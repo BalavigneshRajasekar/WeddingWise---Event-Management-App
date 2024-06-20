@@ -29,7 +29,13 @@ loginRouter.post("/login", async (req, res) => {
       }
     );
 
-    res.status(200).json({ message: "Login Successful", token: authToken });
+    res
+      .status(200)
+      .json({
+        message: "Login Successful",
+        token: authToken,
+        role: validUser.role,
+      });
   } catch (error) {
     res
       .status(500)
