@@ -5,6 +5,9 @@ const mallsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  mallImages: {
+    type: [String],
+  },
   mallAddress: {
     type: String,
     required: true,
@@ -19,18 +22,11 @@ const mallsSchema = new mongoose.Schema({
   },
 
   bookedOn: {
-    type: Date,
-    default: null,
+    //both dates and user
+    type: [Object],
+    default: [],
   },
-  BookedUser: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    default: null,
-  },
-  available: {
-    type: Boolean,
-    default: true,
-  },
+
   spacing: {
     type: String,
     default: "500-1000",

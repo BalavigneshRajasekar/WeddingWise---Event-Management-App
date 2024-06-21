@@ -13,6 +13,7 @@ const mallsRouter = require("./routes/malls");
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("./public"));
 
 //Routes
 app.use("/api/register", registerRouter);
