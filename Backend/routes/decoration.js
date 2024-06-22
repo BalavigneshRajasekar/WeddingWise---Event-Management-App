@@ -49,4 +49,82 @@ decorRouter.post(
   }
 );
 
+// endpoint to get all the decorations
+
+decorRouter.get("/get", async (req, res) => {
+  try {
+    const allDecorations = await Decor.find({});
+    res.status(200).send(allDecorations);
+  } catch (err) {
+    res.status(500).send({ message: "server error", error: err });
+  }
+});
+
+// endpoint to book an Decoration handlers
+
+decorRouter.post("/book/:id", loginAuth, async (req, res) => {
+  const id = req.params.id;
+  const { eventDate } = req.body;
+
+  try {
+    //To verify the date must not be an past date
+    if (eventDate < new Date().toLocaleDateString()) {
+      return res.status(400).send({ message: "Date must not be a past date" });
+    }
+
+    // Find the user selected Decor
+    const selectedMall = await Decor.findById({ _id: id });
+    const verifyDate = selectedMall.bookedOn.filter((dates) => {
+      return dates.date == eventDate;
+    });
+    //verifying the mall is booked on that date r not
+    if (verifyDate.length > 0) {
+      return res
+        .status(400)
+        .send({ message: "Decor already booked on that day" });
+    }
+
+    selectedMall.bookedOn.push({ date: eventDate, user: req.user.id });
+    await selectedMall.save();
+    res.status(200).send({ message: "Decor booked successfully" });
+  } catch (err) {
+    res.status(500).send({ message: "server error: ", err: err.message });
+  }
+});
+
+//endpoint to remove Booking for a particular user
+decorRouter.post("/remove/:id", loginAuth, async (req, res) => {
+  const id = req.params.id;
+  const { eventDate } = req.body;
+  try {
+    const selectedMall = await Decor.findById({ _id: id });
+
+    const verifyDate = selectedMall.bookedOn.filter((dates) => {
+      if (dates.user == req.user.id) {
+        return dates.date !== eventDate;
+      } else {
+        return dates;
+      }
+    });
+    console.log(verifyDate);
+    selectedMall.$set({ bookedOn: verifyDate });
+    await selectedMall.save();
+    res.status(200).send({ message: "remove booking successfully" });
+  } catch (err) {
+    res.status(500).send({ message: "server error: ", err: err.message });
+  }
+});
+
+// endpoint to show particular user bookings for dashboard
+
+decorRouter.get("/dashboard", loginAuth, async (req, res) => {
+  try {
+    const userBookings = await Decor.find({
+      "bookedOn.user": req.user.id,
+    });
+    res.status(200).send(userBookings);
+  } catch (err) {
+    res.status(500).send({ message: "server error: ", err: err.message });
+  }
+});
 module.exports = decorRouter;
