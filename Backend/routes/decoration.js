@@ -83,6 +83,16 @@ decorRouter.post("/book/:id", loginAuth, async (req, res) => {
         .status(400)
         .send({ message: "Decor already booked on that day" });
     }
+    //if user has booked a mall then he cannot book the same mall to other date until that day overs
+    const verifyUser = selectedMall.bookedOn.filter((user) => {
+      return user.user == req.user.id;
+    });
+    console.log(verifyUser);
+    if (verifyUser.length > 0) {
+      return res.status(400).send({
+        message: "once previous booking is done then only you can book another",
+      });
+    }
 
     selectedMall.bookedOn.push({ date: eventDate, user: req.user.id });
     await selectedMall.save();
@@ -108,6 +118,7 @@ decorRouter.post("/remove/:id", loginAuth, async (req, res) => {
     });
     console.log(verifyDate);
     selectedMall.$set({ bookedOn: verifyDate });
+
     await selectedMall.save();
     res.status(200).send({ message: "remove booking successfully" });
   } catch (err) {
@@ -127,4 +138,5 @@ decorRouter.get("/dashboard", loginAuth, async (req, res) => {
     res.status(500).send({ message: "server error: ", err: err.message });
   }
 });
+
 module.exports = decorRouter;

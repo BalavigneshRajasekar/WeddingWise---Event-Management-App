@@ -68,12 +68,13 @@ mallsRouter.post("/book/:id", loginAuth, async (req, res) => {
 
   try {
     //To verify the date must not be an past date
-    if (eventDate < new Date().toLocaleDateString()) {
+    if (eventDate <= new Date().toLocaleDateString()) {
       return res.status(400).send({ message: "Date must not be a past date" });
     }
 
     // Find the user selected mall
     const selectedMall = await malls.findById({ _id: id });
+
     const verifyDate = selectedMall.bookedOn.filter((dates) => {
       return dates.date == eventDate;
     });
@@ -83,9 +84,19 @@ mallsRouter.post("/book/:id", loginAuth, async (req, res) => {
         .status(400)
         .send({ message: "Mall already booked on that day" });
     }
-
+    //if user has booked a mall then he cannot book the same mall to other date until that day overs
+    const verifyUser = selectedMall.bookedOn.filter((user) => {
+      return user.user == req.user.id;
+    });
+    console.log(verifyUser);
+    if (verifyUser.length > 0) {
+      return res.status(400).send({
+        message: "once previous booking is done then only you can book another",
+      });
+    }
     selectedMall.bookedOn.push({ date: eventDate, user: req.user.id });
     await selectedMall.save();
+
     res.status(200).send({ message: "Mall booked successfully" });
   } catch (err) {
     res.status(500).send({ message: "server error: ", err: err.message });

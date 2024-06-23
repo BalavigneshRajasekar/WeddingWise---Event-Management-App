@@ -18,6 +18,14 @@ const userSchema = new mongoose.Schema({
     enum: ["Admin", "User"],
     default: "User",
   },
+  malls: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "Malls",
+  },
+  decorations: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "Decor",
+  },
   created_at: {
     type: Date,
     default: Date.now,
