@@ -29,6 +29,10 @@ const djSchema = new mongoose.Schema({
     type: [Object],
     default: [],
   },
+  price: {
+    type: Number,
+    required: true,
+  },
 });
 
 const DJ = mongoose.model("DJ", djSchema);

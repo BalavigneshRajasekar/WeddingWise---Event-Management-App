@@ -1,5 +1,6 @@
 const express = require("express");
 const Catering = require("../models/catering");
+const Users = require("../models/users");
 const loginAuth = require("../middlewares/loginAuth");
 const roleAuth = require("../middlewares/roleAuth");
 const upload = require("../middlewares/multerMiddleware");
@@ -75,6 +76,7 @@ cateringRouter.post("/book/:id", loginAuth, async (req, res) => {
 
     // Find the user selected catering
     const selectedCater = await Catering.findById({ _id: id });
+    const user = await Users.findById(req.user.id);
     const verifyDate = selectedCater.bookedOn.filter((dates) => {
       return dates.date == eventDate;
     });
@@ -97,6 +99,10 @@ cateringRouter.post("/book/:id", loginAuth, async (req, res) => {
 
     selectedCater.bookedOn.push({ date: eventDate, user: req.user.id });
     await selectedCater.save();
+    // calculate budget
+    user.budgetSpent = selectedCater.price + user.budgetSpent;
+    user.budgetLeft = user.budgetLeft - selectedCater.price;
+    await user.save();
     res.status(200).send({ message: "Catering booked successfully" });
   } catch (err) {
     res.status(500).send({ message: "server error: ", err: err.message });
@@ -109,6 +115,7 @@ cateringRouter.post("/remove/:id", loginAuth, async (req, res) => {
   const { eventDate } = req.body;
   try {
     const selectedCater = await Catering.findById({ _id: id });
+    const user = await Users.findById(req.user.id);
 
     const verifyDate = selectedCater.bookedOn.filter((dates) => {
       if (dates.user == req.user.id) {
@@ -119,8 +126,13 @@ cateringRouter.post("/remove/:id", loginAuth, async (req, res) => {
     });
     console.log(verifyDate);
     selectedCater.$set({ bookedOn: verifyDate });
-
     await selectedCater.save();
+
+    // calculate budget
+    user.budgetSpent = user.budgetSpent - selectedCater.price;
+    user.budgetLeft = user.budgetLeft + selectedCater.price;
+    await user.save();
+
     res.status(200).send({ message: "remove booking successfully" });
   } catch (err) {
     res.status(500).send({ message: "server error: ", err: err.message });

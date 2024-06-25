@@ -1,5 +1,6 @@
 const express = require("express");
 const Decor = require("../models/decorations");
+const Users = require("../models/users");
 const loginAuth = require("../middlewares/loginAuth");
 const roleAuth = require("../middlewares/roleAuth");
 const upload = require("../middlewares/multerMiddleware");
@@ -74,6 +75,7 @@ decorRouter.post("/book/:id", loginAuth, async (req, res) => {
 
     // Find the user selected Decor
     const selectedMall = await Decor.findById({ _id: id });
+    const user = await Users.findById(req.user.id);
     const verifyDate = selectedMall.bookedOn.filter((dates) => {
       return dates.date == eventDate;
     });
@@ -95,6 +97,10 @@ decorRouter.post("/book/:id", loginAuth, async (req, res) => {
     }
 
     selectedMall.bookedOn.push({ date: eventDate, user: req.user.id });
+    // calculate budget
+    user.budgetSpent = selectedMall.Price + user.budgetSpent;
+    user.budgetLeft = user.budgetLeft - selectedMall.Price;
+    await user.save();
     await selectedMall.save();
     res.status(200).send({ message: "Decor booked successfully" });
   } catch (err) {
@@ -108,6 +114,7 @@ decorRouter.post("/remove/:id", loginAuth, async (req, res) => {
   const { eventDate } = req.body;
   try {
     const selectedMall = await Decor.findById({ _id: id });
+    const user = await Users.findById(req.user.id);
 
     const verifyDate = selectedMall.bookedOn.filter((dates) => {
       if (dates.user == req.user.id) {
@@ -118,8 +125,11 @@ decorRouter.post("/remove/:id", loginAuth, async (req, res) => {
     });
     console.log(verifyDate);
     selectedMall.$set({ bookedOn: verifyDate });
-
     await selectedMall.save();
+    // calculate budget
+    user.budgetSpent = user.budgetSpent - selectedMall.Price;
+    user.budgetLeft = user.budgetLeft + selectedMall.Price;
+    await user.save();
     res.status(200).send({ message: "remove booking successfully" });
   } catch (err) {
     res.status(500).send({ message: "server error: ", err: err.message });

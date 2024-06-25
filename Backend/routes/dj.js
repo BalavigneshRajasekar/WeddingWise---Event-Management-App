@@ -1,10 +1,9 @@
 const express = require("express");
-
-const Catering = require("../models/catering");
 const loginAuth = require("../middlewares/loginAuth");
 const roleAuth = require("../middlewares/roleAuth");
 const upload = require("../middlewares/multerMiddleware");
 const DJ = require("../models/dj");
+const Users = require("../models/users");
 
 const djRouter = express.Router();
 
@@ -69,6 +68,7 @@ djRouter.post("/book/:id", loginAuth, async (req, res) => {
 
     // Find the user selected catering
     const selectedDJ = await DJ.findById({ _id: id });
+    const user = await Users.findById(req.user.id);
     const verifyDate = selectedDJ.bookedOn.filter((dates) => {
       return dates.date == eventDate;
     });
@@ -88,7 +88,12 @@ djRouter.post("/book/:id", loginAuth, async (req, res) => {
     }
 
     selectedDJ.bookedOn.push({ date: eventDate, user: req.user.id });
+    // calculate budget
+    user.budgetSpent = selectedDJ.price + user.budgetSpent;
+    user.budgetLeft = user.budgetLeft - selectedDJ.price;
+    await user.save();
     await selectedDJ.save();
+
     res.status(200).send({ message: "DJ booked successfully" });
   } catch (err) {
     res.status(500).send({ message: "server error: ", err: err.message });
@@ -101,6 +106,7 @@ djRouter.post("/remove/:id", loginAuth, async (req, res) => {
   const { eventDate } = req.body;
   try {
     const selectedDJ = await DJ.findById({ _id: id });
+    const user = await Users.findById(req.user.id);
 
     const verifyDate = selectedDJ.bookedOn.filter((dates) => {
       if (dates.user == req.user.id) {
@@ -111,6 +117,10 @@ djRouter.post("/remove/:id", loginAuth, async (req, res) => {
     });
     console.log(verifyDate);
     selectedDJ.$set({ bookedOn: verifyDate });
+    // calculate budget
+    user.budgetSpent = user.budgetSpent - selectedDJ.price;
+    user.budgetLeft = user.budgetLeft + selectedDJ.price;
+    await user.save();
 
     await selectedDJ.save();
     res.status(200).send({ message: "remove booking successfully" });

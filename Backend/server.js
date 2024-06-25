@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 //files
 const registerRouter = require("./routes/register");
 const loginRouter = require("./routes/login");
+const budgetRouter = require("./routes/budget");
 const mallsRouter = require("./routes/malls");
 const decorRouter = require("./routes/decoration");
 const cateringRouter = require("./routes/catering");
@@ -21,6 +22,7 @@ app.use(express.static("./public"));
 //Routes
 app.use("/api/register", registerRouter);
 app.use("/api/login", loginRouter);
+app.use("/api/budget", budgetRouter);
 app.use("/api/malls", mallsRouter);
 app.use("/api/decorations", decorRouter);
 app.use("/api/catering", cateringRouter);

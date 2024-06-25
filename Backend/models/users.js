@@ -18,6 +18,18 @@ const userSchema = new mongoose.Schema({
     enum: ["Admin", "User"],
     default: "User",
   },
+  budget: {
+    type: Number,
+    default: 0,
+  },
+  budgetLeft: {
+    type: Number,
+    default: 0,
+  },
+  budgetSpent: {
+    type: Number,
+    default: 0,
+  },
 
   created_at: {
     type: Date,
