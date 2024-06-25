@@ -10,6 +10,7 @@ const loginRouter = require("./routes/login");
 const mallsRouter = require("./routes/malls");
 const decorRouter = require("./routes/decoration");
 const cateringRouter = require("./routes/catering");
+const djRouter = require("./routes/dj");
 
 //Middlewares
 app.use(cors());
@@ -23,6 +24,7 @@ app.use("/api/login", loginRouter);
 app.use("/api/malls", mallsRouter);
 app.use("/api/decorations", decorRouter);
 app.use("/api/catering", cateringRouter);
+app.use("/api/dj", djRouter);
 
 mongoose.connect("mongodb://localhost:27017/Event-Management").then(() => {
   console.log("Database Connected");

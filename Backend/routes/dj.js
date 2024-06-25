@@ -1,69 +1,63 @@
 const express = require("express");
+
 const Catering = require("../models/catering");
 const loginAuth = require("../middlewares/loginAuth");
 const roleAuth = require("../middlewares/roleAuth");
 const upload = require("../middlewares/multerMiddleware");
+const DJ = require("../models/dj");
 
-const cateringRouter = express.Router();
+const djRouter = express.Router();
 
-// endpoint to add catering to the DB(Admin)
+// endpoint to add DJ to the DB(Admin)
 
-cateringRouter.post(
+djRouter.post(
   "/add",
   loginAuth,
   roleAuth("Admin"),
   upload.single("media"),
   async (req, res) => {
-    const {
-      cateringName,
-      cateringDescription,
-      cateringAddress,
-      cateringCity,
-      cateringMenu,
-      cateringContact,
-      price,
-    } = req.body;
+    const { djName, djDescription, djAddress, djCity, djContact, price } =
+      req.body;
 
     try {
-      const verifyCatering = await Catering.findOne({
-        cateringContact: cateringContact,
+      const verifyDJ = await DJ.findOne({
+        djContact: djContact,
       });
-      if (verifyCatering) {
-        return res.status(400).json({ message: "Catering already exists" });
+      if (verifyDJ) {
+        return res.status(400).json({ message: "DJ already exists" });
       }
-      const newCatering = new Catering({
-        cateringName,
-        cateringDescription,
-        cateringAddress,
-        cateringCity,
-        cateringContact,
-        cateringMenu: cateringMenu.split(","),
-        cateringImages: `http://localhost:3000/mallImages/${req.file.filename}`,
+      const newDJ = new DJ({
+        djName,
+        djDescription,
+        djAddress,
+        djCity,
+        djContact,
+        djImages: `http://localhost:3000/mallImages/${req.file.filename}`,
         price,
       });
 
-      await newCatering.save();
-      res.status(200).json({ message: "Catering added successfully" });
+      await newDJ.save();
+      res.status(200).json({ message: "DJ added successfully" });
     } catch (errors) {
       res.status(500).send({ message: "server error", error: errors });
     }
   }
 );
 
-// endpoint to get all the catering
+// endpoint to get all the DJ
 
-cateringRouter.get("/get", async (req, res) => {
+djRouter.get("/get", async (req, res) => {
   try {
-    const allCaterings = await Catering.find({});
-    res.status(200).send(allCaterings);
+    const allDJ = await DJ.find({});
+    res.status(200).send(allDJ);
   } catch (err) {
     res.status(500).send({ message: "server error", error: err });
   }
 });
 
-// endpoint to book an catering handlers
+// endpoint to book an DJ handlers
 
-cateringRouter.post("/book/:id", loginAuth, async (req, res) => {
+djRouter.post("/book/:id", loginAuth, async (req, res) => {
   const id = req.params.id;
   const { eventDate } = req.body;
 
@@ -74,18 +68,16 @@ cateringRouter.post("/book/:id", loginAuth, async (req, res) => {
     }
 
     // Find the user selected catering
-    const selectedCater = await Catering.findById({ _id: id });
-    const verifyDate = selectedCater.bookedOn.filter((dates) => {
+    const selectedDJ = await DJ.findById({ _id: id });
+    const verifyDate = selectedDJ.bookedOn.filter((dates) => {
       return dates.date == eventDate;
     });
     //verifying the catering is booked on that date r not
     if (verifyDate.length > 0) {
-      return res
-        .status(400)
-        .send({ message: "catering already booked on that day" });
+      return res.status(400).send({ message: "DJ already booked on that day" });
     }
     //if user has booked a catering then he cannot book the same catering to other date until that day overs
-    const verifyUser = selectedCater.bookedOn.filter((user) => {
+    const verifyUser = selectedDJ.bookedOn.filter((user) => {
       return user.user == req.user.id;
     });
     console.log(verifyUser);
@@ -95,22 +87,22 @@ cateringRouter.post("/book/:id", loginAuth, async (req, res) => {
       });
     }
 
-    selectedCater.bookedOn.push({ date: eventDate, user: req.user.id });
-    await selectedCater.save();
-    res.status(200).send({ message: "Catering booked successfully" });
+    selectedDJ.bookedOn.push({ date: eventDate, user: req.user.id });
+    await selectedDJ.save();
+    res.status(200).send({ message: "DJ booked successfully" });
   } catch (err) {
     res.status(500).send({ message: "server error: ", err: err.message });
   }
 });
 
 //endpoint to remove Booking for a particular user
-cateringRouter.post("/remove/:id", loginAuth, async (req, res) => {
+djRouter.post("/remove/:id", loginAuth, async (req, res) => {
   const id = req.params.id;
   const { eventDate } = req.body;
   try {
-    const selectedCater = await Catering.findById({ _id: id });
+    const selectedDJ = await DJ.findById({ _id: id });
 
-    const verifyDate = selectedCater.bookedOn.filter((dates) => {
+    const verifyDate = selectedDJ.bookedOn.filter((dates) => {
       if (dates.user == req.user.id) {
         return dates.date !== eventDate;
       } else {
@@ -118,9 +110,9 @@ cateringRouter.post("/remove/:id", loginAuth, async (req, res) => {
       }
     });
     console.log(verifyDate);
-    selectedCater.$set({ bookedOn: verifyDate });
+    selectedDJ.$set({ bookedOn: verifyDate });
 
-    await selectedCater.save();
+    await selectedDJ.save();
     res.status(200).send({ message: "remove booking successfully" });
   } catch (err) {
     res.status(500).send({ message: "server error: ", err: err.message });
@@ -129,9 +121,9 @@ cateringRouter.post("/remove/:id", loginAuth, async (req, res) => {
 
 // endpoint to show particular user bookings for dashboard
 
-cateringRouter.get("/dashboard", loginAuth, async (req, res) => {
+djRouter.get("/dashboard", loginAuth, async (req, res) => {
   try {
-    const userBookings = await Catering.find({
+    const userBookings = await DJ.find({
       "bookedOn.user": req.user.id,
     });
     res.status(200).send(userBookings);
@@ -140,4 +132,4 @@ cateringRouter.get("/dashboard", loginAuth, async (req, res) => {
   }
 });
 
-module.exports = cateringRouter;
+module.exports = djRouter;
