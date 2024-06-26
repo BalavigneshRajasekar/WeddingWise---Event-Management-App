@@ -4,6 +4,8 @@ const cors = require("cors");
 const app = express();
 const mongoose = require("mongoose");
 
+require("dotenv").config();
+
 //files
 const registerRouter = require("./routes/register");
 const loginRouter = require("./routes/login");
@@ -28,7 +30,7 @@ app.use("/api/decorations", decorRouter);
 app.use("/api/catering", cateringRouter);
 app.use("/api/dj", djRouter);
 
-mongoose.connect("mongodb://localhost:27017/Event-Management").then(() => {
+mongoose.connect(process.env.MONGODB).then(() => {
   console.log("Database Connected");
   app.listen("3000", () => {
     console.log("Server is running on port 3000");
