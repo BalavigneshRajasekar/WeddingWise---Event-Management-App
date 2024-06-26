@@ -39,7 +39,7 @@ cateringRouter.post(
         cateringCity,
         cateringContact,
         cateringMenu: cateringMenu.split(","),
-        cateringImages: `http://localhost:3000/mallImages/${req.file.filename}`,
+        cateringImages: `https://apieventmanagement.onrender.com/mallImages/${req.file.filename}`,
         price,
       });
 
