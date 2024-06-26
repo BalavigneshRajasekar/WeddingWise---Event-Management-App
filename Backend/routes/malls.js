@@ -34,7 +34,7 @@ mallsRouter.post(
         mallName,
         mallAddress,
         mallCity,
-        mallImages: `https://apieventmanagement.onrender.com/mallImages/${req.file.filename}`,
+        mallImages: `http://localhost:3000/mallImages/${req.file.filename}`,
         mallContact,
         spacing,
         amenities: amenities.split(","),

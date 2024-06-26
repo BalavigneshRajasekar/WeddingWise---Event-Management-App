@@ -38,7 +38,7 @@ decorRouter.post(
         decorCity,
         decorContact,
         decorType: decorType.split(","),
-        decorImages: `https://apieventmanagement.onrender.com/mallImages/${req.file.filename}`,
+        decorImages: `http://localhost:3000/mallImages/${req.file.filename}`,
         Price,
       });
 

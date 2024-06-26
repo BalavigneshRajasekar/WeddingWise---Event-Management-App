@@ -31,7 +31,7 @@ djRouter.post(
         djAddress,
         djCity,
         djContact,
-        djImages: `https://apieventmanagement.onrender.com/mallImages/${req.file.filename}`,
+        djImages: `http://localhost:3000/mallImages/${req.file.filename}`,
         price,
       });
 
