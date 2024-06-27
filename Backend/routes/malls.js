@@ -29,7 +29,7 @@ mallsRouter.post(
       if (verify) {
         return res.status(400).send({ message: "Mall already exists" });
       }
-      console.log(req.file);
+
       const newMall = new malls({
         mallName,
         mallAddress,
