@@ -55,6 +55,10 @@ function Nav() {
     if (index == 1) {
       setOpenModel(true);
     }
+    if (index == 3) {
+      localStorage.removeItem("logToken");
+      window.location.reload();
+    }
   };
 
   const onFinish = async (values) => {
