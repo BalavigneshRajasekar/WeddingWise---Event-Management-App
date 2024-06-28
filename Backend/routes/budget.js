@@ -19,4 +19,14 @@ budgetRouter.post("/add", loginAuth, async (req, res) => {
   }
 });
 
+budgetRouter.get("/get", loginAuth, async (req, res) => {
+  try {
+    const user = await Users.findById(req.user.id);
+    res
+      .status(200)
+      .json({ budgetSpend: user.budgetSpent, budgetLeft: user.budgetLeft });
+  } catch (err) {
+    res.status(500).send({ message: "server error", error: err });
+  }
+});
 module.exports = budgetRouter;

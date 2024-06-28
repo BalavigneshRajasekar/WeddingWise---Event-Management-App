@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useState, useContext } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,15 +11,31 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import AdbIcon from "@mui/icons-material/Adb";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
+import Modal from "@mui/material/Modal";
+import { Form, Input, Button, message } from "antd";
+import axios from "axios";
+import { AppContext } from "../context/AppContext";
 
 const pages = ["Home", "Catering", "Dj", "Photography", "Decorations"];
 const settings = ["Profile", "Add Budget", "Dashboard", "Logout"];
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 function Nav() {
+  const { fetchUserData } = useContext(AppContext);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [openModel, setOpenModel] = useState(false);
+  const [btnLoading, setBtnLoading] = useState(false);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -34,9 +51,35 @@ function Nav() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  const click = (index) => {
-    console.log(index);
+  const handleProfile = (index) => {
+    if (index == 1) {
+      setOpenModel(true);
+    }
   };
+
+  const onFinish = async (values) => {
+    setBtnLoading(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/budget/add",
+        values,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      setOpenModel(false);
+      setBtnLoading(false);
+      fetchUserData();
+    } catch (e) {
+      message.error("Failed to add budget");
+      setBtnLoading(false);
+    }
+  };
+  const onFinishFailed = () => {};
+
   return (
     <div>
       <AppBar position="static">
@@ -143,7 +186,10 @@ function Nav() {
               >
                 {settings.map((setting, index) => (
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center" onClick={() => click(index)}>
+                    <Typography
+                      textAlign="center"
+                      onClick={() => handleProfile(index)}
+                    >
                       {setting}
                     </Typography>
                   </MenuItem>
@@ -153,6 +199,46 @@ function Nav() {
           </Toolbar>
         </Container>
       </AppBar>
+      <Modal
+        open={openModel}
+        onClose={() => setOpenModel(false)}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <Box sx={style}>
+          <Typography variant="h6">Enter the budget to track ! </Typography>
+          <Form
+            style={{ marginTop: 40, minWidth: 300 }}
+            initialValues={{
+              remember: true,
+            }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+          >
+            <Form.Item
+              name="budget"
+              rules={[
+                {
+                  required: true,
+                  message: "please add the budget to track!",
+                  type: "Text",
+                },
+              ]}
+            >
+              <Input placeholder="Add or Update Budget" />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" loading={btnLoading}>
+                Add
+              </Button>
+            </Form.Item>
+            <Form.Item>
+              <Button onClick={() => setOpenModel(false)}>cancel</Button>
+            </Form.Item>
+          </Form>
+        </Box>
+      </Modal>
     </div>
   );
 }
