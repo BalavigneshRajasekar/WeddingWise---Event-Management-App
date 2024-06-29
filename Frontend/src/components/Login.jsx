@@ -10,6 +10,7 @@ import AppContext from "antd/es/app/context";
 
 function Login() {
   const navigate = useNavigate();
+  const { setUserToken } = useContext(AppContext);
   const [btnLoading, setBtnLoading] = useState(false);
   const onFinish = async (values) => {
     setBtnLoading(true);
@@ -20,9 +21,12 @@ function Login() {
       );
       message.success(response.data.message);
       setBtnLoading(false);
+
       localStorage.setItem("logToken", response.data.token);
       localStorage.setItem("role", response.data.role);
+
       navigate("/home");
+      console.log("home");
     } catch (err) {
       message.error(err.response.data.message);
       setBtnLoading(false);

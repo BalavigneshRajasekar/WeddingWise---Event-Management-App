@@ -4,9 +4,8 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Nav from "./Nav";
 import { Container, Button } from "@mui/material";
-import axios from "axios";
-import { message, Image } from "antd";
-import { Fade, Slide } from "react-slideshow-image";
+import { Image } from "antd";
+import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 import Malls from "../Routes/Malls";
 import { AppContext } from "../context/AppContext";
@@ -15,17 +14,17 @@ function Home() {
   const { budget, budgetLeft, fetchUserData } = useContext(AppContext);
 
   const navigate = useNavigate();
-  const [userToken, setUserToken] = useState(localStorage.getItem("logToken"));
+  // const [userToken, setUserToken] = useState(localStorage.getItem("logToken"));
   //Checking user has token r not
   useEffect(() => {
     fetchUserData();
 
-    if (!userToken) {
+    if (!localStorage.getItem("logToken")) {
       navigate("/");
     } else {
       navigate("/home");
     }
-  }, [userToken]);
+  }, []);
 
   // Banners
 
@@ -74,7 +73,12 @@ function Home() {
           <h4>Vendors :</h4>
           <div className=" p-md-5 mt-3 bg-md-dark">
             <div className="row gap-3 justify-content-around ">
-              <Button variant="contained" color="secondary" className="col-5 ">
+              <Button
+                variant="contained"
+                color="secondary"
+                className="col-5 "
+                onClick={() => navigate("/Decoration")}
+              >
                 Decoration
                 <img
                   src="Decoration.png"
@@ -85,7 +89,12 @@ function Home() {
                   }}
                 ></img>
               </Button>
-              <Button variant="contained" color="secondary" className="col-5">
+              <Button
+                variant="contained"
+                color="secondary"
+                className="col-5"
+                onClick={() => navigate("/Photography")}
+              >
                 PhotoGraphy
                 <img
                   src="PhotoIcon.webp"
@@ -97,7 +106,12 @@ function Home() {
                 ></img>
               </Button>
 
-              <Button variant="contained" color="secondary" className="col-5 ">
+              <Button
+                variant="contained"
+                color="secondary"
+                className="col-5 "
+                onClick={() => navigate("/Dj")}
+              >
                 DJ Players
                 <img
                   src="DjIcon.png"
@@ -108,7 +122,12 @@ function Home() {
                   }}
                 ></img>
               </Button>
-              <Button variant="contained" color="secondary" className="col-5 ">
+              <Button
+                variant="contained"
+                color="secondary"
+                className="col-5 "
+                onClick={() => navigate("/Catering")}
+              >
                 Catering
                 <img
                   src="cateringIcon.webp"

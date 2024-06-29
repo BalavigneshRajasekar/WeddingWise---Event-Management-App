@@ -16,6 +16,7 @@ import Modal from "@mui/material/Modal";
 import { Form, Input, Button, message } from "antd";
 import axios from "axios";
 import { AppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 const pages = ["Home", "Catering", "Dj", "Photography", "Decorations"];
 const settings = ["Profile", "Add Budget", "Dashboard", "Logout"];
@@ -31,6 +32,7 @@ const style = {
   p: 4,
 };
 function Nav() {
+  const navigate = useNavigate();
   const { fetchUserData } = useContext(AppContext);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -57,7 +59,8 @@ function Nav() {
     }
     if (index == 3) {
       localStorage.removeItem("logToken");
-      window.location.reload();
+
+      navigate("/");
     }
   };
 
