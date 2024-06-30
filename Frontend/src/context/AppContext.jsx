@@ -9,6 +9,10 @@ export const AppContext = createContext();
 const ProviderHandler = ({ children }) => {
   const [budget, setBudget] = useState();
   const [budgetLeft, setBudgetLeft] = useState();
+  const [singleMall, setSingleMall] = useState();
+  const [singleCatering, setSingleCatering] = useState();
+  const [singleDecoration, setSingleDecoration] = useState();
+  const [singleDj, setSingleDj] = useState();
 
   const fetchUserData = async () => {
     try {
@@ -26,7 +30,21 @@ const ProviderHandler = ({ children }) => {
   };
 
   return (
-    <AppContext.Provider value={{ budget, budgetLeft, fetchUserData }}>
+    <AppContext.Provider
+      value={{
+        budget,
+        budgetLeft,
+        singleMall,
+        singleCatering,
+        singleDecoration,
+        singleDj,
+        setSingleDj,
+        setSingleDecoration,
+        setSingleCatering,
+        setSingleMall,
+        fetchUserData,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );

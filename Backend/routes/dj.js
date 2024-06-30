@@ -15,8 +15,15 @@ djRouter.post(
   roleAuth("Admin"),
   upload.single("media"),
   async (req, res) => {
-    const { djName, djDescription, djAddress, djCity, djContact, price } =
-      req.body;
+    const {
+      djName,
+      djDescription,
+      djAddress,
+      djCity,
+      djContact,
+      price,
+      musicType,
+    } = req.body;
 
     try {
       const verifyDJ = await DJ.findOne({
@@ -31,6 +38,7 @@ djRouter.post(
         djAddress,
         djCity,
         djContact,
+        musicType: musicType.split(","),
         djImages: `http://localhost:3000/mallImages/${req.file.filename}`,
         price,
       });
@@ -137,6 +145,17 @@ djRouter.get("/dashboard", loginAuth, async (req, res) => {
       "bookedOn.user": req.user.id,
     });
     res.status(200).send(userBookings);
+  } catch (err) {
+    res.status(500).send({ message: "server error: ", err: err.message });
+  }
+});
+
+//endpoint to show particular dj by ID
+
+djRouter.get("/get/:id", async (req, res) => {
+  try {
+    const dj = await DJ.findById(req.params.id);
+    res.status(200).send(dj);
   } catch (err) {
     res.status(500).send({ message: "server error: ", err: err.message });
   }

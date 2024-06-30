@@ -12,10 +12,12 @@ import Dj from "./Routes/Dj";
 import Catering from "./Routes/Catering";
 import PhotoGraphy from "./Routes/PhotoGraphy";
 import Decoration from "./Routes/Decoration";
+import SingleMall from "./components/SingleMall";
+import SingleCatering from "./components/SingleCatering";
+import SingleDecoration from "./components/SingleDecoration";
+import SingleDj from "./components/SingleDj";
 
 function App() {
-  const [userToken, SetUserToken] = useState(true);
-
   return (
     <>
       <div>
@@ -27,14 +29,18 @@ function App() {
               <Route path="/login" element={<Login />}></Route>
 
               <Route path="/home" element={<Home />}></Route>
-              {userToken && (
-                <>
-                  <Route path="/Dj" element={<Dj />}></Route>
-                  <Route path="/Catering" element={<Catering />}></Route>
-                  <Route path="/Photography" element={<PhotoGraphy />}></Route>
-                  <Route path="/Decoration" element={<Decoration />}></Route>
-                </>
-              )}
+
+              <Route path="/Dj" element={<Dj />}></Route>
+              <Route path="/Catering" element={<Catering />}></Route>
+              <Route path="/Photography" element={<PhotoGraphy />}></Route>
+              <Route path="/Decoration" element={<Decoration />}></Route>
+              <Route path="/mall/:id" element={<SingleMall />}></Route>
+              <Route path="/catering/:id" element={<SingleCatering />}></Route>
+              <Route path="/Dj/:id" element={<SingleDj />}></Route>
+              <Route
+                path="/decoration/:id"
+                element={<SingleDecoration />}
+              ></Route>
             </Routes>
           </BrowserRouter>
         </ProviderHandler>

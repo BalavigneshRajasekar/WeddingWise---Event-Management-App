@@ -152,4 +152,17 @@ cateringRouter.get("/dashboard", loginAuth, async (req, res) => {
   }
 });
 
+//endpoint to get particular Catering by ID
+cateringRouter.get("/get/:id", async (req, res) => {
+  try {
+    const catering = await Catering.findById(req.params.id);
+    if (!catering) {
+      return res.status(404).send({ message: "Catering not found" });
+    }
+    res.status(200).send(catering);
+  } catch (err) {
+    res.status(500).send({ message: "Server error: " + err.message });
+  }
+});
+
 module.exports = cateringRouter;

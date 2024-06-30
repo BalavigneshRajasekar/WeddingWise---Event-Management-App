@@ -24,6 +24,10 @@ const djSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  musicType: {
+    type: [String],
+    required: true,
+  },
   bookedOn: {
     //both dates and user
     type: [Object],

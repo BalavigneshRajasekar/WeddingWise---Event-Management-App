@@ -151,4 +151,17 @@ mallsRouter.get("/dashboard", loginAuth, async (req, res) => {
   }
 });
 
+// endpoint to get particular Mall by ID
+
+mallsRouter.get("/get/:id", async (req, res) => {
+  try {
+    const mall = await malls.findById(req.params.id);
+    if (!mall) return res.status(404).send({ message: "Mall not found" });
+
+    res.status(200).send(mall);
+  } catch (err) {
+    res.status(500).send({ message: "server error: ", err: err.message });
+  }
+});
+
 module.exports = mallsRouter;

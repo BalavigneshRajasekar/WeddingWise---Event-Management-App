@@ -29,10 +29,10 @@ function Decoration() {
       "http://localhost:3000/api/decorations/get"
     );
     setDecorations(response.data);
-    console.log(response);
   };
   const singleDecor = (decor) => {
     console.log(decor);
+    navigate(`/decoration/${decor._id}`);
   };
 
   const onSearch = (value, _e, info) => console.log(value);

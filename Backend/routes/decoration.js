@@ -149,4 +149,18 @@ decorRouter.get("/dashboard", loginAuth, async (req, res) => {
   }
 });
 
+// endpoint to get particular decor by ID
+
+decorRouter.get("/get/:id", async (req, res) => {
+  try {
+    const decor = await Decor.findById(req.params.id);
+    if (!decor) {
+      return res.status(404).send({ message: "Decor not found" });
+    }
+    res.status(200).send(decor);
+  } catch (err) {
+    res.status(500).send({ message: "server error", error: err });
+  }
+});
+
 module.exports = decorRouter;

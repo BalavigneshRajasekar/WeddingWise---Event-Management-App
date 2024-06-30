@@ -11,7 +11,9 @@ const loginAuth = (req, res, next) => {
     req.user = verified;
     next();
   } catch (err) {
-    res.status(500).send({ message: "Invalid token", err: err.message });
+    res
+      .status(500)
+      .send({ message: "Invalid token", err: err.message, path: "/" });
   }
 };
 

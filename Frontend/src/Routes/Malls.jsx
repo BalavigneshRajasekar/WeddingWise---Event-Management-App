@@ -1,12 +1,16 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Image, Segmented } from "antd";
 import Button from "@mui/material/Button";
 import PlaceIcon from "@mui/icons-material/Place";
+import { AppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 function Malls() {
   const [malls, setMalls] = useState(null);
+  const { setSingleMall } = useContext(AppContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchMalls();
@@ -17,7 +21,7 @@ function Malls() {
     setMalls(response.data);
   };
   const singleMall = (mall) => {
-    console.log(mall);
+    navigate(`/mall/${mall._id}`);
   };
   return (
     <div>
