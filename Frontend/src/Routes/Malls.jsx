@@ -6,9 +6,27 @@ import Button from "@mui/material/Button";
 import PlaceIcon from "@mui/icons-material/Place";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
 
+import { Form, Input, message } from "antd";
+import { FormControl } from "@mui/material";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 function Malls() {
   const [malls, setMalls] = useState(null);
+  const [modal, setModal] = useState(false);
   const { setSingleMall } = useContext(AppContext);
   const navigate = useNavigate();
 
@@ -20,8 +38,23 @@ function Malls() {
     const response = await axios.get("http://localhost:3000/api/malls/get");
     setMalls(response.data);
   };
-  const singleMall = (mall) => {
+  const singleMall = (mall, e) => {
+    if (e.target.tagName == "BUTTON") {
+      return;
+    }
     navigate(`/mall/${mall._id}`);
+  };
+  const handleBook = () => {
+    setModal(true);
+  };
+  const handleClose = () => {
+    setModal(false);
+  };
+  const onFinish = (values) => {
+    console.log(values);
+  };
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
   };
   return (
     <div>
@@ -40,8 +73,8 @@ function Malls() {
               <div
                 className="card col-md-3"
                 key={index}
-                onClick={() => {
-                  singleMall(mall);
+                onClick={(e) => {
+                  singleMall(mall, e);
                 }}
               >
                 <div className="card-border-top"></div>
@@ -63,12 +96,72 @@ function Malls() {
                   {mall.mallAddress + "," + mall.mallCity}
                 </p>
                 <p className="job">Price: {mall.Price}</p>
-                <Button color="success" variant="contained">
+                <Button
+                  color="success"
+                  variant="contained"
+                  onClick={handleBook}
+                >
                   Book
                 </Button>
               </div>
             </>
           ))}
+      </div>
+      <div>
+        <Modal
+          open={modal}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Event Date :
+            </Typography>
+
+            <Form
+              style={{ marginTop: 40, minWidth: 300 }}
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
+            >
+              <Form.Item
+                name="eventDate"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter Event date",
+                    type: "date",
+                  },
+                ]}
+              >
+                <Input placeholder="date" type="date" />
+              </Form.Item>
+              <FormControl className="d-flex">
+                <Form.Item>
+                  <Input
+                    type="Submit"
+                    placeholder="Book"
+                    name="eventName"
+                    value="Book"
+                    className="bg-success"
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Input
+                    type="button"
+                    value="Close"
+                    className="bg-danger"
+                    onClick={handleClose}
+                  />
+                </Form.Item>
+              </FormControl>
+            </Form>
+          </Box>
+        </Modal>
       </div>
     </div>
   );

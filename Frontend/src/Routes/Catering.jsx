@@ -7,9 +7,27 @@ import { Input, Segmented, Image } from "antd";
 import PlaceIcon from "@mui/icons-material/Place";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import { FormControl } from "@mui/material";
+import { Form, message } from "antd";
 const { Search } = Input;
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 function Catering() {
   const [catering, setCatering] = useState();
+  const [modal, setModal] = useState();
 
   useEffect(() => {
     fetchCatering();
@@ -34,11 +52,24 @@ function Catering() {
     console.log(values);
   };
 
-  const singleCatering = (catering) => {
+  const singleCatering = (catering, e) => {
+    if (e.target.tagName == "BUTTON") {
+      return;
+    }
     console.log(catering);
     navigate(`/catering/${catering._id}`);
   };
 
+  const handleClose = () => {
+    setModal(false);
+  };
+  const onFinish = (values) => {
+    console.log(values);
+  };
+  const handleBook = () => {
+    setModal(true);
+  };
+  const onFinishFailed = () => {};
   return (
     <div>
       <Nav></Nav>
@@ -75,8 +106,8 @@ function Catering() {
                 <div
                   className="card col-md-3"
                   key={index}
-                  onClick={() => {
-                    singleCatering(cater);
+                  onClick={(e) => {
+                    singleCatering(cater, e);
                   }}
                 >
                   <div className="card-border-top"></div>
@@ -98,7 +129,11 @@ function Catering() {
                     {cater.cateringAddress + "," + cater.cateringCity}
                   </p>
                   <p className="job">Price: {cater.price}</p>
-                  <Button color="success" variant="contained">
+                  <Button
+                    color="success"
+                    variant="contained"
+                    onClick={handleBook}
+                  >
                     Book
                   </Button>
                 </div>
@@ -106,6 +141,62 @@ function Catering() {
             ))}
         </div>
       </Container>
+      <div>
+        <Modal
+          open={modal}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Event Date :
+            </Typography>
+
+            <Form
+              style={{ marginTop: 40, minWidth: 300 }}
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
+            >
+              <Form.Item
+                name="eventDate"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter Event date",
+                    type: "date",
+                  },
+                ]}
+              >
+                <Input placeholder="date" type="date" />
+              </Form.Item>
+              <FormControl className="d-flex">
+                <Form.Item>
+                  <Input
+                    type="Submit"
+                    placeholder="Book"
+                    name="eventName"
+                    value="Book"
+                    className="bg-success"
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Input
+                    type="button"
+                    value="Close"
+                    className="bg-danger"
+                    onClick={handleClose}
+                  />
+                </Form.Item>
+              </FormControl>
+            </Form>
+          </Box>
+        </Modal>
+      </div>
     </div>
   );
 }
