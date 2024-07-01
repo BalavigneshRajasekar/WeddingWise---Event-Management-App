@@ -41,9 +41,23 @@ function SingleDecoration() {
     setModal(false);
   };
 
-  const onFinish = (values) => {
-    console.log(values);
-    console.log(id);
+  const onFinish = async (values) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/api/decorations/book/${id}`,
+        values,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      handleClose();
+      fetchDecor();
+    } catch (e) {
+      message.error(e.response.data.message);
+    }
   };
 
   const handleBook = (djs) => {
