@@ -24,6 +24,7 @@ function Login() {
 
       localStorage.setItem("logToken", response.data.token);
       localStorage.setItem("role", response.data.role);
+      localStorage.setItem("userId", response.data.id);
 
       navigate("/home");
       console.log("home");

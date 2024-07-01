@@ -14,20 +14,11 @@ import { FormControl } from "@mui/material";
 import { Form, message } from "antd";
 const { Search } = Input;
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 function Catering() {
+  const navigate = useNavigate();
   const [catering, setCatering] = useState();
   const [modal, setModal] = useState();
+  const [cateringId, setCateringId] = useState();
 
   useEffect(() => {
     fetchCatering();
@@ -47,7 +38,7 @@ function Catering() {
       console.log(e);
     }
   };
-  const navigate = useNavigate();
+
   const onSearch = (values) => {
     console.log(values);
   };
@@ -63,11 +54,28 @@ function Catering() {
   const handleClose = () => {
     setModal(false);
   };
-  const onFinish = (values) => {
-    console.log(values);
+  const onFinish = async (values) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/api/catering/book/${cateringId}`,
+        values,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      handleClose();
+      fetchCatering();
+    } catch (e) {
+      message.error(e.response.data.message);
+      handleClose();
+    }
   };
-  const handleBook = () => {
+  const handleBook = (cater) => {
     setModal(true);
+    setCateringId(cater._id);
   };
   const onFinishFailed = () => {};
   return (
@@ -129,13 +137,19 @@ function Catering() {
                     {cater.cateringAddress + "," + cater.cateringCity}
                   </p>
                   <p className="job">Price: {cater.price}</p>
-                  <Button
-                    color="success"
-                    variant="contained"
-                    onClick={handleBook}
-                  >
-                    Book
-                  </Button>
+                  {cater.bookedBy.includes(localStorage.getItem("userId")) ? (
+                    <Button disabled variant="contained">
+                      Booked
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handleBook(cater)}
+                    >
+                      Book
+                    </Button>
+                  )}
                 </div>
               </>
             ))}
@@ -148,7 +162,7 @@ function Catering() {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Box sx={style}>
+          <Box className="style">
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Event Date :
             </Typography>

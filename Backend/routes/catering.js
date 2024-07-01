@@ -70,7 +70,7 @@ cateringRouter.post("/book/:id", loginAuth, async (req, res) => {
 
   try {
     //To verify the date must not be an past date
-    if (eventDate < new Date().toLocaleDateString()) {
+    if (new Date(eventDate) <= Date.now()) {
       return res.status(400).send({ message: "Date must not be a past date" });
     }
 
@@ -98,6 +98,7 @@ cateringRouter.post("/book/:id", loginAuth, async (req, res) => {
     }
 
     selectedCater.bookedOn.push({ date: eventDate, user: req.user.id });
+    selectedCater.bookedBy.push(req.user.id);
     await selectedCater.save();
     // calculate budget
     user.budgetSpent = selectedCater.price + user.budgetSpent;
@@ -124,8 +125,11 @@ cateringRouter.post("/remove/:id", loginAuth, async (req, res) => {
         return dates;
       }
     });
+    const resetUser = selectedCater.bookedBy.filter((id) => {
+      return id !== req.user.id;
+    });
     console.log(verifyDate);
-    selectedCater.$set({ bookedOn: verifyDate });
+    selectedCater.$set({ bookedOn: verifyDate, bookedBy: resetUser });
     await selectedCater.save();
 
     // calculate budget

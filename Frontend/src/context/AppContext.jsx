@@ -9,10 +9,14 @@ export const AppContext = createContext();
 const ProviderHandler = ({ children }) => {
   const [budget, setBudget] = useState();
   const [budgetLeft, setBudgetLeft] = useState();
+
+  // state for all particular product details
   const [singleMall, setSingleMall] = useState();
   const [singleCatering, setSingleCatering] = useState();
   const [singleDecoration, setSingleDecoration] = useState();
   const [singleDj, setSingleDj] = useState();
+
+  //State for product Booking ID
 
   const fetchUserData = async () => {
     try {

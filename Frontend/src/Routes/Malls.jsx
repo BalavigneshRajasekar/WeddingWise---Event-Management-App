@@ -13,21 +13,11 @@ import Box from "@mui/material/Box";
 import { Form, Input, message } from "antd";
 import { FormControl } from "@mui/material";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 function Malls() {
   const [malls, setMalls] = useState(null);
   const [modal, setModal] = useState(false);
-  const { setSingleMall } = useContext(AppContext);
+  const [mallId, setMallId] = useState();
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,20 +28,42 @@ function Malls() {
     const response = await axios.get("http://localhost:3000/api/malls/get");
     setMalls(response.data);
   };
+
+  //This will view the particular Malls
   const singleMall = (mall, e) => {
     if (e.target.tagName == "BUTTON") {
       return;
     }
     navigate(`/mall/${mall._id}`);
   };
-  const handleBook = () => {
+
+  const handleBook = (mall) => {
     setModal(true);
+    setMallId(mall._id);
   };
   const handleClose = () => {
     setModal(false);
   };
-  const onFinish = (values) => {
+
+  const onFinish = async (values) => {
     console.log(values);
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/api/malls/book/${mallId}`,
+        values,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      handleClose();
+      fetchMalls();
+    } catch (e) {
+      message.error(e.response.data.message);
+      handleClose();
+    }
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -96,13 +108,19 @@ function Malls() {
                   {mall.mallAddress + "," + mall.mallCity}
                 </p>
                 <p className="job">Price: {mall.Price}</p>
-                <Button
-                  color="success"
-                  variant="contained"
-                  onClick={handleBook}
-                >
-                  Book
-                </Button>
+                {mall.bookedBy.includes(localStorage.getItem("userId")) ? (
+                  <Button disabled variant="contained">
+                    Booked
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() => handleBook(mall)}
+                  >
+                    Book
+                  </Button>
+                )}
               </div>
             </>
           ))}
@@ -114,7 +132,7 @@ function Malls() {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Box sx={style}>
+          <Box className="style">
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Event Date :
             </Typography>
@@ -140,6 +158,7 @@ function Malls() {
               >
                 <Input placeholder="date" type="date" />
               </Form.Item>
+
               <FormControl className="d-flex">
                 <Form.Item>
                   <Input

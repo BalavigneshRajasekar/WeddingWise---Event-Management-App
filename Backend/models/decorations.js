@@ -33,6 +33,10 @@ const decorSchema = new mongoose.Schema({
     type: [Object],
     default: [],
   },
+  bookedBy: {
+    type: [String],
+    default: [],
+  },
   Price: {
     type: Number,
     required: true,

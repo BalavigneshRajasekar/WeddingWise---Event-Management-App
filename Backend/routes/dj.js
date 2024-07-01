@@ -70,7 +70,7 @@ djRouter.post("/book/:id", loginAuth, async (req, res) => {
 
   try {
     //To verify the date must not be an past date
-    if (eventDate < new Date().toLocaleDateString()) {
+    if (new Date(eventDate) <= Date.now()) {
       return res.status(400).send({ message: "Date must not be a past date" });
     }
 
@@ -96,6 +96,7 @@ djRouter.post("/book/:id", loginAuth, async (req, res) => {
     }
 
     selectedDJ.bookedOn.push({ date: eventDate, user: req.user.id });
+    selectedDJ.bookedBy.push(req.user.id);
     // calculate budget
     user.budgetSpent = selectedDJ.price + user.budgetSpent;
     user.budgetLeft = user.budgetLeft - selectedDJ.price;
@@ -123,8 +124,11 @@ djRouter.post("/remove/:id", loginAuth, async (req, res) => {
         return dates;
       }
     });
+    const resetUser = selectedDJ.bookedBy.filter((user) => {
+      return user !== req.user.id;
+    });
     console.log(verifyDate);
-    selectedDJ.$set({ bookedOn: verifyDate });
+    selectedDJ.$set({ bookedOn: verifyDate, bookedBy: resetUser });
     // calculate budget
     user.budgetSpent = user.budgetSpent - selectedDJ.price;
     user.budgetLeft = user.budgetLeft + selectedDJ.price;

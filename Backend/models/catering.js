@@ -29,6 +29,10 @@ const cateringSchema = new mongoose.Schema({
     type: [Object],
     default: [],
   },
+  bookedBy: {
+    type: [String],
+    default: [],
+  },
   cateringMenu: {
     type: [String],
     required: true,

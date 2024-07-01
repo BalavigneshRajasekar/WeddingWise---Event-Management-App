@@ -26,7 +26,10 @@ const mallsSchema = new mongoose.Schema({
     type: [Object],
     default: [],
   },
-
+  bookedBy: {
+    type: [String],
+    default: [],
+  },
   spacing: {
     type: String,
     default: "500-1000",

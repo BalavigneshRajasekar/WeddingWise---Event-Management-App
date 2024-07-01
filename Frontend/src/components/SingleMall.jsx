@@ -109,14 +109,26 @@ function SingleMall() {
             >
               Price :<CurrencyRupeeIcon /> {singleMall.Price}
             </Typography>
-            <Button
-              variant="contained"
-              fullWidth
-              sx={{ marginTop: 3, padding: 2 }}
-              onClick={handleBook}
-            >
-              Book
-            </Button>
+            {singleMall.bookedBy.includes(localStorage.getItem("userId")) ? (
+              <Button
+                fullWidth
+                sx={{ marginTop: 3 }}
+                disabled
+                variant="contained"
+              >
+                Booked
+              </Button>
+            ) : (
+              <Button
+                fullWidth
+                sx={{ marginTop: 3 }}
+                variant="contained"
+                color="success"
+                onClick={() => handleBook()}
+              >
+                Book
+              </Button>
+            )}
           </Paper>
         )}
       </Container>

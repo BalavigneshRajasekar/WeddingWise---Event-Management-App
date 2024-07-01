@@ -14,17 +14,6 @@ import { FormControl } from "@mui/material";
 import { Form, message } from "antd";
 const { Search } = Input;
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 function Dj() {
   const navigate = useNavigate();
   const [dj, setDj] = useState();
@@ -60,14 +49,30 @@ function Dj() {
   const handleClose = () => {
     setModal(false);
   };
-  const onFinish = (values) => {
-    console.log(values);
-    console.log(id);
+
+  const onFinish = async (values) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/api/dj/book/${id}`,
+        values,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      fetchDj();
+      setModal(false);
+    } catch (e) {
+      message.error(e.response.data.message);
+      setModal(false);
+    }
   };
+
   const handleBook = (djs) => {
     setModal(true);
     setId(djs._id);
-    console.log(id);
   };
   const onFinishFailed = () => {};
   return (
@@ -129,13 +134,19 @@ function Dj() {
                     {djs.djAddress + "," + djs.djCity}
                   </p>
                   <p className="job">Price: {djs.price}</p>
-                  <Button
-                    color="success"
-                    variant="contained"
-                    onClick={() => handleBook(djs)}
-                  >
-                    Book
-                  </Button>
+                  {djs.bookedBy.includes(localStorage.getItem("userId")) ? (
+                    <Button disabled variant="contained">
+                      Booked
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handleBook(djs)}
+                    >
+                      Book
+                    </Button>
+                  )}
                 </div>
               </>
             ))}
@@ -148,7 +159,7 @@ function Dj() {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Box sx={style}>
+          <Box className="style">
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Event Date :
             </Typography>

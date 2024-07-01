@@ -15,22 +15,12 @@ import { FormControl } from "@mui/material";
 import { Form, message } from "antd";
 const { Search } = Input;
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 function Decoration() {
   const navigate = useNavigate();
 
   const [decorations, setDecorations] = useState();
   const [modal, setModal] = useState();
+  const [decorId, setDecorId] = useState();
 
   useEffect(() => {
     fetchDecorations();
@@ -60,11 +50,28 @@ function Decoration() {
   const handleClose = () => {
     setModal(false);
   };
-  const onFinish = (values) => {
-    console.log(values);
+  const onFinish = async (values) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/api/decorations/book/${decorId}`,
+        values,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      fetchDecorations();
+      setModal(false);
+    } catch (e) {
+      message.error(e.response.data.message);
+      setModal(false);
+    }
   };
-  const handleBook = () => {
+  const handleBook = (decor) => {
     setModal(true);
+    setDecorId(decor._id);
   };
   const onFinishFailed = () => {};
   return (
@@ -126,13 +133,19 @@ function Decoration() {
                     {decor.decorAddress + "," + decor.decorCity}
                   </p>
                   <p className="job">Price: {decor.Price}</p>
-                  <Button
-                    color="success"
-                    variant="contained"
-                    onClick={handleBook}
-                  >
-                    Book
-                  </Button>
+                  {decor.bookedBy.includes(localStorage.getItem("userId")) ? (
+                    <Button disabled variant="contained">
+                      Booked
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handleBook(decor)}
+                    >
+                      Book
+                    </Button>
+                  )}
                 </div>
               </>
             ))}
@@ -145,7 +158,7 @@ function Decoration() {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Box sx={style}>
+          <Box className="style">
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Event Date :
             </Typography>

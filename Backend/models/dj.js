@@ -33,6 +33,10 @@ const djSchema = new mongoose.Schema({
     type: [Object],
     default: [],
   },
+  bookedBy: {
+    type: [String],
+    default: [],
+  },
   price: {
     type: Number,
     required: true,

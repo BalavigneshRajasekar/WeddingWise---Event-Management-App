@@ -110,14 +110,28 @@ function SingleCatering() {
             >
               Price :<CurrencyRupeeIcon /> {singleCatering.price}
             </Typography>
-            <Button
-              variant="contained"
-              fullWidth
-              sx={{ marginTop: 3, padding: 2 }}
-              onClick={handleBook}
-            >
-              Book
-            </Button>
+            {singleCatering.bookedBy.includes(
+              localStorage.getItem("userId")
+            ) ? (
+              <Button
+                disabled
+                variant="contained"
+                fullWidth
+                sx={{ marginTop: 3, padding: 2 }}
+              >
+                Booked
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="success"
+                fullWidth
+                sx={{ marginTop: 3, padding: 2 }}
+                onClick={() => handleBook()}
+              >
+                Book
+              </Button>
+            )}
           </Paper>
         )}
       </Container>

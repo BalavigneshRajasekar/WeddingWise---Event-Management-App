@@ -66,10 +66,10 @@ mallsRouter.get("/get", async (req, res) => {
 mallsRouter.post("/book/:id", loginAuth, async (req, res) => {
   const id = req.params.id;
   const { eventDate } = req.body;
-
+  console.log(eventDate);
   try {
     //To verify the date must not be an past date
-    if (eventDate <= new Date().toLocaleDateString()) {
+    if (new Date(eventDate) <= Date.now()) {
       return res.status(400).send({ message: "Date must not be a past date" });
     }
 
@@ -102,9 +102,12 @@ mallsRouter.post("/book/:id", loginAuth, async (req, res) => {
     user.budgetLeft = user.budgetLeft - selectedMall.Price;
     await user.save();
     selectedMall.bookedOn.push({ date: eventDate, user: req.user.id });
+    selectedMall.bookedBy.push(req.user.id);
     await selectedMall.save();
 
-    res.status(200).send({ message: "Mall booked successfully" });
+    res
+      .status(200)
+      .send({ message: "Mall booked successfully", mallId: selectedMall._id });
   } catch (err) {
     res.status(500).send({ message: "server error: ", err: err.message });
   }
@@ -125,9 +128,13 @@ mallsRouter.post("/remove/:id", loginAuth, async (req, res) => {
         return dates;
       }
     });
+    const resetUsers = selectedMall.bookedBy.filter((id) => {
+      return id !== req.user.id;
+    });
     console.log(verifyDate);
-    selectedMall.$set({ bookedOn: verifyDate });
+    selectedMall.$set({ bookedOn: verifyDate, bookedBy: resetUsers });
     await selectedMall.save();
+
     // calculate budget
     user.budgetSpent = user.budgetSpent - selectedMall.Price;
     user.budgetLeft = user.budgetLeft + selectedMall.Price;

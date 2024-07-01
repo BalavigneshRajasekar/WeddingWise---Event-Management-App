@@ -69,7 +69,7 @@ decorRouter.post("/book/:id", loginAuth, async (req, res) => {
 
   try {
     //To verify the date must not be an past date
-    if (eventDate < new Date().toLocaleDateString()) {
+    if (new Date(eventDate) <= Date.now()) {
       return res.status(400).send({ message: "Date must not be a past date" });
     }
 
@@ -97,6 +97,7 @@ decorRouter.post("/book/:id", loginAuth, async (req, res) => {
     }
 
     selectedMall.bookedOn.push({ date: eventDate, user: req.user.id });
+    selectedMall.bookedBy.push(req.user.id);
     // calculate budget
     user.budgetSpent = selectedMall.Price + user.budgetSpent;
     user.budgetLeft = user.budgetLeft - selectedMall.Price;
@@ -123,8 +124,11 @@ decorRouter.post("/remove/:id", loginAuth, async (req, res) => {
         return dates;
       }
     });
+    const resetUser = selectedMall.bookedBy.filter((id) => {
+      return id != req.user.id;
+    });
     console.log(verifyDate);
-    selectedMall.$set({ bookedOn: verifyDate });
+    selectedMall.$set({ bookedOn: verifyDate, bookedBy: resetUser });
     await selectedMall.save();
     // calculate budget
     user.budgetSpent = user.budgetSpent - selectedMall.Price;

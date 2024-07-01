@@ -107,14 +107,26 @@ function SingleDj() {
             >
               Price :<CurrencyRupeeIcon /> {singleDj.price}
             </Typography>
-            <Button
-              variant="contained"
-              fullWidth
-              sx={{ marginTop: 3, padding: 2 }}
-              onClick={handleBook}
-            >
-              Book
-            </Button>
+            {singleDj.bookedBy.includes(localStorage.getItem("userId")) ? (
+              <Button
+                disabled
+                variant="contained"
+                fullWidth
+                sx={{ marginTop: 3, padding: 2 }}
+              >
+                Booked
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                fullWidth
+                sx={{ marginTop: 3, padding: 2 }}
+                color="success"
+                onClick={() => handleBook()}
+              >
+                Book
+              </Button>
+            )}
           </Paper>
         )}
       </Container>
