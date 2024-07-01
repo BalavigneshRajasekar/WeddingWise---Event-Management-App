@@ -26,6 +26,7 @@ const style = {
   p: 4,
 };
 function Dj() {
+  const navigate = useNavigate();
   const [dj, setDj] = useState();
   const [id, setId] = useState();
   const [modal, setModal] = useState();
@@ -38,18 +39,21 @@ function Dj() {
       navigate("/Dj");
     }
   }, []);
+
   const fetchDj = async () => {
     const response = await axios.get("http://localhost:3000/api/dj/get");
     setDj(response.data);
   };
-  const navigate = useNavigate();
+
   const onSearch = (values) => {
     console.log(values);
   };
+
   const singleDj = (djs, e) => {
     if (e.target.tagName == "BUTTON") {
       return;
     }
+
     navigate(`/Dj/${djs._id}`);
   };
 
