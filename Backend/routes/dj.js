@@ -113,7 +113,9 @@ djRouter.post("/book/:id", loginAuth, async (req, res) => {
 djRouter.post("/remove/:id", loginAuth, async (req, res) => {
   const id = req.params.id;
   const { eventDate } = req.body;
+  console.log(eventDate);
   try {
+    console.log(eventDate);
     const selectedDJ = await DJ.findById({ _id: id });
     const user = await Users.findById(req.user.id);
 

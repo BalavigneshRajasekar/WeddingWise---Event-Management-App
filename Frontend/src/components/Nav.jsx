@@ -37,6 +37,7 @@ function Nav() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [openModel, setOpenModel] = useState(false);
+  const [profileModel, setProfileModel] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
 
   const handleOpenNavMenu = (event) => {
@@ -54,13 +55,22 @@ function Nav() {
     setAnchorElUser(null);
   };
   const handleProfile = (index) => {
-    if (index == 1) {
-      setOpenModel(true);
-    }
-    if (index == 3) {
-      localStorage.removeItem("logToken");
-
-      navigate("/");
+    switch (index) {
+      case 0:
+        setProfileModel(true);
+        break;
+      case 1:
+        setOpenModel(true);
+        break;
+      case 2:
+        navigate("/dashboard");
+        break;
+      case 3:
+        localStorage.removeItem("logToken");
+        navigate("/");
+        break;
+      default:
+        break;
     }
   };
   const handleMenu = (index) => {
@@ -270,6 +280,37 @@ function Nav() {
               <Button onClick={() => setOpenModel(false)}>cancel</Button>
             </Form.Item>
           </Form>
+        </Box>
+      </Modal>
+      {/* //Profile model */}
+      <Modal
+        open={profileModel}
+        onClose={() => setProfileModel(false)}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <Box sx={style}>
+          <Typography
+            variant="h4"
+            sx={{
+              textAlign: "center",
+              borderBottom: "2px solid green",
+              paddingBottom: 2,
+            }}
+          >
+            Profile
+          </Typography>
+          <div className="p-3">
+            <Typography variant="h6" sx={{ padding: 2, fontWeight: 600 }}>
+              Name : {localStorage.getItem("userName")}
+            </Typography>
+            <Typography variant="h6" sx={{ padding: 2, fontWeight: 600 }}>
+              Email : {localStorage.getItem("userEmail")}
+            </Typography>
+            <Typography variant="h6" sx={{ padding: 2, fontWeight: 600 }}>
+              Role : {localStorage.getItem("role")}
+            </Typography>
+          </div>
         </Box>
       </Modal>
     </div>

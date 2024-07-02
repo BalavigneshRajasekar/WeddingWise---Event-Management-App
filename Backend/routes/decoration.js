@@ -113,6 +113,8 @@ decorRouter.post("/book/:id", loginAuth, async (req, res) => {
 decorRouter.post("/remove/:id", loginAuth, async (req, res) => {
   const id = req.params.id;
   const { eventDate } = req.body;
+  console.log("hello");
+
   try {
     const selectedMall = await Decor.findById({ _id: id });
     const user = await Users.findById(req.user.id);
@@ -127,7 +129,7 @@ decorRouter.post("/remove/:id", loginAuth, async (req, res) => {
     const resetUser = selectedMall.bookedBy.filter((id) => {
       return id != req.user.id;
     });
-    console.log(verifyDate);
+    console.log("hemmo" + "" + verifyDate);
     selectedMall.$set({ bookedOn: verifyDate, bookedBy: resetUser });
     await selectedMall.save();
     // calculate budget

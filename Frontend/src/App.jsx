@@ -16,6 +16,7 @@ import SingleMall from "./components/SingleMall";
 import SingleCatering from "./components/SingleCatering";
 import SingleDecoration from "./components/SingleDecoration";
 import SingleDj from "./components/SingleDj";
+import Dashboard from "./Routes/Dashboard";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
               <Route path="/login" element={<Login />}></Route>
 
               <Route path="/home" element={<Home />}></Route>
+              <Route path="/dashboard" element={<Dashboard />}></Route>
 
               <Route path="/Dj" element={<Dj />}></Route>
               <Route path="/Catering" element={<Catering />}></Route>

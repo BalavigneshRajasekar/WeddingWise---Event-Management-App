@@ -34,6 +34,8 @@ loginRouter.post("/login", async (req, res) => {
       token: authToken,
       role: validUser.role,
       id: validUser._id,
+      name: validUser.name,
+      email: validUser.email,
     });
   } catch (error) {
     res

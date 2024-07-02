@@ -25,6 +25,8 @@ function Login() {
       localStorage.setItem("logToken", response.data.token);
       localStorage.setItem("role", response.data.role);
       localStorage.setItem("userId", response.data.id);
+      localStorage.setItem("userName", response.data.name);
+      localStorage.setItem("userEmail", response.data.email);
 
       navigate("/home");
       console.log("home");
