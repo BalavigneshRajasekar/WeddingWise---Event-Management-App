@@ -17,6 +17,7 @@ function Malls() {
   const [malls, setMalls] = useState(null);
   const [modal, setModal] = useState(false);
   const [mallId, setMallId] = useState();
+  const { fetchUserData } = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -60,6 +61,7 @@ function Malls() {
       message.success(response.data.message);
       handleClose();
       fetchMalls();
+      fetchUserData();
     } catch (e) {
       message.error(e.response.data.message);
       handleClose();
