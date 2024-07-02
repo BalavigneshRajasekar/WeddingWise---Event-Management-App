@@ -42,7 +42,7 @@ function Nav() {
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event) => {
+  const handleOpenUserMenu = (event, index) => {
     setAnchorElUser(event.currentTarget);
   };
 
@@ -61,6 +61,27 @@ function Nav() {
       localStorage.removeItem("logToken");
 
       navigate("/");
+    }
+  };
+  const handleMenu = (index) => {
+    switch (index) {
+      case 0:
+        navigate("/home");
+        break;
+      case 1:
+        navigate("/Catering");
+        break;
+      case 2:
+        navigate("/Dj");
+        break;
+      case 3:
+        navigate("/Photography");
+        break;
+      case 4:
+        navigate("/Decoration");
+        break;
+      default:
+        break;
     }
   };
 
@@ -142,9 +163,14 @@ function Nav() {
                   display: { xs: "block", md: "none" },
                 }}
               >
-                {pages.map((page) => (
+                {pages.map((page, index) => (
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
+                    <Typography
+                      textAlign="center"
+                      onClick={() => handleMenu(index)}
+                    >
+                      {page}
+                    </Typography>
                   </MenuItem>
                 ))}
               </Menu>
