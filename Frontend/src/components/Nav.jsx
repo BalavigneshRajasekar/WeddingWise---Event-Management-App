@@ -17,20 +17,11 @@ import { Form, Input, Button, message } from "antd";
 import axios from "axios";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
+import Zoom from "@mui/material/Zoom";
 
 const pages = ["Home", "Catering", "Dj", "Photography", "Decorations"];
 const settings = ["Profile", "Add Budget", "Dashboard", "Logout"];
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+
 function Nav() {
   const navigate = useNavigate();
   const { fetchUserData } = useContext(AppContext);
@@ -242,13 +233,14 @@ function Nav() {
           </Toolbar>
         </Container>
       </AppBar>
+
       <Modal
         open={openModel}
         onClose={() => setOpenModel(false)}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
-        <Box sx={style}>
+        <Box className="style">
           <Typography variant="h6">Enter the budget to track ! </Typography>
           <Form
             style={{ marginTop: 40, minWidth: 300 }}
@@ -282,6 +274,7 @@ function Nav() {
           </Form>
         </Box>
       </Modal>
+
       {/* //Profile model */}
       <Modal
         open={profileModel}
@@ -289,7 +282,7 @@ function Nav() {
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
-        <Box sx={style}>
+        <Box className="style">
           <Typography
             variant="h4"
             sx={{

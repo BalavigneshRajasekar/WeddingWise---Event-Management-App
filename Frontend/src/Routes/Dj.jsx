@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Nav from "../components/Nav";
 import { Container, Button } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Input, Segmented, Image } from "antd";
+import { Input, Segmented, Image, Empty } from "antd";
 import PlaceIcon from "@mui/icons-material/Place";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -12,13 +12,17 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { FormControl } from "@mui/material";
 import { Form, message } from "antd";
+import { AppContext } from "../context/AppContext";
+import Slide from "@mui/material/Slide";
 const { Search } = Input;
 
 function Dj() {
   const navigate = useNavigate();
-  const [dj, setDj] = useState();
+  const [dj, setDj] = useState([]);
+  const [filteredDj, setFilteredDj] = useState([]);
   const [id, setId] = useState();
   const [modal, setModal] = useState();
+  const { setRender } = useContext(AppContext);
 
   useEffect(() => {
     fetchDj();
@@ -28,16 +32,13 @@ function Dj() {
       navigate("/Dj");
     }
   }, []);
-
+  //handle Initial DJ fetching on component load
   const fetchDj = async () => {
     const response = await axios.get("http://localhost:3000/api/dj/get");
     setDj(response.data);
+    setFilteredDj(response.data);
   };
-
-  const onSearch = (values) => {
-    console.log(values);
-  };
-
+  //This will view the particular DJ
   const singleDj = (djs, e) => {
     if (e.target.tagName == "BUTTON") {
       return;
@@ -49,7 +50,7 @@ function Dj() {
   const handleClose = () => {
     setModal(false);
   };
-
+  //Handling the DJ booking after the popup
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
@@ -69,12 +70,50 @@ function Dj() {
       setModal(false);
     }
   };
-
+  //Handle the event date Pop up
   const handleBook = (djs) => {
     setModal(true);
     setId(djs._id);
   };
   const onFinishFailed = () => {};
+  //Handle Searching filters
+  const onSearch = (values) => {
+    const filterDj = dj.filter((djs) => {
+      return djs.djName
+        .toLowerCase()
+        .includes(values.target.value.toLowerCase());
+    });
+    setFilteredDj(filterDj);
+  };
+  //Handle Sorting filters
+  const handleFilter = (values) => {
+    switch (values) {
+      case "All":
+        setFilteredDj(dj);
+
+        break;
+
+      case "A-Z":
+        setFilteredDj(dj.sort((a, b) => a.djName.localeCompare(b.djName)));
+        setRender(values);
+        break;
+      case "Z-A":
+        setFilteredDj(dj.sort((a, b) => b.djName.localeCompare(a.djName)));
+        setRender(values);
+        break;
+      case "price-low-high":
+        setFilteredDj(dj.sort((a, b) => a.price - b.price));
+        setRender(values);
+        break;
+
+      case "price-hight-low":
+        setFilteredDj(dj.sort((a, b) => b.price - a.price));
+        setRender(values);
+        break;
+      default:
+        setFilteredDj(dj);
+    }
+  };
   return (
     <div>
       <Nav></Nav>
@@ -94,62 +133,65 @@ function Dj() {
           allowClear
           enterButton="Search"
           size="large"
-          onSearch={onSearch}
+          onChange={onSearch}
         />
         <div className="d-flex justify-content-end mt-5">
           <Segmented
-            options={["Daily", "Weekly", "Monthly", "Quarterly", "Yearly"]}
-            onChange={(value) => {
-              console.log(value); // string
-            }}
+            options={["All", "A-Z", "Z-A", "price-low-high", "price-hight-low"]}
+            onChange={handleFilter}
           />
         </div>
         <div className="row mt-5 gap-1">
-          {dj &&
-            dj.map((djs, index) => (
+          {filteredDj.length > 0 ? (
+            filteredDj.map((djs, index) => (
               <>
-                <div
-                  className="card col-md-3"
-                  key={index}
-                  onClick={(e) => {
-                    singleDj(djs, e);
-                  }}
-                >
-                  <div className="card-border-top"></div>
-                  <div className="img">
-                    <Image
-                      src={djs.djImages[0]}
-                      width="100%"
-                      height="150px"
-                    ></Image>
+                <Slide direction="right" in={filteredDj.length > 0}>
+                  <div
+                    className="card col-md-3"
+                    key={index}
+                    onClick={(e) => {
+                      singleDj(djs, e);
+                    }}
+                  >
+                    <div className="card-border-top"></div>
+                    <div className="img">
+                      <Image
+                        src={djs.djImages[0]}
+                        width="100%"
+                        height="150px"
+                      ></Image>
+                    </div>
+                    <span>{djs.djName}</span>
+                    <ul>
+                      {djs.musicType.map((offers, index1) => (
+                        <li key={index1}> {offers}</li>
+                      ))}
+                    </ul>
+                    <p>
+                      <PlaceIcon />
+                      {djs.djAddress + "," + djs.djCity}
+                    </p>
+                    <p className="job">Price: {djs.price}</p>
+                    {djs.bookedBy.includes(localStorage.getItem("userId")) ? (
+                      <Button disabled variant="contained">
+                        Booked
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        color="success"
+                        onClick={() => handleBook(djs)}
+                      >
+                        Book
+                      </Button>
+                    )}
                   </div>
-                  <span>{djs.djName}</span>
-                  <ul>
-                    {djs.musicType.map((offers, index1) => (
-                      <li key={index1}> {offers}</li>
-                    ))}
-                  </ul>
-                  <p>
-                    <PlaceIcon />
-                    {djs.djAddress + "," + djs.djCity}
-                  </p>
-                  <p className="job">Price: {djs.price}</p>
-                  {djs.bookedBy.includes(localStorage.getItem("userId")) ? (
-                    <Button disabled variant="contained">
-                      Booked
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      color="success"
-                      onClick={() => handleBook(djs)}
-                    >
-                      Book
-                    </Button>
-                  )}
-                </div>
+                </Slide>
               </>
-            ))}
+            ))
+          ) : (
+            <Empty description="No DJ Available" />
+          )}
         </div>
       </Container>
       <div>

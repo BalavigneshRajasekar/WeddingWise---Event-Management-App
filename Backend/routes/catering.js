@@ -111,19 +111,15 @@ cateringRouter.post("/book/:id", loginAuth, async (req, res) => {
 });
 
 //endpoint to remove Booking for a particular user
-cateringRouter.post("/remove/:id", loginAuth, async (req, res) => {
+cateringRouter.delete("/remove/:id", loginAuth, async (req, res) => {
   const id = req.params.id;
-  const { eventDate } = req.body;
+
   try {
     const selectedCater = await Catering.findById({ _id: id });
     const user = await Users.findById(req.user.id);
 
     const verifyDate = selectedCater.bookedOn.filter((dates) => {
-      if (dates.user == req.user.id) {
-        return dates.date !== eventDate;
-      } else {
-        return dates;
-      }
+      return dates.user !== req.user.id;
     });
     const resetUser = selectedCater.bookedBy.filter((id) => {
       return id !== req.user.id;

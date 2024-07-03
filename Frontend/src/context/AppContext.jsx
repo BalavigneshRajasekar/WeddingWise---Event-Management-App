@@ -10,13 +10,14 @@ const ProviderHandler = ({ children }) => {
   const [budget, setBudget] = useState();
   const [budgetLeft, setBudgetLeft] = useState();
 
-  // state for all particular product details
+  // state for all particular or user selected product details
   const [singleMall, setSingleMall] = useState();
   const [singleCatering, setSingleCatering] = useState();
   const [singleDecoration, setSingleDecoration] = useState();
   const [singleDj, setSingleDj] = useState();
 
-  //State for product Booking ID
+  //State for re render purpose when there is any issue with creating virtual dom we use this
+  const [render, setRender] = useState(null);
 
   const fetchUserData = async () => {
     try {
@@ -42,6 +43,9 @@ const ProviderHandler = ({ children }) => {
         singleCatering,
         singleDecoration,
         singleDj,
+        render,
+        setRender,
+
         setSingleDj,
         setSingleDecoration,
         setSingleCatering,

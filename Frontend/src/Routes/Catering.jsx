@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Nav from "../components/Nav";
 import { Container, Button } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Input, Segmented, Image } from "antd";
+import { Input, Segmented, Image, Empty } from "antd";
 import PlaceIcon from "@mui/icons-material/Place";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -12,13 +12,17 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { FormControl } from "@mui/material";
 import { Form, message } from "antd";
+import { AppContext } from "../context/AppContext";
+import Slide from "@mui/material/Slide";
 const { Search } = Input;
 
 function Catering() {
   const navigate = useNavigate();
-  const [catering, setCatering] = useState();
+  const [catering, setCatering] = useState([]);
+  const [filteredCater, setFilteredCater] = useState([]);
   const [modal, setModal] = useState();
   const [cateringId, setCateringId] = useState();
+  const { setRender } = useContext(AppContext);
 
   useEffect(() => {
     fetchCatering();
@@ -28,21 +32,19 @@ function Catering() {
       navigate("/Catering");
     }
   }, []);
+  //handle Initial Catering fetching on component load
   const fetchCatering = async () => {
     try {
       const response = await axios.get(
         "http://localhost:3000/api/catering/get"
       );
       setCatering(response.data);
+      setFilteredCater(response.data);
     } catch (e) {
       console.log(e);
     }
   };
-
-  const onSearch = (values) => {
-    console.log(values);
-  };
-
+  //This will view the particular Catering
   const singleCatering = (catering, e) => {
     if (e.target.tagName == "BUTTON") {
       return;
@@ -54,6 +56,7 @@ function Catering() {
   const handleClose = () => {
     setModal(false);
   };
+  //Handling the Catering booking after the popup
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
@@ -78,6 +81,48 @@ function Catering() {
     setCateringId(cater._id);
   };
   const onFinishFailed = () => {};
+  //Handle Searching filters
+  const onSearch = (values) => {
+    const filterCater = catering.filter((mall) => {
+      return mall.cateringName
+        .toLowerCase()
+        .includes(values.target.value.toLowerCase());
+    });
+    setFilteredCater(filterCater);
+  };
+  //Handle Sorting filters
+  const handleFilter = (values) => {
+    switch (values) {
+      case "All":
+        setFilteredCater(catering);
+
+        break;
+
+      case "A-Z":
+        setFilteredCater(
+          catering.sort((a, b) => a.cateringName.localeCompare(b.cateringName))
+        );
+        setRender(values);
+        break;
+      case "Z-A":
+        setFilteredCater(
+          catering.sort((a, b) => b.cateringName.localeCompare(a.cateringName))
+        );
+        setRender(values);
+        break;
+      case "price-low-high":
+        setFilteredCater(catering.sort((a, b) => a.price - b.price));
+        setRender(values);
+        break;
+
+      case "price-hight-low":
+        setFilteredCater(catering.sort((a, b) => b.price - a.price));
+        setRender(values);
+        break;
+      default:
+        setFilteredCater(catering);
+    }
+  };
   return (
     <div>
       <Nav></Nav>
@@ -97,62 +142,65 @@ function Catering() {
           allowClear
           enterButton="Search"
           size="large"
-          onSearch={onSearch}
+          onChange={onSearch}
         />
         <div className="d-flex justify-content-end mt-5">
           <Segmented
-            options={["Daily", "Weekly", "Monthly", "Quarterly", "Yearly"]}
-            onChange={(value) => {
-              console.log(value); // string
-            }}
+            options={["All", "A-Z", "Z-A", "price-low-high", "price-hight-low"]}
+            onChange={handleFilter}
           />
         </div>
         <div className="row mt-5 gap-1">
-          {catering &&
-            catering.map((cater, index) => (
+          {filteredCater.length > 0 ? (
+            filteredCater.map((cater, index) => (
               <>
-                <div
-                  className="card col-md-3"
-                  key={index}
-                  onClick={(e) => {
-                    singleCatering(cater, e);
-                  }}
-                >
-                  <div className="card-border-top"></div>
-                  <div className="img">
-                    <Image
-                      src={cater.cateringImages[0]}
-                      width="100%"
-                      height="150px"
-                    ></Image>
+                <Slide direction="right" in={filteredCater.length > 0}>
+                  <div
+                    className="card col-md-3"
+                    key={index}
+                    onClick={(e) => {
+                      singleCatering(cater, e);
+                    }}
+                  >
+                    <div className="card-border-top"></div>
+                    <div className="img">
+                      <Image
+                        src={cater.cateringImages[0]}
+                        width="100%"
+                        height="150px"
+                      ></Image>
+                    </div>
+                    <span>{cater.cateringName}</span>
+                    <ul>
+                      {cater.cateringMenu.map((offers, index1) => (
+                        <li key={index1}> {offers}</li>
+                      ))}
+                    </ul>
+                    <p>
+                      <PlaceIcon />
+                      {cater.cateringAddress + "," + cater.cateringCity}
+                    </p>
+                    <p className="job">Price: {cater.price}</p>
+                    {cater.bookedBy.includes(localStorage.getItem("userId")) ? (
+                      <Button disabled variant="contained">
+                        Booked
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        color="success"
+                        onClick={() => handleBook(cater)}
+                      >
+                        Book
+                      </Button>
+                    )}
                   </div>
-                  <span>{cater.cateringName}</span>
-                  <ul>
-                    {cater.cateringMenu.map((offers, index1) => (
-                      <li key={index1}> {offers}</li>
-                    ))}
-                  </ul>
-                  <p>
-                    <PlaceIcon />
-                    {cater.cateringAddress + "," + cater.cateringCity}
-                  </p>
-                  <p className="job">Price: {cater.price}</p>
-                  {cater.bookedBy.includes(localStorage.getItem("userId")) ? (
-                    <Button disabled variant="contained">
-                      Booked
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      color="success"
-                      onClick={() => handleBook(cater)}
-                    >
-                      Book
-                    </Button>
-                  )}
-                </div>
+                </Slide>
               </>
-            ))}
+            ))
+          ) : (
+            <Empty description="No Catering Available" />
+          )}
         </div>
       </Container>
       <div>

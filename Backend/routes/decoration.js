@@ -110,21 +110,15 @@ decorRouter.post("/book/:id", loginAuth, async (req, res) => {
 });
 
 //endpoint to remove Booking for a particular user
-decorRouter.post("/remove/:id", loginAuth, async (req, res) => {
+decorRouter.delete("/remove/:id", loginAuth, async (req, res) => {
   const id = req.params.id;
-  const { eventDate } = req.body;
-  console.log("hello");
 
   try {
     const selectedMall = await Decor.findById({ _id: id });
     const user = await Users.findById(req.user.id);
 
     const verifyDate = selectedMall.bookedOn.filter((dates) => {
-      if (dates.user == req.user.id) {
-        return dates.date !== eventDate;
-      } else {
-        return dates;
-      }
+      return dates.user !== req.user.id;
     });
     const resetUser = selectedMall.bookedBy.filter((id) => {
       return id != req.user.id;

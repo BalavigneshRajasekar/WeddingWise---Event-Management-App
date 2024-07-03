@@ -114,19 +114,15 @@ mallsRouter.post("/book/:id", loginAuth, async (req, res) => {
 });
 
 //endpoint to remove Booking for a particular user
-mallsRouter.post("/remove/:id", loginAuth, async (req, res) => {
+mallsRouter.delete("/remove/:id", loginAuth, async (req, res) => {
   const id = req.params.id;
-  const { eventDate } = req.body;
+
   try {
     const selectedMall = await malls.findById({ _id: id });
     const user = await Users.findById(req.user.id);
 
     const verifyDate = selectedMall.bookedOn.filter((dates) => {
-      if (dates.user == req.user.id) {
-        return dates.date !== eventDate;
-      } else {
-        return dates;
-      }
+      return dates.user !== req.user.id;
     });
     const resetUsers = selectedMall.bookedBy.filter((id) => {
       return id !== req.user.id;

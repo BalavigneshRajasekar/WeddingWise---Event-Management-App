@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
-import { Image, Segmented } from "antd";
+import { Image, Segmented, Empty } from "antd";
 import Button from "@mui/material/Button";
 import PlaceIcon from "@mui/icons-material/Place";
 import { AppContext } from "../context/AppContext";
@@ -9,25 +9,29 @@ import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
+import Slide from "@mui/material/Slide";
 
 import { Form, Input, message } from "antd";
 import { FormControl } from "@mui/material";
+const { Search } = Input;
 
 function Malls() {
-  const [malls, setMalls] = useState(null);
+  const [malls, setMalls] = useState([]);
+  const [filterMalls, setFilterMalls] = useState([]);
   const [modal, setModal] = useState(false);
   const [mallId, setMallId] = useState();
-  const { fetchUserData } = useContext(AppContext);
+  const { fetchUserData, setRender } = useContext(AppContext);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchMalls();
   }, []);
-
+  //handle Initial mall fetching on component load
   const fetchMalls = async () => {
     const response = await axios.get("http://localhost:3000/api/malls/get");
     setMalls(response.data);
+    setFilterMalls(response.data);
   };
 
   //This will view the particular Malls
@@ -38,14 +42,17 @@ function Malls() {
     navigate(`/mall/${mall._id}`);
   };
 
+  //Handle the event date Pop up
   const handleBook = (mall) => {
     setModal(true);
     setMallId(mall._id);
   };
+
   const handleClose = () => {
     setModal(false);
   };
 
+  //Handling the mall booking after the popup
   const onFinish = async (values) => {
     console.log(values);
     try {
@@ -70,62 +77,117 @@ function Malls() {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+  //Handle Searching filters
+  const onSearch = (value) => {
+    const filtermall = malls.filter((mall) => {
+      return mall.mallName
+        .toLowerCase()
+        .includes(value.target.value.toLowerCase());
+    });
+    setFilterMalls(filtermall);
+  };
+  //Handle Sorting filters
+  const handleFilters = (values) => {
+    switch (values) {
+      case "All":
+        setFilterMalls(malls);
+
+        break;
+
+      case "A-Z":
+        setFilterMalls(
+          malls.sort((a, b) => a.mallName.localeCompare(b.mallName))
+        );
+        setRender(values);
+        break;
+      case "Z-A":
+        setFilterMalls(
+          malls.sort((a, b) => b.mallName.localeCompare(a.mallName))
+        );
+        setRender(values);
+        break;
+      case "price-low-high":
+        setFilterMalls(malls.sort((a, b) => a.Price - b.Price));
+        setRender(values);
+        break;
+
+      case "price-hight-low":
+        setFilterMalls(malls.sort((a, b) => b.Price - a.Price));
+        setRender(values);
+        break;
+      default:
+        setFilterMalls(malls);
+    }
+  };
+
   return (
     <div>
+      <Search
+        className="mt-5"
+        style={{ width: "100%" }}
+        placeholder="Search Malls..."
+        allowClear
+        enterButton="Search"
+        size="large"
+        onChange={onSearch}
+      />
       <div className="d-flex justify-content-end mt-5">
         <Segmented
-          options={["Daily", "Weekly", "Monthly", "Quarterly", "Yearly"]}
-          onChange={(value) => {
-            console.log(value); // string
-          }}
+          options={["All", "A-Z", "Z-A", "price-low-high", "price-hight-low"]}
+          onChange={handleFilters}
         />
       </div>
       <div className="row mt-5 gap-1">
-        {malls &&
-          malls.map((mall, index) => (
+        {filterMalls.length > 0 ? (
+          filterMalls.map((mall, index) => (
             <>
-              <div
-                className="card col-md-3"
-                key={index}
-                onClick={(e) => {
-                  singleMall(mall, e);
-                }}
-              >
-                <div className="card-border-top"></div>
-                <div className="img">
-                  <Image
-                    src={mall.mallImages[0]}
-                    width="100%"
-                    height="150px"
-                  ></Image>
+              <Slide direction="right" in={filterMalls.length > 0}>
+                <div
+                  className="card col-md-3"
+                  key={mall.Name}
+                  onClick={(e) => {
+                    singleMall(mall, e);
+                  }}
+                >
+                  <div className="card-border-top"></div>
+                  <div className="img">
+                    <Image
+                      src={mall.mallImages[0]}
+                      width="100%"
+                      height="150px"
+                    ></Image>
+                  </div>
+                  <span>{mall.mallName}</span>
+                  <ul>
+                    {mall.amenities.map((offers, index1) => (
+                      <li key={index1}> {offers}</li>
+                    ))}
+                  </ul>
+                  <p>
+                    <PlaceIcon />
+                    {mall.mallAddress + "," + mall.mallCity}
+                  </p>
+                  <p className="job">Price: {mall.Price}</p>
+                  {mall.bookedBy.includes(localStorage.getItem("userId")) ? (
+                    <Button disabled variant="contained">
+                      Booked
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handleBook(mall)}
+                    >
+                      Book
+                    </Button>
+                  )}
                 </div>
-                <span>{mall.mallName}</span>
-                <ul>
-                  {mall.amenities.map((offers, index1) => (
-                    <li key={index1}> {offers}</li>
-                  ))}
-                </ul>
-                <p>
-                  <PlaceIcon />
-                  {mall.mallAddress + "," + mall.mallCity}
-                </p>
-                <p className="job">Price: {mall.Price}</p>
-                {mall.bookedBy.includes(localStorage.getItem("userId")) ? (
-                  <Button disabled variant="contained">
-                    Booked
-                  </Button>
-                ) : (
-                  <Button
-                    variant="contained"
-                    color="success"
-                    onClick={() => handleBook(mall)}
-                  >
-                    Book
-                  </Button>
-                )}
-              </div>
+              </Slide>
             </>
-          ))}
+          ))
+        ) : (
+          <Empty description="No malls" />
+        )}
       </div>
       <div>
         <Modal

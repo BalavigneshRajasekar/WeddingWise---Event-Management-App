@@ -110,21 +110,15 @@ djRouter.post("/book/:id", loginAuth, async (req, res) => {
 });
 
 //endpoint to remove Booking for a particular user
-djRouter.post("/remove/:id", loginAuth, async (req, res) => {
+djRouter.delete("/remove/:id", loginAuth, async (req, res) => {
   const id = req.params.id;
-  const { eventDate } = req.body;
-  console.log(eventDate);
+
   try {
-    console.log(eventDate);
     const selectedDJ = await DJ.findById({ _id: id });
     const user = await Users.findById(req.user.id);
 
     const verifyDate = selectedDJ.bookedOn.filter((dates) => {
-      if (dates.user == req.user.id) {
-        return dates.date !== eventDate;
-      } else {
-        return dates;
-      }
+      return dates.user !== req.user.id;
     });
     const resetUser = selectedDJ.bookedBy.filter((user) => {
       return user !== req.user.id;
