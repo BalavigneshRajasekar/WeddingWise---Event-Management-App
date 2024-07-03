@@ -9,6 +9,7 @@ export const AppContext = createContext();
 const ProviderHandler = ({ children }) => {
   const [budget, setBudget] = useState();
   const [budgetLeft, setBudgetLeft] = useState();
+  const [openModel, setOpenModel] = useState(false);
 
   // state for all particular or user selected product details
   const [singleMall, setSingleMall] = useState();
@@ -44,6 +45,8 @@ const ProviderHandler = ({ children }) => {
         singleDecoration,
         singleDj,
         render,
+        openModel,
+        setOpenModel,
         setRender,
 
         setSingleDj,

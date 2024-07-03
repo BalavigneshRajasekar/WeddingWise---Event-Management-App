@@ -11,7 +11,8 @@ import Malls from "../Routes/Malls";
 import { AppContext } from "../context/AppContext";
 
 function Home() {
-  const { budget, budgetLeft, fetchUserData } = useContext(AppContext);
+  const { budget, budgetLeft, fetchUserData, setOpenModel } =
+    useContext(AppContext);
 
   const navigate = useNavigate();
   // const [userToken, setUserToken] = useState(localStorage.getItem("logToken"));
@@ -24,6 +25,9 @@ function Home() {
     } else {
       navigate("/home");
     }
+    setTimeout(() => {
+      setOpenModel(true);
+    }, 5000);
   }, []);
 
   // Banners

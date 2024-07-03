@@ -17,7 +17,6 @@ import { Form, Input, Button, message } from "antd";
 import axios from "axios";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
-import Zoom from "@mui/material/Zoom";
 
 const pages = ["Home", "Catering", "Dj", "Photography", "Decorations"];
 const settings = ["Profile", "Add Budget", "Dashboard", "Logout"];
@@ -27,10 +26,9 @@ function Nav() {
   const { fetchUserData } = useContext(AppContext);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [openModel, setOpenModel] = useState(false);
   const [profileModel, setProfileModel] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
-
+  const { openModel, setOpenModel } = useContext(AppContext);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
