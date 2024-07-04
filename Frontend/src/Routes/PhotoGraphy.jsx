@@ -13,6 +13,7 @@ import { FormControl } from "@mui/material";
 import { Form } from "antd";
 import { AppContext } from "../context/AppContext";
 import { UploadOutlined } from "@ant-design/icons";
+import AddIcon from "@mui/icons-material/Add";
 
 const { Search } = Input;
 function PhotoGraphy() {
@@ -197,7 +198,7 @@ function PhotoGraphy() {
             }
             onClick={handleAddMall}
           >
-            Add
+            Add <AddIcon />
           </Button>
           <Segmented
             options={["All", "A-Z", "Z-A", "price-low-high", "price-hight-low"]}
@@ -225,7 +226,7 @@ function PhotoGraphy() {
                       ></Image>
                     </div>
                     <span>{photo.photographyName}</span>
-                    <ul>
+                    <ul className="p-3">
                       {photo.photographyType.map((offers, index1) => (
                         <li key={index1}> {offers}</li>
                       ))}

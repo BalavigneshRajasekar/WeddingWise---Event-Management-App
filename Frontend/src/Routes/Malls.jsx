@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Slide from "@mui/material/Slide";
+import AddIcon from "@mui/icons-material/Add";
 
 import { Form, Input, message } from "antd";
 import { FormControl } from "@mui/material";
@@ -190,7 +191,7 @@ function Malls() {
           }
           onClick={handleAddMall}
         >
-          Add
+          Add <AddIcon />
         </Button>
         <Segmented
           options={["All", "A-Z", "Z-A", "price-low-high", "price-hight-low"]}
@@ -218,7 +219,7 @@ function Malls() {
                     ></Image>
                   </div>
                   <span>{mall.mallName}</span>
-                  <ul>
+                  <ul className="p-3">
                     {mall.amenities.map((offers, index1) => (
                       <li key={index1}> {offers}</li>
                     ))}
@@ -315,8 +316,13 @@ function Malls() {
           aria-describedby="modal-modal-description"
         >
           <Box className="style">
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              New MAll Details :
+            <Typography
+              id="modal-modal-title"
+              variant="h6"
+              component="h2"
+              className="p-2 border border-1 shadow-sm rounded-2"
+            >
+              New Mall Details :
             </Typography>
 
             <Form

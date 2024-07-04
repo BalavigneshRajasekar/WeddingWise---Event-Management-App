@@ -15,6 +15,7 @@ import { Form, message } from "antd";
 import { AppContext } from "../context/AppContext";
 import Slide from "@mui/material/Slide";
 import { UploadOutlined } from "@ant-design/icons";
+import AddIcon from "@mui/icons-material/Add";
 const { Search } = Input;
 
 function Catering() {
@@ -198,7 +199,7 @@ function Catering() {
             }
             onClick={handleAddMall}
           >
-            Add
+            Add <AddIcon />
           </Button>
           <Segmented
             options={["All", "A-Z", "Z-A", "price-low-high", "price-hight-low"]}
@@ -226,7 +227,7 @@ function Catering() {
                       ></Image>
                     </div>
                     <span>{cater.cateringName}</span>
-                    <ul>
+                    <ul className="p-3">
                       {cater.cateringMenu.map((offers, index1) => (
                         <li key={index1}> {offers}</li>
                       ))}
@@ -323,8 +324,13 @@ function Catering() {
           aria-describedby="modal-modal-description"
         >
           <Box className="style">
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              New MAll Details :
+            <Typography
+              id="modal-modal-title"
+              variant="h6"
+              component="h2"
+              className="p-2 border border-1 shadow-sm rounded-2"
+            >
+              New Catering Details :
             </Typography>
 
             <Form
