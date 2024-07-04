@@ -9,6 +9,7 @@ import "../App.css";
 function Register() {
   const [btnLoading, setBtnLoading] = useState(false);
   const onFinish = async (values) => {
+    console.log(values);
     setBtnLoading(true);
     try {
       const response = await axios.post(
@@ -83,8 +84,8 @@ function Register() {
             />
           </Form.Item>
 
-          <Form.Item name="remember" valuePropName="checked">
-            <Checkbox>Remember me</Checkbox>
+          <Form.Item name="role" valuePropName="checked">
+            <Checkbox>Admin</Checkbox>
           </Form.Item>
           <p>
             already have an acount ?{" "}

@@ -13,11 +13,12 @@ registerRouter.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Email already exists" });
     }
     const hashPassword = await bcrypt.hash(password, 10);
+
     const newUser = new user({
       name: name,
       email: email,
       password: hashPassword,
-      role: role,
+      role: role == true && "Admin",
     });
     await newUser.save();
     res.status(201).json({ message: "User created successfully" });
