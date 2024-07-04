@@ -14,6 +14,7 @@ const mallsRouter = require("./routes/malls");
 const decorRouter = require("./routes/decoration");
 const cateringRouter = require("./routes/catering");
 const djRouter = require("./routes/dj");
+const photographyRouter = require("./routes/photoGraphy");
 
 //Middlewares
 app.use(cors());
@@ -29,6 +30,7 @@ app.use("/api/malls", mallsRouter);
 app.use("/api/decorations", decorRouter);
 app.use("/api/catering", cateringRouter);
 app.use("/api/dj", djRouter);
+app.use("/api/photography", photographyRouter);
 
 mongoose.connect(process.env.MONGODB).then(() => {
   console.log("Database Connected");
