@@ -14,12 +14,14 @@ function Dashboard() {
   const [bookedDj, setBookedDj] = useState([]);
   const [bookedDecor, setBookedDecor] = useState([]);
   const [bookedCater, setBookedCater] = useState([]);
+  const [bookedPhoto, setBookedPhoto] = useState([]);
 
   useEffect(() => {
     fetchBookedMall();
     fetchBookedDj();
     fetchBookedDecor();
     fetchCatering();
+    fetchPhoto();
   }, []);
 
   //Handle Fetching booked Mall while component load
@@ -158,6 +160,41 @@ function Dashboard() {
       message.error(e.response.data.message);
     }
   };
+
+  //Handle Fetching booked PhotoGraphy while component load
+  const fetchPhoto = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/photography/dashboard`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      setBookedPhoto(response.data);
+    } catch (e) {
+      message.error(e.response.data.message);
+    }
+  };
+  //Handle the Canceling of the Booked Photo
+  const handlePhotoCanceling = async (photo) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/api/photography/remove/${photo._id}`,
+
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      fetchPhoto();
+    } catch (e) {
+      message.error(e.response.data.message);
+    }
+  };
   return (
     <div>
       <Container>
@@ -175,6 +212,7 @@ function Dashboard() {
         {(bookedMall.length > 0) |
         (bookedDj.length > 0) |
         (bookedDecor.length > 0) |
+        (bookedPhoto.length > 0) |
         (bookedCater.length > 0) ? (
           <div>
             <div className="mt-5 ">
@@ -399,6 +437,67 @@ function Dashboard() {
                             variant="contained"
                             fullWidth
                             onClick={() => handleCaterCanceling(mall)}
+                          >
+                            Cancel Booking
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+            <div className="mt-5 ">
+              {bookedPhoto.length > 0 && (
+                <>
+                  <Typography variant="h4">Booked PhotoGraphy :</Typography>
+                  <div className="d-flex">
+                    {bookedPhoto.map((photo, index) => (
+                      <div
+                        key={index}
+                        className="card"
+                        style={{ width: "300px" }}
+                      >
+                        <div className="card-border-top"></div>
+                        <div className="img">
+                          <Image
+                            src={photo.photographyImages[0]}
+                            width="100%"
+                            height="150px"
+                          ></Image>
+                        </div>
+                        <span>{photo.photographyName}</span>
+                        <ul>
+                          {photo.photographyType.map((offers, index1) => (
+                            <li key={index1}> {offers}</li>
+                          ))}
+                        </ul>
+                        <p>
+                          <PlaceIcon />
+                          {photo.photographyAddress +
+                            "," +
+                            photo.photographyCity}
+                        </p>
+                        <p className="job">Price: {photo.Price}</p>
+                        <div>
+                          <Button
+                            color="success"
+                            variant="contained"
+                            disabled
+                            fullWidth
+                          >
+                            Scheduled ON :{" "}
+                            {photo.bookedOn.map((user) => {
+                              if (user.user == localStorage.getItem("userId")) {
+                                return user.date;
+                              }
+                            })}
+                          </Button>
+                          <Button
+                            color="error"
+                            variant="contained"
+                            fullWidth
+                            onClick={() => handlePhotoCanceling(photo)}
                           >
                             Cancel Booking
                           </Button>
