@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Container, Button, Slide, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Input, Segmented, Image, message, Empty } from "antd";
+import { Input, Segmented, Image, message, Empty, Upload } from "antd";
 import axios from "axios";
 import PlaceIcon from "@mui/icons-material/Place";
 import Nav from "../components/Nav";
@@ -12,12 +12,15 @@ import Box from "@mui/material/Box";
 import { FormControl } from "@mui/material";
 import { Form } from "antd";
 import { AppContext } from "../context/AppContext";
+import { UploadOutlined } from "@ant-design/icons";
 
 const { Search } = Input;
 function PhotoGraphy() {
   const navigate = useNavigate();
   const [photoGraphy, setPhotoGraphy] = useState([]);
   const [filteredPhoto, setFilteredPhoto] = useState([]);
+  const [formModel, setFormModel] = useState(false);
+  const [photoImages, setPhotoImages] = useState([]);
   const [id, setId] = useState();
   const [modal, setModal] = useState(false);
   const { setRender } = useContext(AppContext);
@@ -124,9 +127,45 @@ function PhotoGraphy() {
         setFilteredPhoto(photoGraphy);
     }
   };
+  const handleAddMall = () => {
+    setFormModel(true);
+  };
+  const handleFormModelClose = () => {
+    setFormModel(false);
+  };
+  const handleImage = ({ fileList }) => {
+    setPhotoImages(fileList);
+  };
+  const onFormFinish = async (values) => {
+    const formData = new FormData();
+    //Add Form field values to formData
+    for (const key in values) {
+      formData.append(key, values[key]);
+    }
+    //Add Images to formData
+    photoImages.forEach((file) => {
+      formData.append("media", file.originFileObj);
+    });
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/photography/add",
+        formData,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      setFormModel(false);
+      fetchPhotoGraphy();
+    } catch (e) {
+      message.error(e.response.data.message);
+    }
+  };
   return (
     <div>
-      <Container maxWidth="lg" className="mt-5">
+      <Container maxWidth className="mt-5">
         <Button
           startIcon={<ArrowBackIcon />}
           variant="outlined"
@@ -144,7 +183,16 @@ function PhotoGraphy() {
           size="large"
           onChange={onSearch}
         />
-        <div className="d-flex justify-content-end mt-5">
+        <div className="d-flex justify-content-between mt-5 flex-md-row flex-column-reverse gap-5">
+          <Button
+            variant="contained"
+            className={
+              localStorage.getItem("role") == "Admin" ? "d-block" : "d-none"
+            }
+            onClick={handleAddMall}
+          >
+            Add
+          </Button>
           <Segmented
             options={["All", "A-Z", "Z-A", "price-low-high", "price-hight-low"]}
             onChange={handleFilter}
@@ -253,6 +301,147 @@ function PhotoGraphy() {
                     value="Close"
                     className="bg-danger"
                     onClick={handleClose}
+                  />
+                </Form.Item>
+              </FormControl>
+            </Form>
+          </Box>
+        </Modal>
+      </div>
+      {/* Form model for adding a mall in admin login */}
+      <div>
+        <Modal
+          open={formModel}
+          onClose={handleFormModelClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box className="style">
+            <Typography
+              id="modal-modal-title"
+              variant="h6"
+              component="h2"
+              className="p-2 border border-1 shadow-sm rounded-2"
+            >
+              New Photography Details :
+            </Typography>
+
+            <Form
+              style={{ marginTop: 40, minWidth: 300 }}
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={onFormFinish}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
+            >
+              <Form.Item
+                name="photographyName"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter Photography Name",
+                  },
+                ]}
+              >
+                <Input placeholder="Photography Name" type="text" />
+              </Form.Item>
+              <Form.Item
+                name="photographyDescription"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter Description",
+                  },
+                ]}
+              >
+                <Input placeholder="Description" type="text" />
+              </Form.Item>
+              <Form.Item
+                name="photographyAddress"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter Address",
+                  },
+                ]}
+              >
+                <Input placeholder="Address" type="text" />
+              </Form.Item>
+              <Form.Item
+                name="photographyCity"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter City",
+                  },
+                ]}
+              >
+                <Input placeholder="City" type="text" />
+              </Form.Item>
+              <Form.Item
+                name="photographyContact"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter Contact email",
+                  },
+                ]}
+              >
+                <Input placeholder="Email" type="email" />
+              </Form.Item>
+
+              <Form.Item
+                name="photographyType"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter Types of photoGraphy by ,",
+                  },
+                ]}
+              >
+                <Input
+                  placeholder="pre wedding,post wedding,baby shower"
+                  type="text"
+                />
+              </Form.Item>
+              <Form.Item
+                name="Price"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter mall Price",
+                  },
+                ]}
+              >
+                <Input placeholder="Price" type="text" />
+              </Form.Item>
+              <Upload
+                fileList={photoImages}
+                beforeUpload={() => false}
+                onChange={handleImage}
+              >
+                <Button>
+                  <UploadOutlined /> Upload Images
+                </Button>
+              </Upload>
+
+              <FormControl className="d-flex mt-3">
+                <Form.Item>
+                  <Input
+                    type="Submit"
+                    placeholder="Book"
+                    name="button"
+                    value="Book"
+                    className="bg-success"
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Input
+                    type="button"
+                    value="Close"
+                    className="bg-danger"
+                    onClick={handleFormModelClose}
                   />
                 </Form.Item>
               </FormControl>
