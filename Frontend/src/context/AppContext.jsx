@@ -16,6 +16,7 @@ const ProviderHandler = ({ children }) => {
   const [singleCatering, setSingleCatering] = useState();
   const [singleDecoration, setSingleDecoration] = useState();
   const [singleDj, setSingleDj] = useState();
+  const [singlePhoto, setSinglePhoto] = useState();
 
   //State for re render purpose when there is any issue with creating virtual dom we use this
   const [render, setRender] = useState(null);
@@ -46,6 +47,8 @@ const ProviderHandler = ({ children }) => {
         singleDj,
         render,
         openModel,
+        singlePhoto,
+        setSinglePhoto,
         setOpenModel,
         setRender,
 

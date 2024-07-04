@@ -17,6 +17,7 @@ import SingleCatering from "./components/SingleCatering";
 import SingleDecoration from "./components/SingleDecoration";
 import SingleDj from "./components/SingleDj";
 import Dashboard from "./Routes/Dashboard";
+import SinglePhoto from "./components/SinglePhoto";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
                 path="/decoration/:id"
                 element={<SingleDecoration />}
               ></Route>
+              <Route path="/photo/:id" element={<SinglePhoto />}></Route>
             </Routes>
           </BrowserRouter>
         </ProviderHandler>
