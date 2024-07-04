@@ -18,17 +18,19 @@ import SingleDecoration from "./components/SingleDecoration";
 import SingleDj from "./components/SingleDj";
 import Dashboard from "./Routes/Dashboard";
 import SinglePhoto from "./components/SinglePhoto";
+import ForgotPassword from "./components/ForgotPassword";
 
 function App() {
   return (
     <>
-      <div className="py-5">
+      <div>
         <ProviderHandler>
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/register" element={<Register />}></Route>
               <Route path="/login" element={<Login />}></Route>
+              <Route path="forgotPassword" element={<ForgotPassword />}></Route>
 
               <Route path="/home" element={<Home />}></Route>
               <Route path="/dashboard" element={<Dashboard />}></Route>

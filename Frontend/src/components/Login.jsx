@@ -37,8 +37,11 @@ function Login() {
   };
   const onFinishFailed = async () => {};
   return (
-    <div className="vh-100 bg-dark">
-      <div className=" p-5  form bg-light shadow-lg rounded-5">
+    <div className="d-flex flex-wrap p-3 justify-content-between">
+      <div>
+        <img src="../login.avif" alt="" className="img" />
+      </div>
+      <div className=" p-5  bg-light shadow-lg rounded-5">
         <h5 className="border-bottom pb-3 border-success">SignIN</h5>
         <Form
           style={{ marginTop: 40, minWidth: 300 }}
@@ -87,7 +90,7 @@ function Login() {
               Register
             </Link>
           </p>
-          <a>Forgot password ?</a>
+          <Link to={"/forgotPassword"}>forgot Password ?</Link>
           <Form.Item>
             <Button
               type="primary"

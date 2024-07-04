@@ -24,11 +24,14 @@ function Register() {
   };
   const onFinishFailed = () => {};
   return (
-    <div className="vh-100 bg-dark">
-      <div className=" p-5  form bg-light shadow-lg rounded-5">
+    <div className="d-flex flex-wrap-reverse p-3 justify-content-between">
+      <div
+        className=" p-5  bg-light shadow-lg rounded-5 flex-grow-1"
+        style={{}}
+      >
         <h5 className="border-bottom pb-3 border-success">SignUP</h5>
         <Form
-          style={{ marginTop: 40, minWidth: 300 }}
+          style={{ marginTop: 40 }}
           initialValues={{
             remember: true,
           }}
@@ -100,6 +103,9 @@ function Register() {
             </Button>
           </Form.Item>
         </Form>
+      </div>
+      <div>
+        <img src="../register.avif" alt="" className="img" />
       </div>
     </div>
   );
