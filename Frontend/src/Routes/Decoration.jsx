@@ -181,7 +181,13 @@ function Decoration() {
           size="large"
           onChange={onSearch}
         />
-        <div className="d-flex justify-content-between mt-5 flex-md-row flex-column-reverse gap-5">
+        <div
+          className={
+            localStorage.getItem("role") == "User"
+              ? "d-flex justify-content-end mt-5"
+              : "d-flex justify-content-between mt-5 flex-md-row flex-column-reverse gap-5 "
+          }
+        >
           <Button
             variant="contained"
             className={
