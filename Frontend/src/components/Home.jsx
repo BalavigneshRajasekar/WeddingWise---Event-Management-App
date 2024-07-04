@@ -48,7 +48,9 @@ function Home() {
   ];
   return (
     <div>
-      <Nav></Nav>
+      <div className="position-sticky top-0 z-1">
+        <Nav></Nav>
+      </div>
       <Container maxWidth>
         <div className="d-flex justify-content-between mt-3">
           <p className="bg-success p-2 text-light rounded-3">
@@ -64,7 +66,7 @@ function Home() {
           className="slide-container mt-3 w-100 "
           style={{ maxWidth: "1000px" }}
         >
-          <Slide>
+          <Slide canSwipe duration={1000}>
             {fadeImages.map((fadeImage, index) => (
               <div key={index}>
                 <Image width="100%" height="400px" src={fadeImage.url} />

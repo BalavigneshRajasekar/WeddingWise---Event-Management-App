@@ -166,6 +166,9 @@ function PhotoGraphy() {
   };
   return (
     <div>
+      <div className="position-sticky top-0 z-1">
+        <Nav></Nav>
+      </div>
       <Container maxWidth className="mt-5">
         <Button
           startIcon={<ArrowBackIcon />}

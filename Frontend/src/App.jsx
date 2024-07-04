@@ -22,7 +22,7 @@ import SinglePhoto from "./components/SinglePhoto";
 function App() {
   return (
     <>
-      <div>
+      <div className="py-5">
         <ProviderHandler>
           <BrowserRouter>
             <Routes>
