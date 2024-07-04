@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  resetCode: {
+    type: String,
+    default: null,
+  },
 
   created_at: {
     type: Date,

@@ -9,6 +9,8 @@ require("dotenv").config();
 //files
 const registerRouter = require("./routes/register");
 const loginRouter = require("./routes/login");
+const resetRouter = require("./routes/resetLink");
+const resetPassword = require("./routes/resetPassword");
 const budgetRouter = require("./routes/budget");
 const mallsRouter = require("./routes/malls");
 const decorRouter = require("./routes/decoration");
@@ -20,11 +22,14 @@ const photographyRouter = require("./routes/photoGraphy");
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
 app.use(express.static("./public"));
 
 //Routes
 app.use("/api/register", registerRouter);
 app.use("/api/login", loginRouter);
+app.use("/api/password", resetRouter);
+app.use("/api/reset", resetPassword);
 app.use("/api/budget", budgetRouter);
 app.use("/api/malls", mallsRouter);
 app.use("/api/decorations", decorRouter);
