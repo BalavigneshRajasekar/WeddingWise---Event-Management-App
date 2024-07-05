@@ -103,7 +103,9 @@ decorRouter.post("/book/:id", loginAuth, async (req, res) => {
     user.budgetLeft = user.budgetLeft - selectedMall.Price;
     await user.save();
     await selectedMall.save();
-    res.status(200).send({ message: "Decor booked successfully" });
+    res.status(200).send({
+      message: "Booked successfully our Admin will contact you shortly",
+    });
   } catch (err) {
     res.status(500).send({ message: "server error: ", err: err.message });
   }
@@ -162,5 +164,70 @@ decorRouter.get("/get/:id", async (req, res) => {
     res.status(500).send({ message: "server error", error: err });
   }
 });
+
+//endpoint to edit DJ Admin
+decorRouter.put(
+  "/edit/:id",
+  loginAuth,
+  roleAuth("Admin"),
+  upload.single("media"),
+  async (req, res) => {
+    const { id } = req.params;
+    const {
+      decorName,
+      DecorDescription,
+      decorAddress,
+      decorCity,
+      decorType,
+      decorContact,
+      Price,
+    } = req.body;
+
+    try {
+      const updatedMall = await Decor.findByIdAndUpdate(
+        id,
+        {
+          decorName,
+          DecorDescription,
+          decorAddress,
+          decorCity,
+          decorContact,
+          Price,
+          decorType: decorType.split(","),
+          decorImages: `http://localhost:3000/mallImages/${req.file.filename}`,
+        },
+        { new: true, runValidators: true }
+      );
+
+      return res
+        .status(200)
+        .send({ message: "update successfully", data: updatedMall });
+    } catch (e) {
+      return res
+        .status(400)
+        .send({ message: "Update failed", data: e.message });
+    }
+  }
+);
+
+// Endpoint to delete the photography
+decorRouter.delete(
+  "/delete/:id",
+  loginAuth,
+  roleAuth("Admin"),
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      const mall = await Decor.findByIdAndDelete(id);
+      console.log(mall);
+      if (!mall) return res.status(404).send({ message: "Decor not found" });
+      res.status(200).send({ message: "Decor deleted successfully" });
+    } catch (e) {
+      return res
+        .status(500)
+        .send({ message: "Delete failed", data: e.message });
+    }
+  }
+);
 
 module.exports = decorRouter;

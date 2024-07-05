@@ -103,7 +103,9 @@ djRouter.post("/book/:id", loginAuth, async (req, res) => {
     await user.save();
     await selectedDJ.save();
 
-    res.status(200).send({ message: "DJ booked successfully" });
+    res.status(200).send({
+      message: "Booked successfully our Admin will contact you shortly",
+    });
   } catch (err) {
     res.status(500).send({ message: "server error: ", err: err.message });
   }
@@ -160,5 +162,70 @@ djRouter.get("/get/:id", async (req, res) => {
     res.status(500).send({ message: "server error: ", err: err.message });
   }
 });
+
+//endpoint to edit DJ Admin
+djRouter.put(
+  "/edit/:id",
+  loginAuth,
+  roleAuth("Admin"),
+  upload.single("media"),
+  async (req, res) => {
+    const { id } = req.params;
+    const {
+      djName,
+      djDescription,
+      djAddress,
+      djCity,
+      djContact,
+      price,
+      musicType,
+    } = req.body;
+
+    try {
+      const updatedMall = await DJ.findByIdAndUpdate(
+        id,
+        {
+          djName,
+          djDescription,
+          djAddress,
+          djCity,
+          djContact,
+          price,
+          musicType: musicType.split(","),
+          djImages: `http://localhost:3000/mallImages/${req.file.filename}`,
+        },
+        { new: true, runValidators: true }
+      );
+
+      return res
+        .status(200)
+        .send({ message: "update successfully", data: updatedMall });
+    } catch (e) {
+      return res
+        .status(400)
+        .send({ message: "Update failed", data: e.message });
+    }
+  }
+);
+
+// Endpoint to delete the Dj
+djRouter.delete(
+  "/delete/:id",
+  loginAuth,
+  roleAuth("Admin"),
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      const mall = await DJ.findByIdAndDelete(id);
+      console.log(mall);
+      if (!mall) return res.status(404).send({ message: "DJ not found" });
+      res.status(200).send({ message: "DJ deleted successfully" });
+    } catch (e) {
+      return res
+        .status(500)
+        .send({ message: "Delete failed", data: e.message });
+    }
+  }
+);
 
 module.exports = djRouter;

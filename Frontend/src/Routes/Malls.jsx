@@ -11,10 +11,16 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Slide from "@mui/material/Slide";
 import AddIcon from "@mui/icons-material/Add";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 
 import { Form, Input, message } from "antd";
-import { FormControl } from "@mui/material";
-import { UploadOutlined } from "@ant-design/icons";
+import { FormControl, IconButton } from "@mui/material";
+import {
+  DeleteFilled,
+  DeleteOutlined,
+  EditOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 const { Search } = Input;
 
 function Malls() {
@@ -40,7 +46,8 @@ function Malls() {
 
   //This will view the particular Malls
   const singleMall = (mall, e) => {
-    if (e.target.tagName == "BUTTON") {
+    console.log(e.target.tagName);
+    if (e.target.tagName == "BUTTON" || e.target.tagName == "svg") {
       return;
     }
     navigate(`/mall/${mall._id}`);
@@ -211,7 +218,21 @@ function Malls() {
                   }}
                 >
                   <div className="card-border-top"></div>
-                  <div className="img">
+                  <div
+                    className={
+                      localStorage.getItem("role") == "Admin"
+                        ? "d-flex justify-content-end"
+                        : "d-none"
+                    }
+                  >
+                    <IconButton color="success" size="small">
+                      <EditOutlined />
+                    </IconButton>
+                    <IconButton color="error" size="small">
+                      <DeleteOutlined />
+                    </IconButton>
+                  </div>
+                  <div className="img ">
                     <Image
                       src={mall.mallImages[0]}
                       width="100%"

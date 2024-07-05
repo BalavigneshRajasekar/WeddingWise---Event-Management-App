@@ -107,9 +107,10 @@ photographyRouter.post("/book/:id", loginAuth, async (req, res) => {
     selectedPhoto.bookedBy.push(req.user.id);
     await selectedPhoto.save();
 
-    res
-      .status(200)
-      .send({ message: "Mall booked successfully", mallId: selectedPhoto._id });
+    res.status(200).send({
+      message: "Booked successfully our Admin will contact you shortly",
+      mallId: selectedPhoto._id,
+    });
   } catch (err) {
     res.status(500).send({ message: "server error: ", err: err.message });
   }
@@ -168,5 +169,71 @@ photographyRouter.get("/get/:id", async (req, res) => {
     res.status(500).send({ message: "server error: ", err: err.message });
   }
 });
+
+//endpoint to edit photography Admin
+photographyRouter.put(
+  "/edit/:id",
+  loginAuth,
+  roleAuth("Admin"),
+  upload.single("media"),
+  async (req, res) => {
+    const { id } = req.params;
+    const {
+      photographyName,
+      photographyAddress,
+      photographyCity,
+      photographyContact,
+      photographyType,
+      photographyDescription,
+      Price,
+    } = req.body;
+
+    try {
+      const updatedMall = await Photography.findByIdAndUpdate(
+        id,
+        {
+          photographyName,
+          photographyAddress,
+          photographyCity,
+          photographyContact,
+          photographyType: photographyType.split(","),
+          photographyDescription,
+          photographyImages: `http://localhost:3000/mallImages/${req.file.filename}`,
+          Price,
+        },
+        { new: true, runValidators: true }
+      );
+
+      return res
+        .status(200)
+        .send({ message: "update successfully", data: updatedMall });
+    } catch (e) {
+      return res
+        .status(400)
+        .send({ message: "Update failed", data: e.message });
+    }
+  }
+);
+
+// Endpoint to delete the photography
+photographyRouter.delete(
+  "/delete/:id",
+  loginAuth,
+  roleAuth("Admin"),
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      const mall = await Photography.findByIdAndDelete(id);
+      console.log(mall);
+      if (!mall)
+        return res.status(404).send({ message: "Photography not found" });
+      res.status(200).send({ message: "Photography deleted successfully" });
+    } catch (e) {
+      return res
+        .status(500)
+        .send({ message: "Delete failed", data: e.message });
+    }
+  }
+);
 
 module.exports = photographyRouter;

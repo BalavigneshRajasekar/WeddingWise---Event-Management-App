@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useEffect, useState } from "react";
 import Nav from "../components/Nav";
-import { Container, Button } from "@mui/material";
+import { Container, Button, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Input, Segmented, Image, Empty, Upload } from "antd";
@@ -14,7 +14,11 @@ import Box from "@mui/material/Box";
 import { FormControl } from "@mui/material";
 import { Form, message } from "antd";
 import Slide from "@mui/material/Slide";
-import { UploadOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import AddIcon from "@mui/icons-material/Add";
 const { Search } = Input;
 
@@ -47,7 +51,7 @@ function Decoration() {
   };
   //This will view the particular Decoration
   const singleDecor = (decor, e) => {
-    if (e.target.tagName == "BUTTON") {
+    if (e.target.tagName == "BUTTON" || e.target.tagName == "svg") {
       return;
     }
     console.log(decor);
@@ -218,6 +222,20 @@ function Decoration() {
                     }}
                   >
                     <div className="card-border-top"></div>
+                    <div
+                      className={
+                        localStorage.getItem("role") == "Admin"
+                          ? "d-flex justify-content-end"
+                          : "d-none"
+                      }
+                    >
+                      <IconButton color="success" size="small">
+                        <EditOutlined />
+                      </IconButton>
+                      <IconButton color="error" size="small">
+                        <DeleteOutlined />
+                      </IconButton>
+                    </div>
                     <div className="img">
                       <Image
                         src={decor.decorImages[0]}

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useEffect, useState } from "react";
 import Nav from "../components/Nav";
-import { Container, Button } from "@mui/material";
+import { Container, Button, IconButton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Input, Segmented, Image, Empty, Upload } from "antd";
 import PlaceIcon from "@mui/icons-material/Place";
@@ -14,7 +14,11 @@ import { FormControl } from "@mui/material";
 import { Form, message } from "antd";
 import { AppContext } from "../context/AppContext";
 import Slide from "@mui/material/Slide";
-import { UploadOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import AddIcon from "@mui/icons-material/Add";
 const { Search } = Input;
 
@@ -50,7 +54,7 @@ function Catering() {
   };
   //This will view the particular Catering
   const singleCatering = (catering, e) => {
-    if (e.target.tagName == "BUTTON") {
+    if (e.target.tagName == "BUTTON" || e.target.tagName == "svg") {
       return;
     }
     console.log(catering);
@@ -221,6 +225,20 @@ function Catering() {
                     }}
                   >
                     <div className="card-border-top"></div>
+                    <div
+                      className={
+                        localStorage.getItem("role") == "Admin"
+                          ? "d-flex justify-content-end"
+                          : "d-none"
+                      }
+                    >
+                      <IconButton color="success" size="small">
+                        <EditOutlined />
+                      </IconButton>
+                      <IconButton color="error" size="small">
+                        <DeleteOutlined />
+                      </IconButton>
+                    </div>
                     <div className="img">
                       <Image
                         src={cater.cateringImages[0]}

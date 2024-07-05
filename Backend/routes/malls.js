@@ -105,9 +105,10 @@ mallsRouter.post("/book/:id", loginAuth, async (req, res) => {
     selectedMall.bookedBy.push(req.user.id);
     await selectedMall.save();
 
-    res
-      .status(200)
-      .send({ message: "Mall booked successfully", mallId: selectedMall._id });
+    res.status(200).send({
+      message: "Booked successfully our Admin will contact you shortly",
+      mallId: selectedMall._id,
+    });
   } catch (err) {
     res.status(500).send({ message: "server error: ", err: err.message });
   }
@@ -166,5 +167,70 @@ mallsRouter.get("/get/:id", async (req, res) => {
     res.status(500).send({ message: "server error: ", err: err.message });
   }
 });
+
+//endpoint to edit Malls Admin
+mallsRouter.put(
+  "/edit/:id",
+  loginAuth,
+  roleAuth("Admin"),
+  upload.single("media"),
+  async (req, res) => {
+    const { id } = req.params;
+    const {
+      mallName,
+      mallAddress,
+      mallCity,
+      mallContact,
+      spacing,
+      amenities,
+      Price,
+    } = req.body;
+
+    try {
+      const updatedMall = await malls.findByIdAndUpdate(
+        id,
+        {
+          mallName,
+          mallAddress,
+          mallCity,
+          mallContact,
+          spacing,
+          amenities: amenities.split(","),
+          mallImages: `http://localhost:3000/mallImages/${req.file.filename}`,
+          Price,
+        },
+        { new: true, runValidators: true }
+      );
+
+      return res
+        .status(200)
+        .send({ message: "update successfully", data: updatedMall });
+    } catch (e) {
+      return res
+        .status(400)
+        .send({ message: "Update failed", data: e.message });
+    }
+  }
+);
+
+// Endpoint to delete the malls
+mallsRouter.delete(
+  "/delete/:id",
+  loginAuth,
+  roleAuth("Admin"),
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      const mall = await malls.findByIdAndDelete(id);
+      console.log(mall);
+      if (!mall) return res.status(404).send({ message: "Mall not found" });
+      res.status(200).send({ message: "Mall deleted successfully" });
+    } catch (e) {
+      return res
+        .status(500)
+        .send({ message: "Delete failed", data: e.message });
+    }
+  }
+);
 
 module.exports = mallsRouter;

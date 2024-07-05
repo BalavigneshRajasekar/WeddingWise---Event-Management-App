@@ -25,9 +25,11 @@ function Home() {
     } else {
       navigate("/home");
     }
-    setTimeout(() => {
-      setOpenModel(true);
-    }, 5000);
+    if (budgetLeft <= 0) {
+      setTimeout(() => {
+        setOpenModel(true);
+      }, 5000);
+    }
   }, []);
 
   // Banners
@@ -48,7 +50,7 @@ function Home() {
   ];
   return (
     <div>
-      <div className="position-sticky top-0 z-1">
+      <div className="position-sticky top-0 z-3">
         <Nav></Nav>
       </div>
       <Container maxWidth>

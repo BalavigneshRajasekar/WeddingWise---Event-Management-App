@@ -104,7 +104,9 @@ cateringRouter.post("/book/:id", loginAuth, async (req, res) => {
     user.budgetSpent = selectedCater.price + user.budgetSpent;
     user.budgetLeft = user.budgetLeft - selectedCater.price;
     await user.save();
-    res.status(200).send({ message: "Catering booked successfully" });
+    res.status(200).send({
+      message: "Booked successfully our Admin will contact you shortly",
+    });
   } catch (err) {
     res.status(500).send({ message: "server error: ", err: err.message });
   }
@@ -164,5 +166,70 @@ cateringRouter.get("/get/:id", async (req, res) => {
     res.status(500).send({ message: "Server error: " + err.message });
   }
 });
+
+//endpoint to edit catering Admin
+cateringRouter.put(
+  "/edit/:id",
+  loginAuth,
+  roleAuth("Admin"),
+  upload.single("media"),
+  async (req, res) => {
+    const { id } = req.params;
+    const {
+      cateringName,
+      cateringDescription,
+      cateringAddress,
+      cateringCity,
+      cateringMenu,
+      cateringContact,
+      price,
+    } = req.body;
+
+    try {
+      const updatedMall = await Catering.findByIdAndUpdate(
+        id,
+        {
+          cateringName,
+          cateringDescription,
+          cateringAddress,
+          cateringCity,
+          cateringMenu: cateringMenu.split(","),
+          cateringContact,
+          price,
+          decorImages: `http://localhost:3000/mallImages/${req.file.filename}`,
+        },
+        { new: true, runValidators: true }
+      );
+
+      return res
+        .status(200)
+        .send({ message: "update successfully", data: updatedMall });
+    } catch (e) {
+      return res
+        .status(400)
+        .send({ message: "Update failed", data: e.message });
+    }
+  }
+);
+
+// Endpoint to delete the catering
+cateringRouter.delete(
+  "/delete/:id",
+  loginAuth,
+  roleAuth("Admin"),
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      const mall = await Catering.findByIdAndDelete(id);
+      console.log(mall);
+      if (!mall) return res.status(404).send({ message: "Catering not found" });
+      res.status(200).send({ message: "Catering deleted successfully" });
+    } catch (e) {
+      return res
+        .status(500)
+        .send({ message: "Delete failed", data: e.message });
+    }
+  }
+);
 
 module.exports = cateringRouter;

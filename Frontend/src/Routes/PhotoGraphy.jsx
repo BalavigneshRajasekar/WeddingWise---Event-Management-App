@@ -1,6 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useEffect, useState } from "react";
-import { Container, Button, Slide, Typography } from "@mui/material";
+import {
+  Container,
+  Button,
+  Slide,
+  Typography,
+  IconButton,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Input, Segmented, Image, message, Empty, Upload } from "antd";
@@ -12,7 +18,11 @@ import Box from "@mui/material/Box";
 import { FormControl } from "@mui/material";
 import { Form } from "antd";
 import { AppContext } from "../context/AppContext";
-import { UploadOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import AddIcon from "@mui/icons-material/Add";
 
 const { Search } = Input;
@@ -43,7 +53,7 @@ function PhotoGraphy() {
   };
   //This will view the particular Photo
   const singlePhoto = (photo, e) => {
-    if (e.target.tagName == "BUTTON") {
+    if (e.target.tagName == "BUTTON" || e.target.tagName == "svg") {
       return;
     }
 
@@ -221,6 +231,20 @@ function PhotoGraphy() {
                     }}
                   >
                     <div className="card-border-top"></div>
+                    <div
+                      className={
+                        localStorage.getItem("role") == "Admin"
+                          ? "d-flex justify-content-end"
+                          : "d-none"
+                      }
+                    >
+                      <IconButton color="success" size="small">
+                        <EditOutlined />
+                      </IconButton>
+                      <IconButton color="error" size="small">
+                        <DeleteOutlined />
+                      </IconButton>
+                    </div>
                     <div className="img">
                       <Image
                         src={photo.photographyImages[0]}

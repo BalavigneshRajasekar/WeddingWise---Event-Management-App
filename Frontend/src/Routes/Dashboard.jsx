@@ -198,7 +198,11 @@ function Dashboard() {
   return (
     <div>
       <Container>
-        <Typography variant="h4" sx={{ marginTop: 5 }}>
+        <Typography
+          variant="h4"
+          sx={{ marginTop: 5, backgroundColor: "blueviolet", fontWeight: 700 }}
+          className="p-3 text-light"
+        >
           Dashboard
         </Typography>
         <Button
@@ -218,7 +222,7 @@ function Dashboard() {
             <div className="mt-5 ">
               {bookedMall.length > 0 && (
                 <>
-                  <Typography variant="h4">Booked Mall :</Typography>
+                  <Typography variant="h6">Booked Mall :</Typography>
                   <div className="d-flex">
                     {bookedMall.map((mall, index) => (
                       <div
@@ -273,7 +277,7 @@ function Dashboard() {
             <div className="mt-5 ">
               {bookedDj.length > 0 && (
                 <>
-                  <Typography variant="h4">Booked Dj :</Typography>
+                  <Typography variant="h6">Booked Dj :</Typography>
                   <div className="d-flex">
                     {bookedDj.map((mall, index) => (
                       <div
@@ -332,7 +336,7 @@ function Dashboard() {
             <div className="mt-5 ">
               {bookedDecor.length > 0 && (
                 <>
-                  <Typography variant="h4">Booked Decor :</Typography>
+                  <Typography variant="h6">Booked Decor :</Typography>
                   <div className="d-flex">
                     {bookedDecor.map((mall, index) => (
                       <div
@@ -391,7 +395,7 @@ function Dashboard() {
             <div className="mt-5 ">
               {bookedCater.length > 0 && (
                 <>
-                  <Typography variant="h4">Booked Catering :</Typography>
+                  <Typography variant="h6">Booked Catering :</Typography>
                   <div className="d-flex">
                     {bookedCater.map((mall, index) => (
                       <div
@@ -450,7 +454,7 @@ function Dashboard() {
             <div className="mt-5 ">
               {bookedPhoto.length > 0 && (
                 <>
-                  <Typography variant="h4">Booked PhotoGraphy :</Typography>
+                  <Typography variant="h6">Booked PhotoGraphy :</Typography>
                   <div className="d-flex">
                     {bookedPhoto.map((photo, index) => (
                       <div
