@@ -173,6 +173,10 @@ function Malls() {
     setMallImages(fileList);
     console.log(mallImages);
   };
+  const handleEdit = () => {
+    setFormModel(true);
+  };
+  const handleDelete = () => {};
   return (
     <div>
       <Search
@@ -225,10 +229,18 @@ function Malls() {
                         : "d-none"
                     }
                   >
-                    <IconButton color="success" size="small">
+                    <IconButton
+                      color="success"
+                      size="small"
+                      onClick={handleEdit}
+                    >
                       <EditOutlined />
                     </IconButton>
-                    <IconButton color="error" size="small">
+                    <IconButton
+                      color="error"
+                      size="small"
+                      onClick={handleDelete}
+                    >
                       <DeleteOutlined />
                     </IconButton>
                   </div>
