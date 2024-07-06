@@ -190,9 +190,11 @@ cateringRouter.put(
         cateringContact: cateringContact,
       });
       if (verify) {
-        return res
-          .status(400)
-          .send({ message: "contact already used in some vendors" });
+        if (verify._id !== id) {
+          return res
+            .status(400)
+            .send({ message: "contact already used in some vendors" });
+        }
       }
       const updatedMall = await Catering.findByIdAndUpdate(
         id,

@@ -188,9 +188,11 @@ mallsRouter.put(
         mallContact: mallContact,
       });
       if (verify) {
-        return res
-          .status(400)
-          .send({ message: "contact already used in some vendors" });
+        if (verify._id !== id) {
+          return res
+            .status(400)
+            .send({ message: "contact already used in some vendors" });
+        }
       }
       const updatedMall = await malls.findByIdAndUpdate(
         id,
