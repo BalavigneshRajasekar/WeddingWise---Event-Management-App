@@ -29,7 +29,6 @@ mallsRouter.post(
       if (verify) {
         return res.status(400).send({ message: "Mall already exists" });
       }
-
       const newMall = new malls({
         mallName,
         mallAddress,
@@ -40,9 +39,7 @@ mallsRouter.post(
         amenities: amenities.split(","),
         Price,
       });
-
       await newMall.save();
-
       res.status(200).send({ message: "Mall registered successfully" });
     } catch (err) {
       res.status(500).send({ message: "server error: ", err: err.message });
