@@ -34,7 +34,7 @@ mallsRouter.post(
         mallName,
         mallAddress,
         mallCity,
-        mallImages: `http://localhost:3000/mallImages/${req.file.filename}`,
+        mallImages: `https://apieventmanagement.onrender.com/mallImages/${req.file.filename}`,
         mallContact,
         spacing,
         amenities: amenities.split(","),
@@ -204,7 +204,7 @@ mallsRouter.put(
           mallContact,
           spacing,
           amenities: amenities.split(","),
-          mallImages: `http://localhost:3000/mallImages/${req.file.filename}`,
+          mallImages: `https://apieventmanagement.onrender.com/mallImages/${req.file.filename}`,
           Price,
         },
         { new: true, runValidators: true }

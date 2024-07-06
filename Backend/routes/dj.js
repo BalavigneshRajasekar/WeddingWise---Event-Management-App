@@ -39,7 +39,7 @@ djRouter.post(
         djCity,
         djContact,
         musicType: musicType.split(","),
-        djImages: `http://localhost:3000/mallImages/${req.file.filename}`,
+        djImages: `https://apieventmanagement.onrender.com/mallImages/${req.file.filename}`,
         price,
       });
 
@@ -200,7 +200,7 @@ djRouter.put(
           djContact,
           price,
           musicType: musicType.split(","),
-          djImages: `http://localhost:3000/mallImages/${req.file.filename}`,
+          djImages: `https://apieventmanagement.onrender.com/mallImages/${req.file.filename}`,
         },
         { new: true, runValidators: true }
       );

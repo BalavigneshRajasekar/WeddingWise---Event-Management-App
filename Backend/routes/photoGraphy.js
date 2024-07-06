@@ -37,7 +37,7 @@ photographyRouter.post(
         photographyAddress,
         photographyDescription,
         photographyCity,
-        photographyImages: `http://localhost:3000/mallImages/${req.file.filename}`,
+        photographyImages: `https://apieventmanagement.onrender.com/mallImages/${req.file.filename}`,
         photographyContact,
         photographyType: photographyType.split(","),
         Price,
@@ -206,7 +206,7 @@ photographyRouter.put(
           photographyContact,
           photographyType: photographyType.split(","),
           photographyDescription,
-          photographyImages: `http://localhost:3000/mallImages/${req.file.filename}`,
+          photographyImages: `https://apieventmanagement.onrender.com/mallImages/${req.file.filename}`,
           Price,
         },
         { new: true, runValidators: true }

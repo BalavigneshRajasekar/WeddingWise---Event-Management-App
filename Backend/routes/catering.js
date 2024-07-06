@@ -39,7 +39,7 @@ cateringRouter.post(
         cateringCity,
         cateringContact,
         cateringMenu: cateringMenu.split(","),
-        cateringImages: `http://localhost:3000/mallImages/${req.file.filename}`,
+        cateringImages: `https://apieventmanagement.onrender.com/mallImages/${req.file.filename}`,
         price,
       });
 
@@ -204,7 +204,7 @@ cateringRouter.put(
           cateringMenu: cateringMenu.split(","),
           cateringContact,
           price,
-          decorImages: `http://localhost:3000/mallImages/${req.file.filename}`,
+          decorImages: `https://apieventmanagement.onrender.com/mallImages/${req.file.filename}`,
         },
         { new: true, runValidators: true }
       );
