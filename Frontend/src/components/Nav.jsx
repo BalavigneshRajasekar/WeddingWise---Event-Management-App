@@ -88,7 +88,7 @@ function Nav() {
     setBtnLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/budget/add",
+        "https://event-management-api-ms52.onrender.com/api/budget/add",
         values,
         {
           headers: {

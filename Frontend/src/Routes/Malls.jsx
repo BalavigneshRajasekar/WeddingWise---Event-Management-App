@@ -40,7 +40,9 @@ function Malls() {
   }, []);
   //handle Initial mall fetching on component load
   const fetchMalls = async () => {
-    const response = await axios.get("http://localhost:3000/api/malls/get");
+    const response = await axios.get(
+      "https://event-management-api-ms52.onrender.com/api/malls/get"
+    );
     setMalls(response.data);
     setFilterMalls(response.data);
   };
@@ -69,7 +71,7 @@ function Malls() {
     console.log(values);
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/malls/book/${mallId}`,
+        `https://event-management-api-ms52.onrender.com/api/malls/book/${mallId}`,
         values,
         {
           headers: {
@@ -154,7 +156,7 @@ function Malls() {
     });
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/malls/add",
+        "https://event-management-api-ms52.onrender.com/api/malls/add",
         formData,
         {
           headers: {
@@ -189,7 +191,7 @@ function Malls() {
   const handleDelete = async (mall) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/malls/delete/${mall._id}`,
+        `https://event-management-api-ms52.onrender.com/api/malls/delete/${mall._id}`,
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
@@ -216,7 +218,7 @@ function Malls() {
     });
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/malls/edit/${editValues._id}`,
+        `https://event-management-api-ms52.onrender.com/api/malls/edit/${editValues._id}`,
         formData,
         {
           headers: {

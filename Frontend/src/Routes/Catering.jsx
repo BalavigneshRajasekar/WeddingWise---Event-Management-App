@@ -45,7 +45,7 @@ function Catering() {
   const fetchCatering = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/catering/get"
+        "https://event-management-api-ms52.onrender.com/api/catering/get"
       );
       setCatering(response.data);
       setFilteredCater(response.data);
@@ -69,7 +69,7 @@ function Catering() {
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/catering/book/${cateringId}`,
+        `https://event-management-api-ms52.onrender.com/api/catering/book/${cateringId}`,
         values,
         {
           headers: {
@@ -154,7 +154,7 @@ function Catering() {
     });
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/catering/add",
+        "https://event-management-api-ms52.onrender.com/api/catering/add",
         formData,
         {
           headers: {
@@ -183,7 +183,7 @@ function Catering() {
   const handleDelete = async (cater) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/catering/delete/${cater._id}`,
+        `https://event-management-api-ms52.onrender.com/api/catering/delete/${cater._id}`,
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
@@ -210,7 +210,7 @@ function Catering() {
     });
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/catering/edit/${editValues._id}`,
+        `https://event-management-api-ms52.onrender.com/api/catering/edit/${editValues._id}`,
         formData,
         {
           headers: {

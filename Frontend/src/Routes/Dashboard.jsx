@@ -28,7 +28,7 @@ function Dashboard() {
   const fetchBookedMall = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/malls/dashboard",
+        "https://event-management-api-ms52.onrender.com/api/malls/dashboard",
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
@@ -44,7 +44,7 @@ function Dashboard() {
   const handleMallCanceling = async (mall) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/malls/remove/${mall._id}`,
+        `https://event-management-api-ms52.onrender.com/api/malls/remove/${mall._id}`,
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
@@ -61,7 +61,7 @@ function Dashboard() {
   const fetchBookedDj = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/dj/dashboard",
+        "https://event-management-api-ms52.onrender.com/api/dj/dashboard",
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
@@ -77,7 +77,7 @@ function Dashboard() {
   const handleDjCanceling = async (dj) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/dj/remove/${dj._id}`,
+        `https://event-management-api-ms52.onrender.com/api/dj/remove/${dj._id}`,
 
         {
           headers: {
@@ -95,7 +95,7 @@ function Dashboard() {
   const fetchBookedDecor = async (mall) => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/decorations/dashboard",
+        "https://event-management-api-ms52.onrender.com/api/decorations/dashboard",
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
@@ -112,7 +112,7 @@ function Dashboard() {
     console.log(bookedDecor);
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/decorations/remove/${decor._id}`,
+        `https://event-management-api-ms52.onrender.com/api/decorations/remove/${decor._id}`,
 
         {
           headers: {
@@ -130,7 +130,7 @@ function Dashboard() {
   const fetchCatering = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/catering/dashboard`,
+        `https://event-management-api-ms52.onrender.com/api/catering/dashboard`,
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
@@ -146,7 +146,7 @@ function Dashboard() {
   const handleCaterCanceling = async (mall) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/catering/remove/${mall._id}`,
+        `https://event-management-api-ms52.onrender.com/api/catering/remove/${mall._id}`,
 
         {
           headers: {
@@ -165,7 +165,7 @@ function Dashboard() {
   const fetchPhoto = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/photography/dashboard`,
+        `https://event-management-api-ms52.onrender.com/api/photography/dashboard`,
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
@@ -181,7 +181,7 @@ function Dashboard() {
   const handlePhotoCanceling = async (photo) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/photography/remove/${photo._id}`,
+        `https://event-management-api-ms52.onrender.com/api/photography/remove/${photo._id}`,
 
         {
           headers: {

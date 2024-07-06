@@ -30,7 +30,7 @@ function SinglePhoto() {
   const fetchPhoto = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/photography/get/${id}`
+        `https://event-management-api-ms52.onrender.com/api/photography/get/${id}`
       );
       setSinglePhoto(response.data);
     } catch (e) {
@@ -45,7 +45,7 @@ function SinglePhoto() {
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/photography/book/${id}`,
+        `https://event-management-api-ms52.onrender.com/api/photography/book/${id}`,
         values,
         {
           headers: {

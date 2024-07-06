@@ -29,7 +29,7 @@ function SingleCatering() {
   const fetchCatering = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/catering/get/${id}`
+        `https://event-management-api-ms52.onrender.com/api/catering/get/${id}`
       );
       setSingleCatering(response.data);
     } catch (e) {
@@ -44,7 +44,7 @@ function SingleCatering() {
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/catering/book/${id}`,
+        `https://event-management-api-ms52.onrender.com/api/catering/book/${id}`,
         values,
         {
           headers: {

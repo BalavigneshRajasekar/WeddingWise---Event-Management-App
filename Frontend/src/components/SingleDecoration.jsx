@@ -29,7 +29,7 @@ function SingleDecoration() {
   const fetchDecor = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/decorations/get/${id}`
+        `https://event-management-api-ms52.onrender.com/api/decorations/get/${id}`
       );
       setSingleDecoration(response.data);
     } catch (err) {
@@ -44,7 +44,7 @@ function SingleDecoration() {
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/decorations/book/${id}`,
+        `https://event-management-api-ms52.onrender.com/api/decorations/book/${id}`,
         values,
         {
           headers: {

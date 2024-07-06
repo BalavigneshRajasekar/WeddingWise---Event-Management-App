@@ -43,7 +43,9 @@ function Dj() {
   }, []);
   //handle Initial DJ fetching on component load
   const fetchDj = async () => {
-    const response = await axios.get("http://localhost:3000/api/dj/get");
+    const response = await axios.get(
+      "https://event-management-api-ms52.onrender.com/api/dj/get"
+    );
     setDj(response.data);
     setFilteredDj(response.data);
   };
@@ -63,7 +65,7 @@ function Dj() {
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/dj/book/${id}`,
+        `https://event-management-api-ms52.onrender.com/api/dj/book/${id}`,
         values,
         {
           headers: {
@@ -147,7 +149,7 @@ function Dj() {
     });
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/dj/add",
+        "https://event-management-api-ms52.onrender.com/api/dj/add",
         formData,
         {
           headers: {
@@ -175,7 +177,7 @@ function Dj() {
   const handleDelete = async (djs) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/dj/delete/${djs._id}`,
+        `https://event-management-api-ms52.onrender.com/api/dj/delete/${djs._id}`,
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
@@ -202,7 +204,7 @@ function Dj() {
     });
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/dj/edit/${editValues._id}`,
+        `https://event-management-api-ms52.onrender.com/api/dj/edit/${editValues._id}`,
         formData,
         {
           headers: {

@@ -38,7 +38,7 @@ decorRouter.post(
         decorCity,
         decorContact,
         decorType: decorType.split(","),
-        decorImages: `https://apieventmanagement.onrender.com/mallImages/${req.file.filename}`,
+        decorImages: `https://event-management-api-ms52.onrender.com/mallImages/${req.file.filename}`,
         Price,
       });
 
@@ -202,7 +202,7 @@ decorRouter.put(
           decorContact,
           Price,
           decorType: decorType.split(","),
-          decorImages: `https://apieventmanagement.onrender.com/mallImages/${req.file.filename}`,
+          decorImages: `https://event-management-api-ms52.onrender.com/mallImages/${req.file.filename}`,
         },
         { new: true, runValidators: true }
       );

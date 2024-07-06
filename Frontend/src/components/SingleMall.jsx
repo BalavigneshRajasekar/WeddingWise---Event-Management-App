@@ -27,7 +27,7 @@ function SingleMall() {
   const fetchMall = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/malls/get/${id}`
+        `https://event-management-api-ms52.onrender.com/api/malls/get/${id}`
       );
       setSingleMall(response.data);
     } catch (e) {
@@ -42,7 +42,7 @@ function SingleMall() {
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/malls/book/${id}`,
+        `https://event-management-api-ms52.onrender.com/api/malls/book/${id}`,
         values,
         {
           headers: {

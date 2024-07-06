@@ -13,7 +13,7 @@ function Register() {
     setBtnLoading(true);
     try {
       const response = await axios.post(
-        "https://apieventmanagement.onrender.com/api/register/register",
+        "https://event-management-api-ms52.onrender.com/api/register/register",
         values
       );
       message.success(response.data.message);

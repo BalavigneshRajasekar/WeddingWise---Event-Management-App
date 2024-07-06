@@ -23,11 +23,14 @@ const ProviderHandler = ({ children }) => {
 
   const fetchUserData = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/budget/get", {
-        headers: {
-          Authorization: localStorage.getItem("logToken"),
-        },
-      });
+      const response = await axios.get(
+        "https://event-management-api-ms52.onrender.com/api/budget/get",
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
       message.success("Budget Fetched");
       setBudget(response.data.budgetSpend);
       setBudgetLeft(response.data.budgetLeft);

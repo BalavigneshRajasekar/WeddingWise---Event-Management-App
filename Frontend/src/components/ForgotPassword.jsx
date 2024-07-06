@@ -20,7 +20,7 @@ function ForgotPassword() {
     setBtnLoad(true);
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/password/resetLink",
+        "https://event-management-api-ms52.onrender.com/api/password/resetLink",
         {
           userMail,
         }
@@ -46,7 +46,7 @@ function ForgotPassword() {
       setBtnLoad(true);
       try {
         const response = await axios.post(
-          "http://localhost:3000/api/reset/password",
+          "https://event-management-api-ms52.onrender.com/api/reset/password",
           { code },
           {
             headers: {

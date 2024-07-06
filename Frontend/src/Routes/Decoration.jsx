@@ -45,7 +45,7 @@ function Decoration() {
   //handle Initial DJ fetching on component load
   const fetchDecorations = async () => {
     const response = await axios.get(
-      "http://localhost:3000/api/decorations/get"
+      "https://event-management-api-ms52.onrender.com/api/decorations/get"
     );
     setDecorations(response.data);
     setFilterDecor(response.data);
@@ -66,7 +66,7 @@ function Decoration() {
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/decorations/book/${decorId}`,
+        `https://event-management-api-ms52.onrender.com/api/decorations/book/${decorId}`,
         values,
         {
           headers: {
@@ -152,7 +152,7 @@ function Decoration() {
     });
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/decorations/add",
+        "https://event-management-api-ms52.onrender.com/api/decorations/add",
         formData,
         {
           headers: {
@@ -180,7 +180,7 @@ function Decoration() {
   const handleDelete = async (decor) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/decorations/delete/${decor._id}`,
+        `https://event-management-api-ms52.onrender.com/api/decorations/delete/${decor._id}`,
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
@@ -207,7 +207,7 @@ function Decoration() {
     });
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/decorations/edit/${editValues._id}`,
+        `https://event-management-api-ms52.onrender.com/api/decorations/edit/${editValues._id}`,
         formData,
         {
           headers: {

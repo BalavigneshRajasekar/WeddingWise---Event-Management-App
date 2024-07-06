@@ -28,7 +28,7 @@ function SingleDj() {
   const fetchDj = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/dj/get/${id}`
+        `https://event-management-api-ms52.onrender.com/api/dj/get/${id}`
       );
       setSingleDj(response.data);
     } catch (e) {
@@ -43,7 +43,7 @@ function SingleDj() {
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/dj/book/${id}`,
+        `https://event-management-api-ms52.onrender.com/api/dj/book/${id}`,
         values,
         {
           headers: {
