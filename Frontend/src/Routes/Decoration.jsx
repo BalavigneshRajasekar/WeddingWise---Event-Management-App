@@ -30,6 +30,7 @@ function Decoration() {
   const [formModel, setFormModel] = useState(false);
   const [decorImages, setDecorImages] = useState([]);
   const [decorId, setDecorId] = useState();
+  const [editValues, setEditValues] = useState(null);
   const { setRender } = useContext(AppContext);
 
   useEffect(() => {
@@ -131,6 +132,7 @@ function Decoration() {
   };
   const handleAddMall = () => {
     setFormModel(true);
+    setEditValues(null);
   };
   const handleFormModelClose = () => {
     setFormModel(false);
@@ -163,6 +165,62 @@ function Decoration() {
       fetchDecorations();
     } catch (e) {
       message.error(e.response.data.message);
+    }
+  };
+  // Handle adding edit values to the state and open form
+
+  const handleEdit = (decor) => {
+    setFormModel(true);
+    setEditValues(decor);
+
+    console.log(editValues);
+  };
+
+  // Handle deleting the mall ADMIN Login
+  const handleDelete = async (decor) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/api/decorations/delete/${decor._id}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      fetchDecorations();
+    } catch (e) {
+      message.error(e.response.data.message);
+    }
+  };
+
+  //Handle editing the mall details in Admin login
+  const onEditFormFinish = async (values) => {
+    const formData = new FormData();
+    // add the form values to form data object
+    for (const key in values) {
+      formData.append(key, values[key]);
+    }
+    // add the images to form data object
+    decorImages.forEach((file) => {
+      formData.append("media", file.originFileObj);
+    });
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/decorations/edit/${editValues._id}`,
+        formData,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      handleFormModelClose();
+      fetchDecorations();
+    } catch (e) {
+      message.error(e.response.data.message);
+      setFormModel(false);
     }
   };
   return (
@@ -229,10 +287,18 @@ function Decoration() {
                           : "d-none"
                       }
                     >
-                      <IconButton color="success" size="small">
+                      <IconButton
+                        color="success"
+                        size="small"
+                        onClick={() => handleEdit(decor)}
+                      >
                         <EditOutlined />
                       </IconButton>
-                      <IconButton color="error" size="small">
+                      <IconButton
+                        color="error"
+                        size="small"
+                        onClick={() => handleDelete(decor)}
+                      >
                         <DeleteOutlined />
                       </IconButton>
                     </div>
@@ -355,12 +421,13 @@ function Decoration() {
               initialValues={{
                 remember: true,
               }}
-              onFinish={onFormFinish}
+              onFinish={editValues ? onEditFormFinish : onFormFinish}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
             >
               <Form.Item
                 name="decorName"
+                initialValue={editValues ? editValues.decorName : ""}
                 rules={[
                   {
                     required: true,
@@ -372,6 +439,7 @@ function Decoration() {
               </Form.Item>
               <Form.Item
                 name="DecorDescription"
+                initialValue={editValues ? editValues.DecorDescription : ""}
                 rules={[
                   {
                     required: true,
@@ -383,6 +451,7 @@ function Decoration() {
               </Form.Item>
               <Form.Item
                 name="decorAddress"
+                initialValue={editValues ? editValues.decorAddress : ""}
                 rules={[
                   {
                     required: true,
@@ -394,6 +463,7 @@ function Decoration() {
               </Form.Item>
               <Form.Item
                 name="decorCity"
+                initialValue={editValues ? editValues.decorCity : ""}
                 rules={[
                   {
                     required: true,
@@ -405,6 +475,7 @@ function Decoration() {
               </Form.Item>
               <Form.Item
                 name="decorContact"
+                initialValue={editValues ? editValues.decorContact : ""}
                 rules={[
                   {
                     required: true,
@@ -417,6 +488,7 @@ function Decoration() {
 
               <Form.Item
                 name="decorType"
+                initialValue={editValues ? editValues.decorType.join() : ""}
                 rules={[
                   {
                     required: true,
@@ -431,6 +503,7 @@ function Decoration() {
               </Form.Item>
               <Form.Item
                 name="Price"
+                initialValue={editValues ? editValues.Price : ""}
                 rules={[
                   {
                     required: true,
@@ -456,7 +529,7 @@ function Decoration() {
                     type="Submit"
                     placeholder="Book"
                     name="button"
-                    value="Book"
+                    value={editValues ? "Update" : "Add"}
                     className="bg-success"
                   />
                 </Form.Item>

@@ -182,6 +182,14 @@ djRouter.put(
     } = req.body;
 
     try {
+      const verify = await DJ.findOne({
+        djContact: djContact,
+      });
+      if (verify) {
+        return res
+          .status(400)
+          .send({ message: "contact already used in some vendors" });
+      }
       const updatedMall = await DJ.findByIdAndUpdate(
         id,
         {

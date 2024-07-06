@@ -189,6 +189,14 @@ photographyRouter.put(
     } = req.body;
 
     try {
+      const verify = await Photography.findOne({
+        photographyContact: photographyContact,
+      });
+      if (verify) {
+        return res
+          .status(400)
+          .send({ message: "contact already used in some vendors" });
+      }
       const updatedMall = await Photography.findByIdAndUpdate(
         id,
         {

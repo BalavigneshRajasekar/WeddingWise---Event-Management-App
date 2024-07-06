@@ -30,6 +30,7 @@ function Malls() {
   const [formModel, setFormModel] = useState(false);
   const [mallImages, setMallImages] = useState([]);
   const [mallId, setMallId] = useState();
+  const [editValues, setEditValues] = useState(null);
   const { fetchUserData, setRender } = useContext(AppContext);
 
   const navigate = useNavigate();
@@ -131,9 +132,11 @@ function Malls() {
     }
   };
 
-  //Below function used to handle Add mall action
+  //Below function used to handle All Admin feature Adding deleting Editing
+
   const handleAddMall = () => {
     setFormModel(true);
+    setEditValues(null); //we using same form for add and edit to clear previous edit value
   };
   const handleFormModelClose = () => {
     setFormModel(false);
@@ -149,7 +152,6 @@ function Malls() {
     mallImages.forEach((file) => {
       formData.append("media", file.originFileObj);
     });
-
     try {
       const response = await axios.post(
         "http://localhost:3000/api/malls/add",
@@ -173,10 +175,63 @@ function Malls() {
     setMallImages(fileList);
     console.log(mallImages);
   };
-  const handleEdit = () => {
+
+  // Handle adding edit values to the state and open form
+
+  const handleEdit = (mall) => {
     setFormModel(true);
+    setEditValues(mall);
+
+    console.log(editValues);
   };
-  const handleDelete = () => {};
+
+  // Handle deleting the mall ADMIN Login
+  const handleDelete = async (mall) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/api/malls/delete/${mall._id}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      fetchMalls();
+    } catch (e) {
+      message.error(e.response.data.message);
+    }
+  };
+
+  //Handle editing the mall details in Admin login
+  const onEditFormFinish = async (values) => {
+    const formData = new FormData();
+    // add the form values to form data object
+    for (const key in values) {
+      formData.append(key, values[key]);
+    }
+    // add the images to form data object
+    mallImages.forEach((file) => {
+      formData.append("media", file.originFileObj);
+    });
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/malls/edit/${editValues._id}`,
+        formData,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      handleFormModelClose();
+      fetchMalls();
+    } catch (e) {
+      message.error(e.response.data.message);
+      setFormModel(false);
+    }
+  };
   return (
     <div>
       <Search
@@ -232,14 +287,14 @@ function Malls() {
                     <IconButton
                       color="success"
                       size="small"
-                      onClick={handleEdit}
+                      onClick={() => handleEdit(mall)}
                     >
                       <EditOutlined />
                     </IconButton>
                     <IconButton
                       color="error"
                       size="small"
-                      onClick={handleDelete}
+                      onClick={() => handleDelete(mall)}
                     >
                       <DeleteOutlined />
                     </IconButton>
@@ -363,12 +418,13 @@ function Malls() {
               initialValues={{
                 remember: true,
               }}
-              onFinish={onFormFinish}
+              onFinish={editValues ? onEditFormFinish : onFormFinish}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
             >
               <Form.Item
                 name="mallName"
+                initialValue={editValues ? editValues.mallName : ""}
                 rules={[
                   {
                     required: true,
@@ -380,6 +436,7 @@ function Malls() {
               </Form.Item>
               <Form.Item
                 name="mallAddress"
+                initialValue={editValues ? editValues.mallAddress : ""}
                 rules={[
                   {
                     required: true,
@@ -391,6 +448,7 @@ function Malls() {
               </Form.Item>
               <Form.Item
                 name="mallCity"
+                initialValue={editValues ? editValues.mallCity : ""}
                 rules={[
                   {
                     required: true,
@@ -402,6 +460,7 @@ function Malls() {
               </Form.Item>
               <Form.Item
                 name="mallContact"
+                initialValue={editValues ? editValues.mallContact : ""}
                 rules={[
                   {
                     required: true,
@@ -413,6 +472,7 @@ function Malls() {
               </Form.Item>
               <Form.Item
                 name="spacing"
+                initialValue={editValues ? editValues.spacing : ""}
                 rules={[
                   {
                     required: true,
@@ -424,6 +484,7 @@ function Malls() {
               </Form.Item>
               <Form.Item
                 name="amenities"
+                initialValue={editValues ? editValues.amenities.join() : ""}
                 rules={[
                   {
                     required: true,
@@ -438,6 +499,7 @@ function Malls() {
               </Form.Item>
               <Form.Item
                 name="Price"
+                initialValue={editValues ? editValues.Price : ""}
                 rules={[
                   {
                     required: true,
@@ -463,7 +525,7 @@ function Malls() {
                     type="Submit"
                     placeholder="Book"
                     name="eventName"
-                    value="Book"
+                    value={editValues ? "Update" : "Add"}
                     className="bg-success"
                   />
                 </Form.Item>

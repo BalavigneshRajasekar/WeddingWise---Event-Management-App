@@ -165,7 +165,7 @@ decorRouter.get("/get/:id", async (req, res) => {
   }
 });
 
-//endpoint to edit DJ Admin
+//endpoint to edit Decor Admin
 decorRouter.put(
   "/edit/:id",
   loginAuth,
@@ -184,6 +184,14 @@ decorRouter.put(
     } = req.body;
 
     try {
+      const verify = await Decor.findOne({
+        decorContact: decorContact,
+      });
+      if (verify) {
+        return res
+          .status(400)
+          .send({ message: "contact already used in some vendors" });
+      }
       const updatedMall = await Decor.findByIdAndUpdate(
         id,
         {
@@ -210,7 +218,7 @@ decorRouter.put(
   }
 );
 
-// Endpoint to delete the photography
+// Endpoint to delete the Decor
 decorRouter.delete(
   "/delete/:id",
   loginAuth,

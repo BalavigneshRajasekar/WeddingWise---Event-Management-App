@@ -30,6 +30,7 @@ function Catering() {
   const [formModel, setFormModel] = useState(false);
   const [caterImages, setCaterImages] = useState([]);
   const [cateringId, setCateringId] = useState();
+  const [editValues, setEditValues] = useState(null);
   const { setRender } = useContext(AppContext);
 
   useEffect(() => {
@@ -133,6 +134,7 @@ function Catering() {
   };
   const handleAddMall = () => {
     setFormModel(true);
+    setEditValues(null);
   };
   const handleFormModelClose = () => {
     setFormModel(false);
@@ -168,6 +170,62 @@ function Catering() {
     }
   };
 
+  // Handle adding edit values to the state and open form
+
+  const handleEdit = (cater) => {
+    setFormModel(true);
+    setEditValues(cater);
+
+    console.log(editValues);
+  };
+
+  // Handle deleting the mall ADMIN Login
+  const handleDelete = async (cater) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/api/catering/delete/${cater._id}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      fetchCatering();
+    } catch (e) {
+      message.error(e.response.data.message);
+    }
+  };
+
+  //Handle editing the mall details in Admin login
+  const onEditFormFinish = async (values) => {
+    const formData = new FormData();
+    // add the form values to form data object
+    for (const key in values) {
+      formData.append(key, values[key]);
+    }
+    // add the images to form data object
+    caterImages.forEach((file) => {
+      formData.append("media", file.originFileObj);
+    });
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/catering/edit/${editValues._id}`,
+        formData,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      handleFormModelClose();
+      fetchCatering();
+    } catch (e) {
+      message.error(e.response.data.message);
+      setFormModel(false);
+    }
+  };
   return (
     <div>
       <div className="position-sticky top-0 z-1">
@@ -232,10 +290,18 @@ function Catering() {
                           : "d-none"
                       }
                     >
-                      <IconButton color="success" size="small">
+                      <IconButton
+                        color="success"
+                        size="small"
+                        onClick={() => handleEdit(cater)}
+                      >
                         <EditOutlined />
                       </IconButton>
-                      <IconButton color="error" size="small">
+                      <IconButton
+                        color="error"
+                        size="small"
+                        onClick={() => handleDelete(cater)}
+                      >
                         <DeleteOutlined />
                       </IconButton>
                     </div>
@@ -358,12 +424,13 @@ function Catering() {
               initialValues={{
                 remember: true,
               }}
-              onFinish={onFormFinish}
+              onFinish={editValues ? onEditFormFinish : onFormFinish}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
             >
               <Form.Item
                 name="cateringName"
+                initialValue={editValues ? editValues.cateringName : ""}
                 rules={[
                   {
                     required: true,
@@ -375,6 +442,7 @@ function Catering() {
               </Form.Item>
               <Form.Item
                 name="cateringDescription"
+                initialValue={editValues ? editValues.cateringDescription : ""}
                 rules={[
                   {
                     required: true,
@@ -386,6 +454,7 @@ function Catering() {
               </Form.Item>
               <Form.Item
                 name="cateringAddress"
+                initialValue={editValues ? editValues.cateringAddress : ""}
                 rules={[
                   {
                     required: true,
@@ -397,6 +466,7 @@ function Catering() {
               </Form.Item>
               <Form.Item
                 name="cateringCity"
+                initialValue={editValues ? editValues.cateringCity : ""}
                 rules={[
                   {
                     required: true,
@@ -408,6 +478,7 @@ function Catering() {
               </Form.Item>
               <Form.Item
                 name="cateringContact"
+                initialValue={editValues ? editValues.cateringContact : ""}
                 rules={[
                   {
                     required: true,
@@ -420,6 +491,7 @@ function Catering() {
 
               <Form.Item
                 name="cateringMenu"
+                initialValue={editValues ? editValues.cateringMenu.join() : ""}
                 rules={[
                   {
                     required: true,
@@ -434,6 +506,7 @@ function Catering() {
               </Form.Item>
               <Form.Item
                 name="price"
+                initialValue={editValues ? editValues.price : ""}
                 rules={[
                   {
                     required: true,
@@ -459,7 +532,7 @@ function Catering() {
                     type="Submit"
                     placeholder="Book"
                     name="button"
-                    value="Book"
+                    value={editValues ? "Update" : "Add"}
                     className="bg-success"
                   />
                 </Form.Item>

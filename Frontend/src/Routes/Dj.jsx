@@ -30,6 +30,7 @@ function Dj() {
   const [DjImages, setDjImages] = useState([]);
   const [id, setId] = useState();
   const [modal, setModal] = useState();
+  const [editValues, setEditValues] = useState(null);
   const { setRender } = useContext(AppContext);
 
   useEffect(() => {
@@ -122,9 +123,10 @@ function Dj() {
         setFilteredDj(dj);
     }
   };
-  //Below function used to handle Add mall action
+  //Below function used to handle All Admin features ADD, delete, edit
   const handleAddMall = () => {
     setFormModel(true);
+    setEditValues(null);
   };
   const handleFormModelClose = () => {
     setFormModel(false);
@@ -160,7 +162,62 @@ function Dj() {
       message.error(e.response.data.message);
     }
   };
+  // Handle adding edit values to the state and open form
 
+  const handleEdit = (djs) => {
+    setFormModel(true);
+    setEditValues(djs);
+
+    console.log(editValues);
+  };
+
+  // Handle deleting the mall ADMIN Login
+  const handleDelete = async (djs) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/api/dj/delete/${djs._id}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      fetchDj();
+    } catch (e) {
+      message.error(e.response.data.message);
+    }
+  };
+
+  //Handle editing the mall details in Admin login
+  const onEditFormFinish = async (values) => {
+    const formData = new FormData();
+    // add the form values to form data object
+    for (const key in values) {
+      formData.append(key, values[key]);
+    }
+    // add the images to form data object
+    DjImages.forEach((file) => {
+      formData.append("media", file.originFileObj);
+    });
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/dj/edit/${editValues._id}`,
+        formData,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      handleFormModelClose();
+      fetchDj();
+    } catch (e) {
+      message.error(e.response.data.message);
+      setFormModel(false);
+    }
+  };
   return (
     <div>
       <div className="position-sticky top-0 z-1">
@@ -225,10 +282,18 @@ function Dj() {
                           : "d-none"
                       }
                     >
-                      <IconButton color="success" size="small">
+                      <IconButton
+                        color="success"
+                        size="small"
+                        onClick={() => handleEdit(djs)}
+                      >
                         <EditOutlined />
                       </IconButton>
-                      <IconButton color="error" size="small">
+                      <IconButton
+                        color="error"
+                        size="small"
+                        onClick={() => handleDelete(djs)}
+                      >
                         <DeleteOutlined />
                       </IconButton>
                     </div>
@@ -351,12 +416,13 @@ function Dj() {
               initialValues={{
                 remember: true,
               }}
-              onFinish={onFormFinish}
+              onFinish={editValues ? onEditFormFinish : onFormFinish}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
             >
               <Form.Item
                 name="djName"
+                initialValue={editValues ? editValues.djName : ""}
                 rules={[
                   {
                     required: true,
@@ -368,6 +434,7 @@ function Dj() {
               </Form.Item>
               <Form.Item
                 name="djDescription"
+                initialValue={editValues ? editValues.djDescription : ""}
                 rules={[
                   {
                     required: true,
@@ -379,6 +446,7 @@ function Dj() {
               </Form.Item>
               <Form.Item
                 name="djAddress"
+                initialValue={editValues ? editValues.djAddress : ""}
                 rules={[
                   {
                     required: true,
@@ -390,6 +458,7 @@ function Dj() {
               </Form.Item>
               <Form.Item
                 name="djCity"
+                initialValue={editValues ? editValues.djCity : ""}
                 rules={[
                   {
                     required: true,
@@ -401,6 +470,7 @@ function Dj() {
               </Form.Item>
               <Form.Item
                 name="djContact"
+                initialValue={editValues ? editValues.djContact : ""}
                 rules={[
                   {
                     required: true,
@@ -413,6 +483,7 @@ function Dj() {
 
               <Form.Item
                 name="musicType"
+                initialValue={editValues ? editValues.musicType.join() : ""}
                 rules={[
                   {
                     required: true,
@@ -424,6 +495,7 @@ function Dj() {
               </Form.Item>
               <Form.Item
                 name="price"
+                initialValue={editValues ? editValues.price : ""}
                 rules={[
                   {
                     required: true,
@@ -449,7 +521,7 @@ function Dj() {
                     type="Submit"
                     placeholder="Book"
                     name="button"
-                    value="Book"
+                    value={editValues ? "Update" : "Add"}
                     className="bg-success"
                   />
                 </Form.Item>

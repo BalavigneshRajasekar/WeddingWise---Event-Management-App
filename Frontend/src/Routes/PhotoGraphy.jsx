@@ -34,6 +34,7 @@ function PhotoGraphy() {
   const [photoImages, setPhotoImages] = useState([]);
   const [id, setId] = useState();
   const [modal, setModal] = useState(false);
+  const [editValues, setEditValues] = useState(null);
   const { setRender } = useContext(AppContext);
 
   useEffect(() => {
@@ -138,8 +139,11 @@ function PhotoGraphy() {
         setFilteredPhoto(photoGraphy);
     }
   };
+
+  //Below function used to handle All Admin feature Adding deleting Editing
   const handleAddMall = () => {
     setFormModel(true);
+    setEditValues(null);
   };
   const handleFormModelClose = () => {
     setFormModel(false);
@@ -172,6 +176,63 @@ function PhotoGraphy() {
       fetchPhotoGraphy();
     } catch (e) {
       message.error(e.response.data.message);
+    }
+  };
+
+  // Handle adding edit values to the state and open form
+
+  const handleEdit = (photo) => {
+    setFormModel(true);
+    setEditValues(photo);
+
+    console.log(editValues);
+  };
+
+  // Handle deleting the mall ADMIN Login
+  const handleDelete = async (photo) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/api/photography/delete/${photo._id}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      fetchPhotoGraphy();
+    } catch (e) {
+      message.error(e.response.data.message);
+    }
+  };
+
+  //Handle editing the mall details in Admin login
+  const onEditFormFinish = async (values) => {
+    const formData = new FormData();
+    // add the form values to form data object
+    for (const key in values) {
+      formData.append(key, values[key]);
+    }
+    // add the images to form data object
+    photoImages.forEach((file) => {
+      formData.append("media", file.originFileObj);
+    });
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/photography/edit/${editValues._id}`,
+        formData,
+        {
+          headers: {
+            Authorization: localStorage.getItem("logToken"),
+          },
+        }
+      );
+      message.success(response.data.message);
+      handleFormModelClose();
+      fetchPhotoGraphy();
+    } catch (e) {
+      message.error(e.response.data.message);
+      setFormModel(false);
     }
   };
   return (
@@ -238,10 +299,18 @@ function PhotoGraphy() {
                           : "d-none"
                       }
                     >
-                      <IconButton color="success" size="small">
+                      <IconButton
+                        color="success"
+                        size="small"
+                        onClick={() => handleEdit(photo)}
+                      >
                         <EditOutlined />
                       </IconButton>
-                      <IconButton color="error" size="small">
+                      <IconButton
+                        color="error"
+                        size="small"
+                        onClick={() => handleDelete(photo)}
+                      >
                         <DeleteOutlined />
                       </IconButton>
                     </div>
@@ -365,12 +434,13 @@ function PhotoGraphy() {
               initialValues={{
                 remember: true,
               }}
-              onFinish={onFormFinish}
+              onFinish={editValues ? onEditFormFinish : onFormFinish}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
             >
               <Form.Item
                 name="photographyName"
+                initialValue={editValues ? editValues.photographyName : ""}
                 rules={[
                   {
                     required: true,
@@ -382,6 +452,9 @@ function PhotoGraphy() {
               </Form.Item>
               <Form.Item
                 name="photographyDescription"
+                initialValue={
+                  editValues ? editValues.photographyDescription : ""
+                }
                 rules={[
                   {
                     required: true,
@@ -393,6 +466,7 @@ function PhotoGraphy() {
               </Form.Item>
               <Form.Item
                 name="photographyAddress"
+                initialValue={editValues ? editValues.photographyAddress : ""}
                 rules={[
                   {
                     required: true,
@@ -404,6 +478,7 @@ function PhotoGraphy() {
               </Form.Item>
               <Form.Item
                 name="photographyCity"
+                initialValue={editValues ? editValues.photographyCity : ""}
                 rules={[
                   {
                     required: true,
@@ -415,6 +490,7 @@ function PhotoGraphy() {
               </Form.Item>
               <Form.Item
                 name="photographyContact"
+                initialValue={editValues ? editValues.photographyContact : ""}
                 rules={[
                   {
                     required: true,
@@ -427,6 +503,9 @@ function PhotoGraphy() {
 
               <Form.Item
                 name="photographyType"
+                initialValue={
+                  editValues ? editValues.photographyType.join() : ""
+                }
                 rules={[
                   {
                     required: true,
@@ -441,6 +520,7 @@ function PhotoGraphy() {
               </Form.Item>
               <Form.Item
                 name="Price"
+                initialValue={editValues ? editValues.Price : ""}
                 rules={[
                   {
                     required: true,
@@ -466,7 +546,7 @@ function PhotoGraphy() {
                     type="Submit"
                     placeholder="Book"
                     name="button"
-                    value="Book"
+                    value={editValues ? "Update" : "Add"}
                     className="bg-success"
                   />
                 </Form.Item>

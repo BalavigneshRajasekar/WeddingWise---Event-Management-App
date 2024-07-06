@@ -187,6 +187,14 @@ mallsRouter.put(
     } = req.body;
 
     try {
+      const verify = await malls.findOne({
+        mallContact: mallContact,
+      });
+      if (verify) {
+        return res
+          .status(400)
+          .send({ message: "contact already used in some vendors" });
+      }
       const updatedMall = await malls.findByIdAndUpdate(
         id,
         {
