@@ -28,7 +28,7 @@ function Dashboard() {
   const fetchBookedMall = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/malls/dashboard",
+        "https://eventapi-uk2d.onrender.com/api/malls/dashboard",
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
@@ -44,7 +44,7 @@ function Dashboard() {
   const handleMallCanceling = async (mall) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/malls/remove/${mall._id}`,
+        `https://eventapi-uk2d.onrender.com/api/malls/remove/${mall._id}`,
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
