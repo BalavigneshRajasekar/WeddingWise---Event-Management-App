@@ -45,7 +45,7 @@ function Decoration() {
   //handle Initial DJ fetching on component load
   const fetchDecorations = async () => {
     const response = await axios.get(
-      "https://event-management-api-ms52.onrender.com/api/decorations/get"
+      "https://eventapi-uk2d.onrender.com/api/decorations/get"
     );
     setDecorations(response.data);
     setFilterDecor(response.data);
@@ -66,7 +66,7 @@ function Decoration() {
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
-        `https://event-management-api-ms52.onrender.com/api/decorations/book/${decorId}`,
+        `https://eventapi-uk2d.onrender.com/api/decorations/book/${decorId}`,
         values,
         {
           headers: {
@@ -152,7 +152,7 @@ function Decoration() {
     });
     try {
       const response = await axios.post(
-        "https://event-management-api-ms52.onrender.com/api/decorations/add",
+        "https://eventapi-uk2d.onrender.com/api/decorations/add",
         formData,
         {
           headers: {
@@ -180,7 +180,7 @@ function Decoration() {
   const handleDelete = async (decor) => {
     try {
       const response = await axios.delete(
-        `https://event-management-api-ms52.onrender.com/api/decorations/delete/${decor._id}`,
+        `https://eventapi-uk2d.onrender.com/api/decorations/delete/${decor._id}`,
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
@@ -207,7 +207,7 @@ function Decoration() {
     });
     try {
       const response = await axios.put(
-        `https://event-management-api-ms52.onrender.com/api/decorations/edit/${editValues._id}`,
+        `https://eventapi-uk2d.onrender.com/api/decorations/edit/${editValues._id}`,
         formData,
         {
           headers: {

@@ -39,7 +39,7 @@ djRouter.post(
         djCity,
         djContact,
         musicType: musicType.split(","),
-        djImages: `https://event-management-api-ms52.onrender.com/mallImages/${req.file.filename}`,
+        djImages: `https://eventapi-uk2d.onrender.com/mallImages/${req.file.filename}`,
         price,
       });
 
@@ -202,7 +202,7 @@ djRouter.put(
           djContact,
           price,
           musicType: musicType.split(","),
-          djImages: `https://event-management-api-ms52.onrender.com/mallImages/${req.file.filename}`,
+          djImages: `https://eventapi-uk2d.onrender.com/mallImages/${req.file.filename}`,
         },
         { new: true, runValidators: true }
       );

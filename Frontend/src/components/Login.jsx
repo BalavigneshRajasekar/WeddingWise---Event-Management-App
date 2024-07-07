@@ -16,7 +16,7 @@ function Login() {
     setBtnLoading(true);
     try {
       const response = await axios.post(
-        "https://event-management-api-ms52.onrender.com/api/login/login",
+        "https://eventapi-uk2d.onrender.com/api/login/login",
         values
       );
       message.success(response.data.message);

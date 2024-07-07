@@ -44,7 +44,7 @@ function Dj() {
   //handle Initial DJ fetching on component load
   const fetchDj = async () => {
     const response = await axios.get(
-      "https://event-management-api-ms52.onrender.com/api/dj/get"
+      "https://eventapi-uk2d.onrender.com/api/dj/get"
     );
     setDj(response.data);
     setFilteredDj(response.data);
@@ -65,7 +65,7 @@ function Dj() {
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
-        `https://event-management-api-ms52.onrender.com/api/dj/book/${id}`,
+        `https://eventapi-uk2d.onrender.com/api/dj/book/${id}`,
         values,
         {
           headers: {
@@ -149,7 +149,7 @@ function Dj() {
     });
     try {
       const response = await axios.post(
-        "https://event-management-api-ms52.onrender.com/api/dj/add",
+        "https://eventapi-uk2d.onrender.com/api/dj/add",
         formData,
         {
           headers: {
@@ -177,7 +177,7 @@ function Dj() {
   const handleDelete = async (djs) => {
     try {
       const response = await axios.delete(
-        `https://event-management-api-ms52.onrender.com/api/dj/delete/${djs._id}`,
+        `https://eventapi-uk2d.onrender.com/api/dj/delete/${djs._id}`,
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
@@ -204,7 +204,7 @@ function Dj() {
     });
     try {
       const response = await axios.put(
-        `https://event-management-api-ms52.onrender.com/api/dj/edit/${editValues._id}`,
+        `https://eventapi-uk2d.onrender.com/api/dj/edit/${editValues._id}`,
         formData,
         {
           headers: {

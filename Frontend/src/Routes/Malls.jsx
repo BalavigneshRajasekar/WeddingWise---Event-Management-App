@@ -41,7 +41,7 @@ function Malls() {
   //handle Initial mall fetching on component load
   const fetchMalls = async () => {
     const response = await axios.get(
-      "https://event-management-api-ms52.onrender.com/api/malls/get"
+      "https://eventapi-uk2d.onrender.com/api/malls/get"
     );
     setMalls(response.data);
     setFilterMalls(response.data);
@@ -71,7 +71,7 @@ function Malls() {
     console.log(values);
     try {
       const response = await axios.post(
-        `https://event-management-api-ms52.onrender.com/api/malls/book/${mallId}`,
+        `https://eventapi-uk2d.onrender.com/api/malls/book/${mallId}`,
         values,
         {
           headers: {
@@ -156,7 +156,7 @@ function Malls() {
     });
     try {
       const response = await axios.post(
-        "https://event-management-api-ms52.onrender.com/api/malls/add",
+        "https://eventapi-uk2d.onrender.com/api/malls/add",
         formData,
         {
           headers: {
@@ -191,7 +191,7 @@ function Malls() {
   const handleDelete = async (mall) => {
     try {
       const response = await axios.delete(
-        `https://event-management-api-ms52.onrender.com/api/malls/delete/${mall._id}`,
+        `https://eventapi-uk2d.onrender.com/api/malls/delete/${mall._id}`,
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
@@ -218,7 +218,7 @@ function Malls() {
     });
     try {
       const response = await axios.put(
-        `https://event-management-api-ms52.onrender.com/api/malls/edit/${editValues._id}`,
+        `https://eventapi-uk2d.onrender.com/api/malls/edit/${editValues._id}`,
         formData,
         {
           headers: {

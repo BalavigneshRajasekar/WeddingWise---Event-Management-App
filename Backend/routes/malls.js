@@ -203,7 +203,7 @@ mallsRouter.put(
           mallContact,
           spacing,
           amenities: amenities.split(","),
-          mallImages: `https://event-management-api-ms52.onrender.com/mallImages/${req.file.filename}`,
+          mallImages: `https://eventapi-uk2d.onrender.com/mallImages/${req.file.filename}`,
           Price,
         },
         { new: true, runValidators: true }

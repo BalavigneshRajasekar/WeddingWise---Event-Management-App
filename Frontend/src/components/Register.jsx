@@ -13,7 +13,7 @@ function Register() {
     setBtnLoading(true);
     try {
       const response = await axios.post(
-        "https://event-management-api-ms52.onrender.com/api/register/register",
+        "https://eventapi-uk2d.onrender.com/api/register/register",
         values
       );
       message.success(response.data.message);

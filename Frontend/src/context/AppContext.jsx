@@ -24,7 +24,7 @@ const ProviderHandler = ({ children }) => {
   const fetchUserData = async () => {
     try {
       const response = await axios.get(
-        "https://event-management-api-ms52.onrender.com/api/budget/get",
+        "https://eventapi-uk2d.onrender.com/api/budget/get",
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),

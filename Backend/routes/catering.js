@@ -39,7 +39,7 @@ cateringRouter.post(
         cateringCity,
         cateringContact,
         cateringMenu: cateringMenu.split(","),
-        cateringImages: `https://event-management-api-ms52.onrender.com/mallImages/${req.file.filename}`,
+        cateringImages: `https://eventapi-uk2d.onrender.com/mallImages/${req.file.filename}`,
         price,
       });
 
@@ -206,7 +206,7 @@ cateringRouter.put(
           cateringMenu: cateringMenu.split(","),
           cateringContact,
           price,
-          decorImages: `https://event-management-api-ms52.onrender.com/mallImages/${req.file.filename}`,
+          decorImages: `https://eventapi-uk2d.onrender.com/mallImages/${req.file.filename}`,
         },
         { new: true, runValidators: true }
       );

@@ -20,7 +20,7 @@ function ForgotPassword() {
     setBtnLoad(true);
     try {
       const response = await axios.post(
-        "https://event-management-api-ms52.onrender.com/api/password/resetLink",
+        "https://eventapi-uk2d.onrender.com/api/password/resetLink",
         {
           userMail,
         }
@@ -46,7 +46,7 @@ function ForgotPassword() {
       setBtnLoad(true);
       try {
         const response = await axios.post(
-          "https://event-management-api-ms52.onrender.com/api/reset/password",
+          "https://eventapi-uk2d.onrender.com/api/reset/password",
           { code },
           {
             headers: {

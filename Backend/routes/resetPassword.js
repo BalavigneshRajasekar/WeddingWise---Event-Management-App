@@ -35,7 +35,7 @@ resetPassword.post("/password", Auth, async (req, res) => {
           button: {
             color: "#22BC66",
             text: "Reset Password",
-            link: `https://event-management-api-ms52.onrender.com/api/reset/resetPassword/${req.user.id}`,
+            link: `https://eventapi-uk2d.onrender.com/api/reset/resetPassword/${req.user.id}`,
           },
         },
       },

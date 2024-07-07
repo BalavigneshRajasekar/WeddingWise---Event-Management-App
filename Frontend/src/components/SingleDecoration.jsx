@@ -29,7 +29,7 @@ function SingleDecoration() {
   const fetchDecor = async () => {
     try {
       const response = await axios.get(
-        `https://event-management-api-ms52.onrender.com/api/decorations/get/${id}`
+        `https://eventapi-uk2d.onrender.com/api/decorations/get/${id}`
       );
       setSingleDecoration(response.data);
     } catch (err) {
@@ -44,7 +44,7 @@ function SingleDecoration() {
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
-        `https://event-management-api-ms52.onrender.com/api/decorations/book/${id}`,
+        `https://eventapi-uk2d.onrender.com/api/decorations/book/${id}`,
         values,
         {
           headers: {

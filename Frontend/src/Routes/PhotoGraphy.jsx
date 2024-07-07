@@ -44,7 +44,7 @@ function PhotoGraphy() {
   const fetchPhotoGraphy = async () => {
     try {
       const response = await axios.get(
-        "https://event-management-api-ms52.onrender.com/api/photography/get"
+        "https://eventapi-uk2d.onrender.com/api/photography/get"
       );
       setPhotoGraphy(response.data);
       setFilteredPhoto(response.data);
@@ -75,7 +75,7 @@ function PhotoGraphy() {
     console.log(values);
     try {
       const response = await axios.post(
-        `https://event-management-api-ms52.onrender.com/api/photography/book/${id}`,
+        `https://eventapi-uk2d.onrender.com/api/photography/book/${id}`,
         values,
         {
           headers: {
@@ -163,7 +163,7 @@ function PhotoGraphy() {
     });
     try {
       const response = await axios.post(
-        "https://event-management-api-ms52.onrender.com/api/photography/add",
+        "https://eventapi-uk2d.onrender.com/api/photography/add",
         formData,
         {
           headers: {
@@ -192,7 +192,7 @@ function PhotoGraphy() {
   const handleDelete = async (photo) => {
     try {
       const response = await axios.delete(
-        `https://event-management-api-ms52.onrender.com/api/photography/delete/${photo._id}`,
+        `https://eventapi-uk2d.onrender.com/api/photography/delete/${photo._id}`,
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
@@ -219,7 +219,7 @@ function PhotoGraphy() {
     });
     try {
       const response = await axios.put(
-        `https://event-management-api-ms52.onrender.com/api/photography/edit/${editValues._id}`,
+        `https://eventapi-uk2d.onrender.com/api/photography/edit/${editValues._id}`,
         formData,
         {
           headers: {
