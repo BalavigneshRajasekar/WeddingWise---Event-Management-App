@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Nav from "../components/Nav";
 import { Container, Button, IconButton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Input, Segmented, Image, Empty, Upload } from "antd";
+import { Input, Segmented, Image, Empty, Upload, Popconfirm } from "antd";
 import PlaceIcon from "@mui/icons-material/Place";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -17,9 +17,11 @@ import Slide from "@mui/material/Slide";
 import {
   DeleteOutlined,
   EditOutlined,
+  SaveFilled,
   UploadOutlined,
 } from "@ant-design/icons";
 import AddIcon from "@mui/icons-material/Add";
+import LoadingButton from "@mui/lab/LoadingButton";
 const { Search } = Input;
 
 function Catering() {
@@ -31,6 +33,7 @@ function Catering() {
   const [caterImages, setCaterImages] = useState([]);
   const [cateringId, setCateringId] = useState();
   const [editValues, setEditValues] = useState(null);
+  const [btnLoading, setBtnLoading] = useState(false);
   const { setRender } = useContext(AppContext);
 
   useEffect(() => {
@@ -55,7 +58,11 @@ function Catering() {
   };
   //This will view the particular Catering
   const singleCatering = (catering, e) => {
-    if (e.target.tagName == "BUTTON" || e.target.tagName == "svg") {
+    if (
+      e.target.tagName == "BUTTON" ||
+      e.target.tagName == "svg" ||
+      e.target.tagName == "SPAN"
+    ) {
       return;
     }
     console.log(catering);
@@ -143,6 +150,7 @@ function Catering() {
     setCaterImages(fileList);
   };
   const onFormFinish = async (values) => {
+    setBtnLoading(true);
     const formData = new FormData();
     //Add Form field values to formData
     for (const key in values) {
@@ -163,9 +171,11 @@ function Catering() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading(false);
       setFormModel(false);
       fetchCatering();
     } catch (e) {
+      setBtnLoading(false);
       message.error(e.response.data.message);
     }
   };
@@ -199,6 +209,7 @@ function Catering() {
 
   //Handle editing the mall details in Admin login
   const onEditFormFinish = async (values) => {
+    setBtnLoading(true);
     const formData = new FormData();
     // add the form values to form data object
     for (const key in values) {
@@ -219,9 +230,11 @@ function Catering() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading(false);
       handleFormModelClose();
       fetchCatering();
     } catch (e) {
+      setBtnLoading(false);
       message.error(e.response.data.message);
       setFormModel(false);
     }
@@ -297,13 +310,18 @@ function Catering() {
                       >
                         <EditOutlined />
                       </IconButton>
-                      <IconButton
-                        color="error"
-                        size="small"
-                        onClick={() => handleDelete(cater)}
+                      <Popconfirm
+                        title="Delete the task"
+                        description="Are you sure to delete this task?"
+                        okText="Yes"
+                        cancelText="No"
+                        onConfirm={() => handleDelete(cater)}
+                        onCancel={onFinishFailed}
                       >
-                        <DeleteOutlined />
-                      </IconButton>
+                        <IconButton color="error" size="small">
+                          <DeleteOutlined />
+                        </IconButton>
+                      </Popconfirm>
                     </div>
                     <div className="img">
                       <Image
@@ -528,21 +546,33 @@ function Catering() {
 
               <FormControl className="d-flex mt-3">
                 <Form.Item>
-                  <Input
+                  <LoadingButton
+                    fullWidth
+                    loading={btnLoading}
+                    loadingPosition="start"
+                    size="large"
+                    startIcon={<SaveFilled />}
+                    variant="contained"
+                    color="success"
                     type="Submit"
                     placeholder="Book"
-                    name="button"
-                    value={editValues ? "Update" : "Add"}
-                    className="bg-success"
-                  />
+                    name="eventName"
+                  >
+                    <span>{editValues ? "Update" : "Add"}</span>
+                  </LoadingButton>
                 </Form.Item>
                 <Form.Item>
-                  <Input
+                  <LoadingButton
+                    fullWidth
+                    size="large"
                     type="button"
                     value="Close"
-                    className="bg-danger"
+                    variant="outlined"
+                    color="error"
                     onClick={handleClose}
-                  />
+                  >
+                    CLose
+                  </LoadingButton>
                 </Form.Item>
               </FormControl>
             </Form>

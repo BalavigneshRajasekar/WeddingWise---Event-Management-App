@@ -28,6 +28,7 @@ function Nav() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [profileModel, setProfileModel] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
+  const [logOut, setLogout] = useState(false);
   const { openModel, setOpenModel } = useContext(AppContext);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -55,8 +56,8 @@ function Nav() {
         navigate("/dashboard");
         break;
       case 3:
-        localStorage.removeItem("logToken");
-        navigate("/");
+        setLogout(true);
+
         break;
       default:
         break;
@@ -106,7 +107,10 @@ function Nav() {
     }
   };
   const onFinishFailed = () => {};
-
+  const handleLogout = () => {
+    localStorage.removeItem("logToken");
+    navigate("/");
+  };
   return (
     <div>
       <AppBar position="static">
@@ -232,6 +236,22 @@ function Nav() {
         </Container>
       </AppBar>
 
+      {/* Logout Model */}
+      <Modal open={logOut} onClose={() => setLogout(false)}>
+        <Box className="style">
+          <Typography className="p-3">
+            Are you sure want to log out ?
+          </Typography>
+          <Button className="p-3 ms-3" type="primary" onClick={handleLogout}>
+            Yes
+          </Button>
+          <Button className="p-3 ms-3" danger onClick={() => setLogout(false)}>
+            No
+          </Button>
+        </Box>
+      </Modal>
+
+      {/* Budget model */}
       <Modal
         open={openModel}
         onClose={() => setOpenModel(false)}

@@ -186,7 +186,7 @@ djRouter.put(
         djContact: djContact,
       });
       if (verify) {
-        if (verify._id !== id) {
+        if (verify._id.toString() !== id) {
           return res
             .status(400)
             .send({ message: "contact already used in some vendors" });

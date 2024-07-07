@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Nav from "../components/Nav";
 import { Container, Button, IconButton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Input, Segmented, Image, Empty, Upload } from "antd";
+import { Input, Segmented, Image, Empty, Upload, Popconfirm } from "antd";
 import PlaceIcon from "@mui/icons-material/Place";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -17,15 +17,18 @@ import Slide from "@mui/material/Slide";
 import {
   DeleteOutlined,
   EditOutlined,
+  SaveFilled,
   UploadOutlined,
 } from "@ant-design/icons";
 import AddIcon from "@mui/icons-material/Add";
+import LoadingButton from "@mui/lab/LoadingButton";
 const { Search } = Input;
 
 function Dj() {
   const navigate = useNavigate();
   const [dj, setDj] = useState([]);
   const [filteredDj, setFilteredDj] = useState([]);
+  const [btnLoading, setBtnLoading] = useState(false);
   const [formModel, setFormModel] = useState(false);
   const [DjImages, setDjImages] = useState([]);
   const [id, setId] = useState();
@@ -51,7 +54,11 @@ function Dj() {
   };
   //This will view the particular DJ
   const singleDj = (djs, e) => {
-    if (e.target.tagName == "BUTTON" || e.target.tagName == "svg") {
+    if (
+      e.target.tagName == "BUTTON" ||
+      e.target.tagName == "svg" ||
+      e.target.tagName == "SPAN"
+    ) {
       return;
     }
 
@@ -138,6 +145,7 @@ function Dj() {
   };
   //Add Data to DB
   const onFormFinish = async (values) => {
+    setBtnLoading(true);
     const formData = new FormData();
     //Add Form field values to formData
     for (const key in values) {
@@ -158,9 +166,11 @@ function Dj() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading(false);
       setFormModel(false);
       fetchDj();
     } catch (e) {
+      setBtnLoading(false);
       message.error(e.response.data.message);
     }
   };
@@ -193,6 +203,7 @@ function Dj() {
 
   //Handle editing the mall details in Admin login
   const onEditFormFinish = async (values) => {
+    setBtnLoading(true);
     const formData = new FormData();
     // add the form values to form data object
     for (const key in values) {
@@ -213,9 +224,11 @@ function Dj() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading(false);
       handleFormModelClose();
       fetchDj();
     } catch (e) {
+      setBtnLoading(false);
       message.error(e.response.data.message);
       setFormModel(false);
     }
@@ -291,13 +304,18 @@ function Dj() {
                       >
                         <EditOutlined />
                       </IconButton>
-                      <IconButton
-                        color="error"
-                        size="small"
-                        onClick={() => handleDelete(djs)}
+                      <Popconfirm
+                        title="Delete the task"
+                        description="Are you sure to delete this task?"
+                        okText="Yes"
+                        cancelText="No"
+                        onConfirm={() => handleDelete(djs)}
+                        onCancel={onFinishFailed}
                       >
-                        <DeleteOutlined />
-                      </IconButton>
+                        <IconButton color="error" size="small">
+                          <DeleteOutlined />
+                        </IconButton>
+                      </Popconfirm>
                     </div>
                     <div className="img">
                       <Image
@@ -395,7 +413,7 @@ function Dj() {
           </Box>
         </Modal>
       </div>
-      {/* Form model for adding a mall in admin login */}
+      {/* Form model for adding a DJ in admin login */}
       <div>
         <Modal
           open={formModel}
@@ -519,21 +537,33 @@ function Dj() {
 
               <FormControl className="d-flex mt-3">
                 <Form.Item>
-                  <Input
+                  <LoadingButton
+                    fullWidth
+                    loading={btnLoading}
+                    loadingPosition="start"
+                    size="large"
+                    startIcon={<SaveFilled />}
+                    variant="contained"
+                    color="success"
                     type="Submit"
                     placeholder="Book"
-                    name="button"
-                    value={editValues ? "Update" : "Add"}
-                    className="bg-success"
-                  />
+                    name="eventName"
+                  >
+                    <span>{editValues ? "Update" : "Add"}</span>
+                  </LoadingButton>
                 </Form.Item>
                 <Form.Item>
-                  <Input
+                  <LoadingButton
+                    fullWidth
+                    size="large"
                     type="button"
                     value="Close"
-                    className="bg-danger"
+                    variant="outlined"
+                    color="error"
                     onClick={handleClose}
-                  />
+                  >
+                    CLose
+                  </LoadingButton>
                 </Form.Item>
               </FormControl>
             </Form>

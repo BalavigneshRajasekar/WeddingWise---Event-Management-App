@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
-import { Image, Segmented, Empty, Upload } from "antd";
+import { Image, Segmented, Empty, Upload, Popconfirm } from "antd";
 import Button from "@mui/material/Button";
 import PlaceIcon from "@mui/icons-material/Place";
 import { AppContext } from "../context/AppContext";
@@ -19,12 +19,15 @@ import {
   DeleteFilled,
   DeleteOutlined,
   EditOutlined,
+  SaveFilled,
   UploadOutlined,
 } from "@ant-design/icons";
+import LoadingButton from "@mui/lab/LoadingButton";
 const { Search } = Input;
 
 function Malls() {
   const [malls, setMalls] = useState([]);
+  const [btnLoading, setBtnLoading] = useState(false);
   const [filterMalls, setFilterMalls] = useState([]);
   const [modal, setModal] = useState(false);
   const [formModel, setFormModel] = useState(false);
@@ -50,7 +53,11 @@ function Malls() {
   //This will view the particular Malls
   const singleMall = (mall, e) => {
     console.log(e.target.tagName);
-    if (e.target.tagName == "BUTTON" || e.target.tagName == "svg") {
+    if (
+      e.target.tagName == "BUTTON" ||
+      e.target.tagName == "svg" ||
+      e.target.tagName == "SPAN"
+    ) {
       return;
     }
     navigate(`/mall/${mall._id}`);
@@ -145,6 +152,7 @@ function Malls() {
   };
   // Handle new mall adding
   const onFormFinish = async (values) => {
+    setBtnLoading(true);
     const formData = new FormData();
     //adding form values to form data
     for (const key in values) {
@@ -165,9 +173,11 @@ function Malls() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading(false);
       handleFormModelClose();
       fetchMalls();
     } catch (e) {
+      setBtnLoading(false);
       message.error(e.response.data.message);
       setFormModel(false);
     }
@@ -207,6 +217,7 @@ function Malls() {
 
   //Handle editing the mall details in Admin login
   const onEditFormFinish = async (values) => {
+    setBtnLoading(true);
     const formData = new FormData();
     // add the form values to form data object
     for (const key in values) {
@@ -227,9 +238,12 @@ function Malls() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading(false);
       handleFormModelClose();
       fetchMalls();
     } catch (e) {
+      setBtnLoading(false);
+      console.log(e);
       message.error(e.response.data.message);
       setFormModel(false);
     }
@@ -293,13 +307,18 @@ function Malls() {
                     >
                       <EditOutlined />
                     </IconButton>
-                    <IconButton
-                      color="error"
-                      size="small"
-                      onClick={() => handleDelete(mall)}
+                    <Popconfirm
+                      title="Delete the task"
+                      description="Are you sure to delete this task?"
+                      okText="Yes"
+                      cancelText="No"
+                      onConfirm={() => handleDelete(mall)}
+                      onCancel={onFinishFailed}
                     >
-                      <DeleteOutlined />
-                    </IconButton>
+                      <IconButton color="error" size="small">
+                        <DeleteOutlined />
+                      </IconButton>
+                    </Popconfirm>
                   </div>
                   <div className="img ">
                     <Image
@@ -523,21 +542,33 @@ function Malls() {
 
               <FormControl className="d-flex mt-3">
                 <Form.Item>
-                  <Input
+                  <LoadingButton
+                    fullWidth
+                    loading={btnLoading}
+                    loadingPosition="start"
+                    size="large"
+                    startIcon={<SaveFilled />}
+                    variant="contained"
+                    color="success"
                     type="Submit"
                     placeholder="Book"
                     name="eventName"
-                    value={editValues ? "Update" : "Add"}
-                    className="bg-success"
-                  />
+                  >
+                    <span>{editValues ? "Update" : "Add"}</span>
+                  </LoadingButton>
                 </Form.Item>
                 <Form.Item>
-                  <Input
+                  <LoadingButton
+                    fullWidth
+                    size="large"
                     type="button"
                     value="Close"
-                    className="bg-danger"
+                    variant="outlined"
+                    color="error"
                     onClick={handleClose}
-                  />
+                  >
+                    CLose
+                  </LoadingButton>
                 </Form.Item>
               </FormControl>
             </Form>
