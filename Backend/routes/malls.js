@@ -33,7 +33,7 @@ mallsRouter.post(
         mallName,
         mallAddress,
         mallCity,
-        mallImages: `https://event-management-api-ms52.onrender.com/mallImages/${req.file.filename}`,
+        mallImages: `https://eventapi-uk2d.onrender.com/mallImages/${req.file.filename}`,
         mallContact,
         spacing,
         amenities: amenities.split(","),
