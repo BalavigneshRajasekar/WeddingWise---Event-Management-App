@@ -36,15 +36,15 @@ function Home() {
 
   const fadeImages = [
     {
-      url: "../public/dj.jpg",
+      url: "dj.jpg",
       caption: "First Slide",
     },
     {
-      url: "../public/catering.jpg",
+      url: "catering.jpg",
       caption: "Second Slide",
     },
     {
-      url: "../public/photo.webp",
+      url: "photo.webp",
       caption: "Third Slide",
     },
   ];
