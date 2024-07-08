@@ -323,7 +323,7 @@ function Dj() {
                       </Popconfirm>
                     </div>
                     <div className="img">
-                      <Zoom canSwipe arrows={false} indicators>
+                      <Zoom canSwipe arrows={false} indicators cssClass="z-0">
                         {djs.djImages.map((image, imgIndex) => (
                           <Image
                             key={imgIndex}

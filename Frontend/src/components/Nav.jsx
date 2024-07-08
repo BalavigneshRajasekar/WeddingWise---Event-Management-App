@@ -239,15 +239,21 @@ function Nav() {
       {/* Logout Model */}
       <Modal open={logOut} onClose={() => setLogout(false)}>
         <Box className="style">
-          <Typography className="p-3">
+          <Typography className="p-3 ">
             Are you sure want to log out ?
           </Typography>
-          <Button className="p-3 ms-3" type="primary" onClick={handleLogout}>
-            Yes
-          </Button>
-          <Button className="p-3 ms-3" danger onClick={() => setLogout(false)}>
-            No
-          </Button>
+          <div className="d-flex">
+            <Button className="p-3 ms-3" type="primary" onClick={handleLogout}>
+              Yes
+            </Button>
+            <Button
+              className="p-3 ms-3"
+              danger
+              onClick={() => setLogout(false)}
+            >
+              No
+            </Button>
+          </div>
         </Box>
       </Modal>
 

@@ -327,8 +327,8 @@ function Decoration() {
                         </IconButton>
                       </Popconfirm>
                     </div>
-                    <div className="img">
-                      <Zoom canSwipe arrows={false} indicators>
+                    <div className="img ">
+                      <Zoom canSwipe arrows={false} indicators cssClass="z-0">
                         {decor.decorImages.map((image, imgIndex) => (
                           <Image
                             key={imgIndex}

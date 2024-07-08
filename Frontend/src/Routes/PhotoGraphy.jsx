@@ -350,7 +350,7 @@ function PhotoGraphy() {
                       </Popconfirm>
                     </div>
                     <div className="img">
-                      <Zoom canSwipe arrows={false} indicators>
+                      <Zoom canSwipe arrows={false} indicators cssClass="z-0">
                         {photo.photographyImages.map((image, imgIndex) => (
                           <Image
                             key={imgIndex}
