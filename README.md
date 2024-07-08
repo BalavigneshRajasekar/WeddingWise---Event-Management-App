@@ -1,4 +1,4 @@
-# WeddingWise---Event-Management-App
+# wedding wise event management
 
 The Event Management System is a comprehensive software solution designed to streamline the planning, organization, and execution of various events. This system aims to automate and simplify the myriad of tasks involved in event management, providing a centralized platform for event organizers, vendors, attendees, and other stakeholders. Whether it’s a conference, wedding, concert, corporate meeting, or any other type of event, this system ensures a seamless and efficient event management experience.
 
@@ -74,10 +74,26 @@ Start the server
     node server.js
 ```
 
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`MONGODB`
+
+`TOKENKEY`
+
+`APP PASS`
+
+`CLOUDINARY-NAME`
+
+`APIKEY`
+
+`APISECRET`
+
 ## Demo
 
 Front end : https://event-manager-lovat.vercel.app/
 
 Backend : https://eventapi-uk2d.onrender.com
 
-API DOCUMENT :
+API DOCUMENT :https://documenter.getpostman.com/view/35282596/2sA3e2eUic
