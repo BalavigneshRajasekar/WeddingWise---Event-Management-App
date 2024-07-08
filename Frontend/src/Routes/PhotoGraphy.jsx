@@ -193,10 +193,12 @@ function PhotoGraphy() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading(false);
       setFormModel(false);
       setFormModel(false);
       fetchPhotoGraphy();
     } catch (e) {
+      setBtnLoading(false);
       setFormModel(false);
       message.error(e.response.data.message);
     }
@@ -252,10 +254,12 @@ function PhotoGraphy() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading(false);
       setFormModel(false);
       handleFormModelClose();
       fetchPhotoGraphy();
     } catch (e) {
+      setBtnLoading(false);
       setFormModel(false);
       message.error(e.response.data.message);
       setFormModel(false);

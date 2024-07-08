@@ -175,10 +175,12 @@ function Decoration() {
       );
       message.success(response.data.message);
       setFormModel(false);
+      setBtnLoading(false);
       setFormModel(false);
       fetchDecorations();
     } catch (e) {
       setFormModel(false);
+      setBtnLoading(false);
       message.error(e.response.data.message);
     }
   };
