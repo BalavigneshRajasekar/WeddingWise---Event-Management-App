@@ -34,6 +34,7 @@ import {
 } from "@ant-design/icons";
 import AddIcon from "@mui/icons-material/Add";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { Zoom } from "react-slideshow-image";
 
 const { Search } = Input;
 function PhotoGraphy() {
@@ -345,11 +346,16 @@ function PhotoGraphy() {
                       </Popconfirm>
                     </div>
                     <div className="img">
-                      <Image
-                        src={photo.photographyImages[0]}
-                        width="100%"
-                        height="150px"
-                      ></Image>
+                      <Zoom canSwipe arrows={false} indicators>
+                        {photo.photographyImages.map((image, imgIndex) => (
+                          <Image
+                            key={imgIndex}
+                            src={image}
+                            width="100%"
+                            height="150px"
+                          ></Image>
+                        ))}
+                      </Zoom>
                     </div>
                     <span>{photo.photographyName}</span>
                     <ul className="p-3">

@@ -22,6 +22,7 @@ import {
 } from "@ant-design/icons";
 import AddIcon from "@mui/icons-material/Add";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { Zoom } from "react-slideshow-image";
 const { Search } = Input;
 
 function Catering() {
@@ -328,11 +329,16 @@ function Catering() {
                       </Popconfirm>
                     </div>
                     <div className="img">
-                      <Image
-                        src={cater.cateringImages[0]}
-                        width="100%"
-                        height="150px"
-                      ></Image>
+                      <Zoom canSwipe arrows={false} indicators>
+                        {cater.cateringImages.map((image, imgIndex) => (
+                          <Image
+                            key={imgIndex}
+                            src={image}
+                            width="100%"
+                            height="150px"
+                          ></Image>
+                        ))}
+                      </Zoom>
                     </div>
                     <span>{cater.cateringName}</span>
                     <ul className="p-3">

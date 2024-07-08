@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Slide from "@mui/material/Slide";
+import { Zoom } from "react-slideshow-image";
 import AddIcon from "@mui/icons-material/Add";
 
 import { Form, Input, message } from "antd";
@@ -324,11 +325,16 @@ function Malls() {
                     </Popconfirm>
                   </div>
                   <div className="img ">
-                    <Image
-                      src={mall.mallImages[0]}
-                      width="100%"
-                      height="150px"
-                    ></Image>
+                    <Zoom canSwipe arrows={false} indicators>
+                      {mall.mallImages.map((image, imgIndex) => (
+                        <Image
+                          key={imgIndex}
+                          src={image}
+                          width="100%"
+                          height="150px"
+                        ></Image>
+                      ))}
+                    </Zoom>
                   </div>
                   <span>{mall.mallName}</span>
                   <ul className="p-3">

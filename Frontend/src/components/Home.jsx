@@ -68,7 +68,7 @@ function Home() {
           className="slide-container mt-3 w-100 "
           style={{ maxWidth: "1000px" }}
         >
-          <Slide canSwipe duration={1000}>
+          <Slide canSwipe arrows={false} indicators duration={1000}>
             {fadeImages.map((fadeImage, index) => (
               <div key={index}>
                 <Image width="100%" height="400px" src={fadeImage.url} />

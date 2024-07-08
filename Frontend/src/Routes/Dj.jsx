@@ -22,6 +22,7 @@ import {
 } from "@ant-design/icons";
 import AddIcon from "@mui/icons-material/Add";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { Zoom } from "react-slideshow-image";
 const { Search } = Input;
 
 function Dj() {
@@ -322,11 +323,16 @@ function Dj() {
                       </Popconfirm>
                     </div>
                     <div className="img">
-                      <Image
-                        src={djs.djImages[0]}
-                        width="100%"
-                        height="150px"
-                      ></Image>
+                      <Zoom canSwipe arrows={false} indicators>
+                        {djs.djImages.map((image, imgIndex) => (
+                          <Image
+                            key={imgIndex}
+                            src={image}
+                            width="100%"
+                            height="150px"
+                          ></Image>
+                        ))}
+                      </Zoom>
                     </div>
                     <span>{djs.djName}</span>
                     <ul className="p-3">

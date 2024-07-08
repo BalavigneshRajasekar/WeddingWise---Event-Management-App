@@ -1,14 +1,14 @@
 /* eslint-disable no-unused-vars */
 import ArrowBack from "@mui/icons-material/ArrowBack";
-import { Button, Container, Typography } from "@mui/material";
+import { Button, Container, FormControl, Typography } from "@mui/material";
 import { Image, message, Empty } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import PlaceIcon from "@mui/icons-material/Place";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Slide from "@mui/material/Slide";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DeleteOutlined } from "@ant-design/icons";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -272,7 +272,7 @@ function Dashboard() {
                         <div>
                           <Button
                             color="success"
-                            variant="contained"
+                            variant="outlined"
                             disabled
                             fullWidth
                           >
@@ -283,21 +283,21 @@ function Dashboard() {
                               }
                             })}
                           </Button>
-                          <LoadingButton
-                            fullWidth
-                            loading={btnLoading.mall}
-                            loadingPosition="start"
-                            size="large"
-                            startIcon={<DeleteOutlined />}
-                            variant="contained"
-                            color="success"
-                            type="Submit"
-                            placeholder="Book"
-                            name="eventName"
-                            onClick={() => handleMallCanceling(mall)}
-                          >
-                            <span>Cancel Booking</span>
-                          </LoadingButton>
+                          <FormControl className="mt-3 d-flex">
+                            <LoadingButton
+                              fullWidth
+                              loading={btnLoading.mall}
+                              size="large"
+                              variant="contained"
+                              color="error"
+                              type="Submit"
+                              placeholder="Book"
+                              name="eventName"
+                              onClick={() => handleMallCanceling(mall)}
+                            >
+                              Cancel Booking
+                            </LoadingButton>
+                          </FormControl>
                         </div>
                       </div>
                     ))}
@@ -338,7 +338,7 @@ function Dashboard() {
                         <div>
                           <Button
                             color="success"
-                            variant="contained"
+                            variant="outlined"
                             disabled
                             fullWidth
                           >
@@ -352,11 +352,9 @@ function Dashboard() {
                           <LoadingButton
                             fullWidth
                             loading={btnLoading.dj}
-                            loadingPosition="start"
                             size="large"
-                            startIcon={<DeleteOutlined />}
                             variant="contained"
-                            color="success"
+                            color="error"
                             type="Submit"
                             placeholder="Book"
                             name="eventName"
@@ -404,7 +402,7 @@ function Dashboard() {
                         <div>
                           <Button
                             color="success"
-                            variant="contained"
+                            variant="outlined"
                             disabled
                             fullWidth
                           >
@@ -418,11 +416,9 @@ function Dashboard() {
                           <LoadingButton
                             fullWidth
                             loading={btnLoading.decor}
-                            loadingPosition="start"
                             size="large"
-                            startIcon={<DeleteOutlined />}
                             variant="contained"
-                            color="success"
+                            color="error"
                             type="Submit"
                             placeholder="Book"
                             name="eventName"
@@ -470,7 +466,7 @@ function Dashboard() {
                         <div>
                           <Button
                             color="success"
-                            variant="contained"
+                            variant="outlined"
                             disabled
                             fullWidth
                           >
@@ -484,9 +480,7 @@ function Dashboard() {
                           <LoadingButton
                             fullWidth
                             loading={btnLoading.cater}
-                            loadingPosition="start"
                             size="large"
-                            startIcon={<DeleteOutlined />}
                             variant="contained"
                             color="success"
                             type="Submit"
@@ -538,7 +532,7 @@ function Dashboard() {
                         <div>
                           <Button
                             color="success"
-                            variant="contained"
+                            variant="outlined"
                             disabled
                             fullWidth
                           >
@@ -553,11 +547,9 @@ function Dashboard() {
                             className="mt-2"
                             fullWidth
                             loading={btnLoading.photo}
-                            loadingPosition="start"
                             size="small"
-                            startIcon={<DeleteOutlined />}
                             variant="contained"
-                            color="success"
+                            color="error"
                             type="Submit"
                             placeholder="Book"
                             name="eventName"
