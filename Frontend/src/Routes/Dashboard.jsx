@@ -51,7 +51,7 @@ function Dashboard() {
   };
   //Handle the Canceling of the Booked mall
   const handleMallCanceling = async (mall) => {
-    setBtnLoading({ ...btnLoading, [mall]: true });
+    setBtnLoading({ ...btnLoading, mall: true });
     try {
       const response = await axios.delete(
         `https://eventapi-uk2d.onrender.com/api/malls/remove/${mall._id}`,
@@ -553,8 +553,8 @@ function Dashboard() {
                             fullWidth
                             loading={btnLoading.photo}
                             loadingPosition="start"
-                            size="large"
-                            startIcon={<DeleteOutlined />}
+                            size="small"
+                            startIcon={<DeleteOutlined size={"small"} />}
                             variant="contained"
                             color="success"
                             type="Submit"
