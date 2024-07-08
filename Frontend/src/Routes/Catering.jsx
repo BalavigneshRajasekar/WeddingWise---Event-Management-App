@@ -26,14 +26,14 @@ const { Search } = Input;
 
 function Catering() {
   const navigate = useNavigate();
-  const [catering, setCatering] = useState([]);
-  const [filteredCater, setFilteredCater] = useState([]);
-  const [modal, setModal] = useState();
-  const [formModel, setFormModel] = useState(false);
-  const [caterImages, setCaterImages] = useState([]);
-  const [cateringId, setCateringId] = useState();
-  const [editValues, setEditValues] = useState(null);
-  const [btnLoading, setBtnLoading] = useState(false);
+  const [catering, setCatering] = useState([]); // ALl catering data from DB
+  const [filteredCater, setFilteredCater] = useState([]); // ALl filtered Catering details
+  const [modal, setModal] = useState(); //Booking form model control
+  const [formModel, setFormModel] = useState(false); //Add Catering form model control
+  const [caterImages, setCaterImages] = useState([]); //Catering images go here while adding
+  const [cateringId, setCateringId] = useState(); //cater ID to view full screen
+  const [editValues, setEditValues] = useState(null); //Catering edit value go here
+  const [btnLoading, setBtnLoading] = useState(false); // Button loading control
   const { setRender } = useContext(AppContext);
 
   useEffect(() => {
@@ -71,6 +71,7 @@ function Catering() {
 
   const handleClose = () => {
     setModal(false);
+    setFormModel(false);
   };
   //Handling the Catering booking after the popup
   const onFinish = async (values) => {

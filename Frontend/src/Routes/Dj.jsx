@@ -26,14 +26,14 @@ const { Search } = Input;
 
 function Dj() {
   const navigate = useNavigate();
-  const [dj, setDj] = useState([]);
-  const [filteredDj, setFilteredDj] = useState([]);
-  const [btnLoading, setBtnLoading] = useState(false);
-  const [formModel, setFormModel] = useState(false);
-  const [DjImages, setDjImages] = useState([]);
-  const [id, setId] = useState();
-  const [modal, setModal] = useState();
-  const [editValues, setEditValues] = useState(null);
+  const [dj, setDj] = useState([]); //All DJ data goes here
+  const [filteredDj, setFilteredDj] = useState([]); // FIltered DJ details go here
+  const [btnLoading, setBtnLoading] = useState(false); // Button loading control
+  const [formModel, setFormModel] = useState(false); // Dj Add form control
+  const [DjImages, setDjImages] = useState([]); // Dj images control
+  const [id, setId] = useState(); // DJ ID to view Full screen
+  const [modal, setModal] = useState(); // Booking model control
+  const [editValues, setEditValues] = useState(null); // Editing DJ details go here
   const { setRender } = useContext(AppContext);
 
   useEffect(() => {
@@ -67,6 +67,7 @@ function Dj() {
 
   const handleClose = () => {
     setModal(false);
+    setFormModel(false);
   };
   //Handling the DJ booking after the popup
   const onFinish = async (values) => {

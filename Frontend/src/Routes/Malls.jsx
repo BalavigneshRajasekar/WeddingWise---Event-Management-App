@@ -11,12 +11,10 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Slide from "@mui/material/Slide";
 import AddIcon from "@mui/icons-material/Add";
-import ModeEditIcon from "@mui/icons-material/ModeEdit";
 
 import { Form, Input, message } from "antd";
 import { FormControl, IconButton } from "@mui/material";
 import {
-  DeleteFilled,
   DeleteOutlined,
   EditOutlined,
   SaveFilled,
@@ -26,14 +24,14 @@ import LoadingButton from "@mui/lab/LoadingButton";
 const { Search } = Input;
 
 function Malls() {
-  const [malls, setMalls] = useState([]);
-  const [btnLoading, setBtnLoading] = useState(false);
-  const [filterMalls, setFilterMalls] = useState([]);
-  const [modal, setModal] = useState(false);
-  const [formModel, setFormModel] = useState(false);
-  const [mallImages, setMallImages] = useState([]);
-  const [mallId, setMallId] = useState();
-  const [editValues, setEditValues] = useState(null);
+  const [malls, setMalls] = useState([]); //All mall data goes here
+  const [btnLoading, setBtnLoading] = useState(false); // For button loadings
+  const [filterMalls, setFilterMalls] = useState([]); // The Filtered mall details
+  const [modal, setModal] = useState(false); // Booking model control
+  const [formModel, setFormModel] = useState(false); // Mall add model control
+  const [mallImages, setMallImages] = useState([]); // mall add images control
+  const [mallId, setMallId] = useState(); // Mall ID to navigate fullscreen
+  const [editValues, setEditValues] = useState(null); // It contains the details of the mall which going to edit
   const { fetchUserData, setRender } = useContext(AppContext);
 
   const navigate = useNavigate();
@@ -71,6 +69,7 @@ function Malls() {
 
   const handleClose = () => {
     setModal(false);
+    setFormModel(false);
   };
 
   //Handling the mall booking after the popup

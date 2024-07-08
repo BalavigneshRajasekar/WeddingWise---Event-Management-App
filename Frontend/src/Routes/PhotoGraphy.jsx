@@ -38,14 +38,14 @@ import LoadingButton from "@mui/lab/LoadingButton";
 const { Search } = Input;
 function PhotoGraphy() {
   const navigate = useNavigate();
-  const [photoGraphy, setPhotoGraphy] = useState([]);
-  const [filteredPhoto, setFilteredPhoto] = useState([]);
-  const [formModel, setFormModel] = useState(false);
-  const [photoImages, setPhotoImages] = useState([]);
-  const [id, setId] = useState();
-  const [modal, setModal] = useState(false);
-  const [editValues, setEditValues] = useState(null);
-  const [btnLoading, setBtnLoading] = useState(false);
+  const [photoGraphy, setPhotoGraphy] = useState([]); // All photoGraphy Details from DB
+  const [filteredPhoto, setFilteredPhoto] = useState([]); // All filtered photography Details
+  const [formModel, setFormModel] = useState(false); // Add new photography form model control
+  const [photoImages, setPhotoImages] = useState([]); //Photography image while Editing and adding
+  const [id, setId] = useState(); //Photography ID to view full screen
+  const [modal, setModal] = useState(false); //Photography ID to view full screen
+  const [editValues, setEditValues] = useState(null); // Photography edit values while editing
+  const [btnLoading, setBtnLoading] = useState(false); // Button loading control
   const { setRender } = useContext(AppContext);
 
   useEffect(() => {
@@ -79,6 +79,7 @@ function PhotoGraphy() {
   // Close the event date pop up
   const handleClose = () => {
     setModal(false);
+    setFormModel(false);
   };
   //Handle the event date Pop up
   const handleBook = (photo) => {

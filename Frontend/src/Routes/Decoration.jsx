@@ -26,14 +26,14 @@ const { Search } = Input;
 
 function Decoration() {
   const navigate = useNavigate();
-  const [decorations, setDecorations] = useState();
-  const [filterDecor, setFilterDecor] = useState([]);
-  const [modal, setModal] = useState();
-  const [formModel, setFormModel] = useState(false);
-  const [decorImages, setDecorImages] = useState([]);
-  const [decorId, setDecorId] = useState();
-  const [editValues, setEditValues] = useState(null);
-  const [btnLoading, setBtnLoading] = useState(false);
+  const [decorations, setDecorations] = useState(); // ALl decor Details
+  const [filterDecor, setFilterDecor] = useState([]); // ALl filtered Decorations
+  const [modal, setModal] = useState(); // Booking decor form control
+  const [formModel, setFormModel] = useState(false); // ADD Decorations form control
+  const [decorImages, setDecorImages] = useState([]); // Decor image go here
+  const [decorId, setDecorId] = useState(); //Decor ID to view full screen
+  const [editValues, setEditValues] = useState(null); // Decor edit values go here
+  const [btnLoading, setBtnLoading] = useState(false); //Button loading control
   const { setRender } = useContext(AppContext);
 
   useEffect(() => {
@@ -68,6 +68,7 @@ function Decoration() {
 
   const handleClose = () => {
     setModal(false);
+    setFormModel(false);
   };
   //Handling the Decoration booking after the popup
   const onFinish = async (values) => {
