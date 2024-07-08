@@ -1,11 +1,16 @@
 const express = require("express");
 const loginAuth = require("../middlewares/loginAuth");
 const roleAuth = require("../middlewares/roleAuth");
-const upload = require("../middlewares/multerMiddleware");
 const DJ = require("../models/dj");
 const Users = require("../models/users");
+const multer = require("multer");
+const cloudinary = require("../cloudinary");
 
 const djRouter = express.Router();
+
+// Multer setup for handling image uploads
+const memory = multer.memoryStorage();
+const upload = multer({ storage: memory });
 
 // endpoint to add DJ to the DB(Admin)
 
@@ -13,7 +18,7 @@ djRouter.post(
   "/add",
   loginAuth,
   roleAuth("Admin"),
-  upload.single("media"),
+  upload.array("media"),
   async (req, res) => {
     const {
       djName,
@@ -26,6 +31,25 @@ djRouter.post(
     } = req.body;
 
     try {
+      //Upload image to cloudinary
+      const mediaUrls = await Promise.all(
+        req.files.map(async (file) => {
+          return new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              {
+                resource_type: "auto",
+                upload_preset: "Unsigned",
+              },
+              (error, result) => {
+                if (error) return reject(error);
+                resolve(result.secure_url);
+              }
+            );
+            uploadStream.end(file.buffer);
+          });
+        })
+      );
+
       const verifyDJ = await DJ.findOne({
         djContact: djContact,
       });
@@ -39,7 +63,9 @@ djRouter.post(
         djCity,
         djContact,
         musicType: musicType.split(","),
-        djImages: `https://eventapi-uk2d.onrender.com/mallImages/${req.file.filename}`,
+        djImages: mediaUrls.filter(
+          (url) => url.endsWith(".jpg") || url.endsWith(".png")
+        ),
         price,
       });
 
@@ -168,7 +194,7 @@ djRouter.put(
   "/edit/:id",
   loginAuth,
   roleAuth("Admin"),
-  upload.single("media"),
+  upload.array("media"),
   async (req, res) => {
     const { id } = req.params;
     const {
@@ -182,6 +208,25 @@ djRouter.put(
     } = req.body;
 
     try {
+      //Upload image to cloudinary
+      const mediaUrls = await Promise.all(
+        req.files.map(async (file) => {
+          return new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              {
+                resource_type: "auto",
+                upload_preset: "Unsigned",
+              },
+              (error, result) => {
+                if (error) return reject(error);
+                resolve(result.secure_url);
+              }
+            );
+            uploadStream.end(file.buffer);
+          });
+        })
+      );
+
       const verify = await DJ.findOne({
         djContact: djContact,
       });
@@ -202,7 +247,9 @@ djRouter.put(
           djContact,
           price,
           musicType: musicType.split(","),
-          djImages: `https://eventapi-uk2d.onrender.com/mallImages/${req.file.filename}`,
+          djImages: mediaUrls.filter(
+            (url) => url.endsWith(".jpg") || url.endsWith(".png")
+          ),
         },
         { new: true, runValidators: true }
       );

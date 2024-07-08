@@ -7,6 +7,8 @@ import PlaceIcon from "@mui/icons-material/Place";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Slide from "@mui/material/Slide";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { DeleteOutlined } from "@ant-design/icons";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -15,6 +17,13 @@ function Dashboard() {
   const [bookedDecor, setBookedDecor] = useState([]);
   const [bookedCater, setBookedCater] = useState([]);
   const [bookedPhoto, setBookedPhoto] = useState([]);
+  const [btnLoading, setBtnLoading] = useState({
+    mall: false,
+    dj: false,
+    decor: false,
+    cater: false,
+    photo: false,
+  });
 
   useEffect(() => {
     fetchBookedMall();
@@ -42,6 +51,7 @@ function Dashboard() {
   };
   //Handle the Canceling of the Booked mall
   const handleMallCanceling = async (mall) => {
+    setBtnLoading({ ...btnLoading, [mall]: true });
     try {
       const response = await axios.delete(
         `https://eventapi-uk2d.onrender.com/api/malls/remove/${mall._id}`,
@@ -52,9 +62,11 @@ function Dashboard() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading({ ...btnLoading, [mall]: false });
       fetchBookedMall();
     } catch (e) {
       message.error(e.response.data.message);
+      setBtnLoading({ ...btnLoading, [mall]: false });
     }
   };
   //Handle Fetching booked Dj while component load
@@ -75,6 +87,7 @@ function Dashboard() {
   };
   //Handle the Canceling of the Booked DJ
   const handleDjCanceling = async (dj) => {
+    setBtnLoading({ ...btnLoading, dj: true });
     try {
       const response = await axios.delete(
         `https://eventapi-uk2d.onrender.com/api/dj/remove/${dj._id}`,
@@ -86,9 +99,11 @@ function Dashboard() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading({ ...btnLoading, dj: false });
       fetchBookedDj();
     } catch (e) {
       message.error(e.response.data.message);
+      setBtnLoading({ ...btnLoading, dj: false });
     }
   };
   //Handle Fetching booked Decor while component load
@@ -109,6 +124,7 @@ function Dashboard() {
   };
   //Handle the Canceling of the Booked Decor
   const handleDecorCanceling = async (decor) => {
+    setBtnLoading({ ...btnLoading, decor: true });
     console.log(bookedDecor);
     try {
       const response = await axios.delete(
@@ -121,9 +137,11 @@ function Dashboard() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading({ ...btnLoading, decor: false });
       fetchBookedDecor();
     } catch (e) {
       message.error(e.response.data.message);
+      setBtnLoading({ ...btnLoading, decor: false });
     }
   };
   //Handle Fetching booked catering while component load
@@ -144,6 +162,7 @@ function Dashboard() {
   };
   //Handle the Canceling of the Booked catering
   const handleCaterCanceling = async (mall) => {
+    setBtnLoading({ ...btnLoading, cater: true });
     try {
       const response = await axios.delete(
         `https://eventapi-uk2d.onrender.com/api/catering/remove/${mall._id}`,
@@ -155,9 +174,11 @@ function Dashboard() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading({ ...btnLoading, cater: false });
       fetchCatering();
     } catch (e) {
       message.error(e.response.data.message);
+      setBtnLoading({ ...btnLoading, cater: false });
     }
   };
 
@@ -179,6 +200,7 @@ function Dashboard() {
   };
   //Handle the Canceling of the Booked Photo
   const handlePhotoCanceling = async (photo) => {
+    setBtnLoading({ ...btnLoading, photo: true });
     try {
       const response = await axios.delete(
         `https://eventapi-uk2d.onrender.com/api/photography/remove/${photo._id}`,
@@ -190,9 +212,11 @@ function Dashboard() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading({ ...btnLoading, photo: false });
       fetchPhoto();
     } catch (e) {
       message.error(e.response.data.message);
+      setBtnLoading({ ...btnLoading, photo: false });
     }
   };
   return (
@@ -259,14 +283,21 @@ function Dashboard() {
                               }
                             })}
                           </Button>
-                          <Button
-                            color="error"
-                            variant="contained"
+                          <LoadingButton
                             fullWidth
+                            loading={btnLoading.mall}
+                            loadingPosition="start"
+                            size="large"
+                            startIcon={<DeleteOutlined />}
+                            variant="contained"
+                            color="success"
+                            type="Submit"
+                            placeholder="Book"
+                            name="eventName"
                             onClick={() => handleMallCanceling(mall)}
                           >
-                            Cancel Booking
-                          </Button>
+                            <span>Cancel Booking</span>
+                          </LoadingButton>
                         </div>
                       </div>
                     ))}
@@ -318,14 +349,21 @@ function Dashboard() {
                               }
                             })}
                           </Button>
-                          <Button
-                            color="error"
-                            variant="contained"
+                          <LoadingButton
                             fullWidth
+                            loading={btnLoading.dj}
+                            loadingPosition="start"
+                            size="large"
+                            startIcon={<DeleteOutlined />}
+                            variant="contained"
+                            color="success"
+                            type="Submit"
+                            placeholder="Book"
+                            name="eventName"
                             onClick={() => handleDjCanceling(mall)}
                           >
-                            Cancel Booking
-                          </Button>
+                            <span>Cancel Booking</span>
+                          </LoadingButton>
                         </div>
                       </div>
                     ))}
@@ -377,14 +415,21 @@ function Dashboard() {
                               }
                             })}
                           </Button>
-                          <Button
-                            color="error"
-                            variant="contained"
+                          <LoadingButton
                             fullWidth
+                            loading={btnLoading.decor}
+                            loadingPosition="start"
+                            size="large"
+                            startIcon={<DeleteOutlined />}
+                            variant="contained"
+                            color="success"
+                            type="Submit"
+                            placeholder="Book"
+                            name="eventName"
                             onClick={() => handleDecorCanceling(mall)}
                           >
-                            Cancel Booking
-                          </Button>
+                            <span>Cancel Booking</span>
+                          </LoadingButton>
                         </div>
                       </div>
                     ))}
@@ -436,14 +481,21 @@ function Dashboard() {
                               }
                             })}
                           </Button>
-                          <Button
-                            color="error"
-                            variant="contained"
+                          <LoadingButton
                             fullWidth
+                            loading={btnLoading.cater}
+                            loadingPosition="start"
+                            size="large"
+                            startIcon={<DeleteOutlined />}
+                            variant="contained"
+                            color="success"
+                            type="Submit"
+                            placeholder="Book"
+                            name="eventName"
                             onClick={() => handleCaterCanceling(mall)}
                           >
-                            Cancel Booking
-                          </Button>
+                            <span>Cancel Booking</span>
+                          </LoadingButton>
                         </div>
                       </div>
                     ))}
@@ -497,14 +549,21 @@ function Dashboard() {
                               }
                             })}
                           </Button>
-                          <Button
-                            color="error"
-                            variant="contained"
+                          <LoadingButton
                             fullWidth
+                            loading={btnLoading.photo}
+                            loadingPosition="start"
+                            size="large"
+                            startIcon={<DeleteOutlined />}
+                            variant="contained"
+                            color="success"
+                            type="Submit"
+                            placeholder="Book"
+                            name="eventName"
                             onClick={() => handlePhotoCanceling(photo)}
                           >
-                            Cancel Booking
-                          </Button>
+                            <span>Cancel Booking</span>
+                          </LoadingButton>
                         </div>
                       </div>
                     ))}

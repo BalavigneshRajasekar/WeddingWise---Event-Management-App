@@ -5,10 +5,10 @@ const cloudinary = require("../cloudinary");
 const loginAuth = require("../middlewares/loginAuth");
 const roleAuth = require("../middlewares/roleAuth");
 const multer = require("multer");
-// const upload = require("../middlewares/multerMiddleware");
 
 const mallsRouter = express.Router();
 
+// Multer setup for handling image uploads
 const memory = multer.memoryStorage();
 const upload = multer({ storage: memory });
 
@@ -29,44 +29,47 @@ mallsRouter.post(
       Price,
     } = req.body;
 
-    const mediaUrls = await Promise.all(
-      req.files.map(async (file) => {
-        return new Promise((resolve, reject) => {
-          const uploadStream = cloudinary.uploader.upload_stream(
-            {
-              resource_type: "auto",
-              folder: "products",
-            },
-            (error, result) => {
-              if (error) return reject(error);
-              resolve(result.secure_url);
-            }
-          );
-          uploadStream.end(file.buffer);
-        });
-      })
-    );
-    console.log(mediaUrls);
-    // try {
-    //   const verify = await malls.findOne({ mallContact: mallContact });
-    //   if (verify) {
-    //     return res.status(400).send({ message: "Mall already exists" });
-    //   }
-    //   const newMall = new malls({
-    //     mallName,
-    //     mallAddress,
-    //     mallCity,
-    //     mallImages: `https://eventapi-uk2d.onrender.com/mallImages/${req.file.filename}`,
-    //     mallContact,
-    //     spacing,
-    //     amenities: amenities.split(","),
-    //     Price,
-    //   });
-    //   await newMall.save();
-    //   res.status(200).send({ message: "Mall registered successfully" });
-    // } catch (err) {
-    //   res.status(500).send({ message: "server error: ", err: err.message });
-    // }
+    try {
+      //Upload image to cloudinary
+      const mediaUrls = await Promise.all(
+        req.files.map(async (file) => {
+          return new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              {
+                resource_type: "auto",
+                upload_preset: "Unsigned",
+              },
+              (error, result) => {
+                if (error) return reject(error);
+                resolve(result.secure_url);
+              }
+            );
+            uploadStream.end(file.buffer);
+          });
+        })
+      );
+
+      const verify = await malls.findOne({ mallContact: mallContact });
+      if (verify) {
+        return res.status(400).send({ message: "Mall already exists" });
+      }
+      const newMall = new malls({
+        mallName,
+        mallAddress,
+        mallCity,
+        mallImages: mediaUrls.filter(
+          (url) => url.endsWith(".jpg") || url.endsWith(".png")
+        ),
+        mallContact,
+        spacing,
+        amenities: amenities.split(","),
+        Price,
+      });
+      await newMall.save();
+      res.status(200).send({ message: "Mall registered successfully" });
+    } catch (err) {
+      res.status(500).send({ message: "server error: ", err: err.message });
+    }
   }
 );
 
@@ -193,7 +196,7 @@ mallsRouter.put(
   "/edit/:id",
   loginAuth,
   roleAuth("Admin"),
-  upload.single("media"),
+  upload.array("media"),
   async (req, res) => {
     const { id } = req.params;
     const {
@@ -207,6 +210,25 @@ mallsRouter.put(
     } = req.body;
 
     try {
+      //Upload image to cloudinary
+      const mediaUrls = await Promise.all(
+        req.files.map(async (file) => {
+          return new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              {
+                resource_type: "auto",
+                upload_preset: "Unsigned",
+              },
+              (error, result) => {
+                if (error) return reject(error);
+                resolve(result.secure_url);
+              }
+            );
+            uploadStream.end(file.buffer);
+          });
+        })
+      );
+
       const verify = await malls.findOne({
         mallContact: mallContact,
       });
@@ -228,7 +250,9 @@ mallsRouter.put(
           mallContact,
           spacing,
           amenities: amenities.split(","),
-          mallImages: `https://eventapi-uk2d.onrender.com/mallImages/${req.file.filename}`,
+          mallImages: mediaUrls.filter(
+            (url) => url.endsWith(".jpg") || url.endsWith(".png")
+          ),
           Price,
         },
         { new: true, runValidators: true }

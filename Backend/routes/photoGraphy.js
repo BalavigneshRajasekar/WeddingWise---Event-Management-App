@@ -3,16 +3,20 @@ const Photography = require("../models/photoGraphy");
 const Users = require("../models/users");
 const loginAuth = require("../middlewares/loginAuth");
 const roleAuth = require("../middlewares/roleAuth");
-const upload = require("../middlewares/multerMiddleware");
+const multer = require("multer");
+const cloudinary = require("../cloudinary");
 
 const photographyRouter = express.Router();
+//Multer configuration for handling images
+const memory = multer.memoryStorage();
+const upload = multer({ storage: memory });
 
 // endpoint to add Photography to the DB
 photographyRouter.post(
   "/add",
   loginAuth,
   roleAuth("Admin"),
-  upload.single("media"),
+  upload.array("media"),
   async (req, res) => {
     const {
       photographyName,
@@ -25,6 +29,25 @@ photographyRouter.post(
     } = req.body;
 
     try {
+      //cloudinary upload
+      const mediaUrls = await Promise.all(
+        req.files.map(async (file) => {
+          return new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              {
+                resource_type: "auto",
+                upload_preset: "Unsigned",
+              },
+              (error, result) => {
+                if (error) return reject(error);
+                resolve(result.secure_url);
+              }
+            );
+            uploadStream.end(file.buffer);
+          });
+        })
+      );
+
       const verify = await Photography.findOne({
         photographyContact: photographyContact,
       });
@@ -37,7 +60,9 @@ photographyRouter.post(
         photographyAddress,
         photographyDescription,
         photographyCity,
-        photographyImages: `https://eventapi-uk2d.onrender.com/mallImages/${req.file.filename}`,
+        photographyImages: mediaUrls.filter(
+          (url) => url.endsWith(".jpg") || url.endsWith(".png")
+        ),
         photographyContact,
         photographyType: photographyType.split(","),
         Price,
@@ -175,7 +200,7 @@ photographyRouter.put(
   "/edit/:id",
   loginAuth,
   roleAuth("Admin"),
-  upload.single("media"),
+  upload.array("media"),
   async (req, res) => {
     const { id } = req.params;
     const {
@@ -189,6 +214,25 @@ photographyRouter.put(
     } = req.body;
 
     try {
+      //cloudinary upload
+      const mediaUrls = await Promise.all(
+        req.files.map(async (file) => {
+          return new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              {
+                resource_type: "auto",
+                upload_preset: "Unsigned",
+              },
+              (error, result) => {
+                if (error) return reject(error);
+                resolve(result.secure_url);
+              }
+            );
+            uploadStream.end(file.buffer);
+          });
+        })
+      );
+
       const verify = await Photography.findOne({
         photographyContact: photographyContact,
       });
@@ -208,7 +252,9 @@ photographyRouter.put(
           photographyContact,
           photographyType: photographyType.split(","),
           photographyDescription,
-          photographyImages: `https://eventapi-uk2d.onrender.com/mallImages/${req.file.filename}`,
+          photographyImages: mediaUrls.filter(
+            (url) => url.endsWith(".jpg") || url.endsWith(".png")
+          ),
           Price,
         },
         { new: true, runValidators: true }

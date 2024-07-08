@@ -9,7 +9,7 @@ const loginRouter = express.Router();
 loginRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
-    const validUser = await user.findOne({ email });
+    const validUser = await user.findOne({ email: email.toLowerCase() });
     if (!validUser) {
       return res.status(400).json({ message: "User does not exist" });
     }

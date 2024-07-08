@@ -3,9 +3,14 @@ const Decor = require("../models/decorations");
 const Users = require("../models/users");
 const loginAuth = require("../middlewares/loginAuth");
 const roleAuth = require("../middlewares/roleAuth");
-const upload = require("../middlewares/multerMiddleware");
+const multer = require("multer");
+const cloudinary = require("../cloudinary");
 
 const decorRouter = express.Router();
+
+// Multer setup for handling image uploads
+const memory = multer.memoryStorage();
+const upload = multer({ storage: memory });
 
 // endpoint to add decoration to the DB(Admin)
 
@@ -13,7 +18,7 @@ decorRouter.post(
   "/add",
   loginAuth,
   roleAuth("Admin"),
-  upload.single("media"),
+  upload.array("media"),
   async (req, res) => {
     const {
       decorName,
@@ -27,6 +32,25 @@ decorRouter.post(
     } = req.body;
 
     try {
+      //Upload image to cloudinary
+      const mediaUrls = await Promise.all(
+        req.files.map(async (file) => {
+          return new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              {
+                resource_type: "auto",
+                upload_preset: "Unsigned",
+              },
+              (error, result) => {
+                if (error) return reject(error);
+                resolve(result.secure_url);
+              }
+            );
+            uploadStream.end(file.buffer);
+          });
+        })
+      );
+
       const verifyDecor = await Decor.findOne({ decorContact: decorContact });
       if (verifyDecor) {
         return res.status(400).json({ message: "Decoration already exists" });
@@ -38,7 +62,9 @@ decorRouter.post(
         decorCity,
         decorContact,
         decorType: decorType.split(","),
-        decorImages: `https://eventapi-uk2d.onrender.com/mallImages/${req.file.filename}`,
+        decorImages: mediaUrls.filter(
+          (url) => url.endsWith(".jpg") || url.endsWith(".png")
+        ),
         Price,
       });
 
@@ -170,7 +196,7 @@ decorRouter.put(
   "/edit/:id",
   loginAuth,
   roleAuth("Admin"),
-  upload.single("media"),
+  upload.array("media"),
   async (req, res) => {
     const { id } = req.params;
     const {
@@ -184,6 +210,25 @@ decorRouter.put(
     } = req.body;
 
     try {
+      //Upload image to cloudinary
+      const mediaUrls = await Promise.all(
+        req.files.map(async (file) => {
+          return new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              {
+                resource_type: "auto",
+                upload_preset: "Unsigned",
+              },
+              (error, result) => {
+                if (error) return reject(error);
+                resolve(result.secure_url);
+              }
+            );
+            uploadStream.end(file.buffer);
+          });
+        })
+      );
+
       const verify = await Decor.findOne({
         decorContact: decorContact,
       });
@@ -204,7 +249,9 @@ decorRouter.put(
           decorContact,
           Price,
           decorType: decorType.split(","),
-          decorImages: `https://eventapi-uk2d.onrender.com/mallImages/${req.file.filename}`,
+          decorImages: mediaUrls.filter(
+            (url) => url.endsWith(".jpg") || url.endsWith(".png")
+          ),
         },
         { new: true, runValidators: true }
       );
