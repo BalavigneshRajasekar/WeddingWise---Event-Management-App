@@ -10,8 +10,8 @@ budgetRouter.post("/add", loginAuth, async (req, res) => {
   const { budget } = req.body;
   try {
     const user = await Users.findById(req.user.id);
-    user.budget = user.budget + budget;
-    user.budgetLeft = user.budgetLeft + budget;
+    user.budget = Number(user.budget) + Number(budget);
+    user.budgetLeft = Number(user.budgetLeft) + Number(budget);
     await user.save();
     res.status(200).json({ message: "Budget added successfully" });
   } catch (err) {
