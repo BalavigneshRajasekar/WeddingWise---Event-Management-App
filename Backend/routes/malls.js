@@ -1,6 +1,7 @@
 const express = require("express");
 const malls = require("../models/malls");
 const Users = require("../models/users");
+const cloudinary = require("../cloudinary");
 const loginAuth = require("../middlewares/loginAuth");
 const roleAuth = require("../middlewares/roleAuth");
 const upload = require("../middlewares/multerMiddleware");
@@ -12,7 +13,7 @@ mallsRouter.post(
   "/add",
   loginAuth,
   roleAuth("Admin"),
-  upload.single("media"),
+
   async (req, res) => {
     const {
       mallName,
@@ -22,28 +23,38 @@ mallsRouter.post(
       spacing,
       amenities,
       Price,
+      imageUrl,
     } = req.body;
+    console.log(imageUrl);
 
-    try {
-      const verify = await malls.findOne({ mallContact: mallContact });
-      if (verify) {
-        return res.status(400).send({ message: "Mall already exists" });
+    let image = await cloudinary.uploader.upload(
+      imageUrl,
+      { upload_preset: "unsigned" },
+      (error, result) => {
+        console.log(result, error);
       }
-      const newMall = new malls({
-        mallName,
-        mallAddress,
-        mallCity,
-        mallImages: `https://eventapi-uk2d.onrender.com/mallImages/${req.file.filename}`,
-        mallContact,
-        spacing,
-        amenities: amenities.split(","),
-        Price,
-      });
-      await newMall.save();
-      res.status(200).send({ message: "Mall registered successfully" });
-    } catch (err) {
-      res.status(500).send({ message: "server error: ", err: err.message });
-    }
+    );
+    console.log(image);
+    // try {
+    //   const verify = await malls.findOne({ mallContact: mallContact });
+    //   if (verify) {
+    //     return res.status(400).send({ message: "Mall already exists" });
+    //   }
+    //   const newMall = new malls({
+    //     mallName,
+    //     mallAddress,
+    //     mallCity,
+    //     mallImages: `https://eventapi-uk2d.onrender.com/mallImages/${req.file.filename}`,
+    //     mallContact,
+    //     spacing,
+    //     amenities: amenities.split(","),
+    //     Price,
+    //   });
+    //   await newMall.save();
+    //   res.status(200).send({ message: "Mall registered successfully" });
+    // } catch (err) {
+    //   res.status(500).send({ message: "server error: ", err: err.message });
+    // }
   }
 );
 
