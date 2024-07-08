@@ -18,7 +18,7 @@ registerRouter.post("/register", async (req, res) => {
       name: name,
       email: email,
       password: hashPassword,
-      role: role == true && "Admin",
+      role: role == true ? "Admin" : "User",
     });
     await newUser.save();
     res.status(201).json({ message: "User created successfully" });
