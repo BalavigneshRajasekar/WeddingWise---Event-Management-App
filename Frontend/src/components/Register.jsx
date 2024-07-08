@@ -2,12 +2,13 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Checkbox, Image, message } from "antd";
 import { MailOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../App.css";
 function Register() {
   const [btnLoading, setBtnLoading] = useState(false);
+  const navigate = useNavigate();
   const onFinish = async (values) => {
     console.log(values);
     setBtnLoading(true);
@@ -18,6 +19,7 @@ function Register() {
       );
       message.success(response.data.message);
       setBtnLoading(false);
+      navigate("/login");
     } catch (err) {
       message.error(err.response.data.message);
       setBtnLoading(false);
