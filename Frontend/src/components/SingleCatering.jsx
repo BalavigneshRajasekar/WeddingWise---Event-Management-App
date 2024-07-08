@@ -15,9 +15,12 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { FormControl } from "@mui/material";
 import { Form, message, Input } from "antd";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { SaveFilled } from "@ant-design/icons";
 
 function SingleCatering() {
   const [modal, setModal] = useState();
+  const [btnLoading, setBtnLoading] = useState(false);
   const { singleCatering, setSingleCatering } = useContext(AppContext);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -184,21 +187,33 @@ function SingleCatering() {
               </Form.Item>
               <FormControl className="d-flex">
                 <Form.Item>
-                  <Input
+                  <LoadingButton
+                    fullWidth
+                    loading={btnLoading}
+                    loadingPosition="start"
+                    size="large"
+                    startIcon={<SaveFilled />}
+                    variant="contained"
+                    color="success"
                     type="Submit"
                     placeholder="Book"
                     name="eventName"
-                    value="Book"
-                    className="bg-success"
-                  />
+                  >
+                    <span>Book</span>
+                  </LoadingButton>
                 </Form.Item>
                 <Form.Item>
-                  <Input
+                  <LoadingButton
+                    fullWidth
+                    size="large"
                     type="button"
                     value="Close"
-                    className="bg-danger"
+                    variant="outlined"
+                    color="error"
                     onClick={handleClose}
-                  />
+                  >
+                    CLose
+                  </LoadingButton>
                 </Form.Item>
               </FormControl>
             </Form>

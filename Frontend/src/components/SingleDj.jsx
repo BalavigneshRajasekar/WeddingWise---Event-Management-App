@@ -15,9 +15,12 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { FormControl } from "@mui/material";
 import { Form, message, Input } from "antd";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { SaveFilled } from "@ant-design/icons";
 
 function SingleDj() {
   const [modal, setModal] = useState(false);
+  const [btnLoading, setBtnLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
   const { singleDj, setSingleDj } = useContext(AppContext);
@@ -41,6 +44,7 @@ function SingleDj() {
   };
 
   const onFinish = async (values) => {
+    setBtnLoading(true);
     try {
       const response = await axios.post(
         `https://eventapi-uk2d.onrender.com/api/dj/book/${id}`,
@@ -52,10 +56,12 @@ function SingleDj() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading(false);
       handleClose();
       fetchDj();
     } catch (e) {
       message.error(e.response.data.message);
+      setBtnLoading(false);
     }
   };
 
@@ -179,21 +185,33 @@ function SingleDj() {
               </Form.Item>
               <FormControl className="d-flex">
                 <Form.Item>
-                  <Input
+                  <LoadingButton
+                    fullWidth
+                    loading={btnLoading}
+                    loadingPosition="start"
+                    size="large"
+                    startIcon={<SaveFilled />}
+                    variant="contained"
+                    color="success"
                     type="Submit"
                     placeholder="Book"
                     name="eventName"
-                    value="Book"
-                    className="bg-success"
-                  />
+                  >
+                    <span>Book</span>
+                  </LoadingButton>
                 </Form.Item>
                 <Form.Item>
-                  <Input
+                  <LoadingButton
+                    fullWidth
+                    size="large"
                     type="button"
                     value="Close"
-                    className="bg-danger"
+                    variant="outlined"
+                    color="error"
                     onClick={handleClose}
-                  />
+                  >
+                    CLose
+                  </LoadingButton>
                 </Form.Item>
               </FormControl>
             </Form>

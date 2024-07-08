@@ -74,6 +74,7 @@ function Catering() {
   };
   //Handling the Catering booking after the popup
   const onFinish = async (values) => {
+    setBtnLoading(true);
     try {
       const response = await axios.post(
         `https://eventapi-uk2d.onrender.com/api/catering/book/${cateringId}`,
@@ -85,10 +86,12 @@ function Catering() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading(false);
       handleClose();
       fetchCatering();
     } catch (e) {
       message.error(e.response.data.message);
+      setBtnLoading(false);
       handleClose();
     }
   };
@@ -363,6 +366,7 @@ function Catering() {
           )}
         </div>
       </Container>
+      {/* Book model form */}
       <div>
         <Modal
           open={modal}
@@ -396,23 +400,35 @@ function Catering() {
               >
                 <Input placeholder="date" type="date" />
               </Form.Item>
-              <FormControl className="d-flex">
+              <FormControl className="d-flex mt-3">
                 <Form.Item>
-                  <Input
+                  <LoadingButton
+                    fullWidth
+                    loading={btnLoading}
+                    loadingPosition="start"
+                    size="large"
+                    startIcon={<SaveFilled />}
+                    variant="contained"
+                    color="success"
                     type="Submit"
                     placeholder="Book"
                     name="eventName"
-                    value="Book"
-                    className="bg-success"
-                  />
+                  >
+                    <span>Book</span>
+                  </LoadingButton>
                 </Form.Item>
                 <Form.Item>
-                  <Input
+                  <LoadingButton
+                    fullWidth
+                    size="large"
                     type="button"
                     value="Close"
-                    className="bg-danger"
+                    variant="outlined"
+                    color="error"
                     onClick={handleClose}
-                  />
+                  >
+                    CLose
+                  </LoadingButton>
                 </Form.Item>
               </FormControl>
             </Form>

@@ -75,6 +75,7 @@ function Malls() {
 
   //Handling the mall booking after the popup
   const onFinish = async (values) => {
+    setBtnLoading(true);
     console.log(values);
     try {
       const response = await axios.post(
@@ -87,10 +88,12 @@ function Malls() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading(false);
       handleClose();
       fetchMalls();
       fetchUserData();
     } catch (e) {
+      setBtnLoading(false);
       message.error(e.response.data.message);
       handleClose();
     }
@@ -360,6 +363,8 @@ function Malls() {
           <Empty description="No malls" />
         )}
       </div>
+
+      {/* Booking model form */}
       <div>
         <Modal
           open={modal}
@@ -396,21 +401,33 @@ function Malls() {
 
               <FormControl className="d-flex">
                 <Form.Item>
-                  <Input
+                  <LoadingButton
+                    fullWidth
+                    loading={btnLoading}
+                    loadingPosition="start"
+                    size="large"
+                    startIcon={<SaveFilled />}
+                    variant="contained"
+                    color="success"
                     type="Submit"
                     placeholder="Book"
                     name="eventName"
-                    value="Book"
-                    className="bg-success"
-                  />
+                  >
+                    <span>Book</span>
+                  </LoadingButton>
                 </Form.Item>
                 <Form.Item>
-                  <Input
+                  <LoadingButton
+                    fullWidth
+                    size="large"
                     type="button"
                     value="Close"
-                    className="bg-danger"
+                    variant="outlined"
+                    color="error"
                     onClick={handleClose}
-                  />
+                  >
+                    Close
+                  </LoadingButton>
                 </Form.Item>
               </FormControl>
             </Form>

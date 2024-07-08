@@ -87,6 +87,7 @@ function PhotoGraphy() {
   };
   //Handling the Photo booking after the popup
   const onFinish = async (values) => {
+    setBtnLoading(true);
     console.log(values);
     try {
       const response = await axios.post(
@@ -100,10 +101,12 @@ function PhotoGraphy() {
       );
 
       message.success(response.data.message);
+      setBtnLoading(false);
       fetchPhotoGraphy();
       setModal(false);
     } catch (e) {
       message.error(e.response.data.message);
+      setBtnLoading(false);
       setModal(false);
     }
   };
@@ -380,6 +383,7 @@ function PhotoGraphy() {
           )}
         </div>
       </Container>
+      {/* Book model form */}
       <div>
         <Modal
           open={modal}
@@ -414,23 +418,35 @@ function PhotoGraphy() {
                 <Input placeholder="date" type="date" />
               </Form.Item>
 
-              <FormControl className="d-flex">
+              <FormControl className="d-flex mt-3">
                 <Form.Item>
-                  <Input
+                  <LoadingButton
+                    fullWidth
+                    loading={btnLoading}
+                    loadingPosition="start"
+                    size="large"
+                    startIcon={<SaveFilled />}
+                    variant="contained"
+                    color="success"
                     type="Submit"
                     placeholder="Book"
                     name="eventName"
-                    value="Book"
-                    className="bg-success"
-                  />
+                  >
+                    <span>{editValues ? "Update" : "Add"}</span>
+                  </LoadingButton>
                 </Form.Item>
                 <Form.Item>
-                  <Input
+                  <LoadingButton
+                    fullWidth
+                    size="large"
                     type="button"
                     value="Close"
-                    className="bg-danger"
+                    variant="outlined"
+                    color="error"
                     onClick={handleClose}
-                  />
+                  >
+                    CLose
+                  </LoadingButton>
                 </Form.Item>
               </FormControl>
             </Form>
