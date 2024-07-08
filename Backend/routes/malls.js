@@ -4,16 +4,20 @@ const Users = require("../models/users");
 const cloudinary = require("../cloudinary");
 const loginAuth = require("../middlewares/loginAuth");
 const roleAuth = require("../middlewares/roleAuth");
-const upload = require("../middlewares/multerMiddleware");
+const multer = require("multer");
+// const upload = require("../middlewares/multerMiddleware");
 
 const mallsRouter = express.Router();
+
+const memory = multer.memoryStorage();
+const upload = multer({ storage: memory });
 
 // endpoint to add mall to the DB
 mallsRouter.post(
   "/add",
   loginAuth,
   roleAuth("Admin"),
-
+  upload.array("media"),
   async (req, res) => {
     const {
       mallName,
@@ -23,18 +27,26 @@ mallsRouter.post(
       spacing,
       amenities,
       Price,
-      imageUrl,
     } = req.body;
-    console.log(imageUrl);
 
-    let image = await cloudinary.uploader.upload(
-      imageUrl,
-      { upload_preset: "unsigned" },
-      (error, result) => {
-        console.log(result, error);
-      }
+    const mediaUrls = await Promise.all(
+      req.files.map(async (file) => {
+        return new Promise((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            {
+              resource_type: "auto",
+              folder: "products",
+            },
+            (error, result) => {
+              if (error) return reject(error);
+              resolve(result.secure_url);
+            }
+          );
+          uploadStream.end(file.buffer);
+        });
+      })
     );
-    console.log(image);
+    console.log(mediaUrls);
     // try {
     //   const verify = await malls.findOne({ mallContact: mallContact });
     //   if (verify) {

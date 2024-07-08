@@ -31,7 +31,6 @@ function Malls() {
   const [formModel, setFormModel] = useState(false); // Mall add model control
   const [mallImages, setMallImages] = useState([]); // mall add images control
   const [mallId, setMallId] = useState(); // Mall ID to navigate fullscreen
-  const [imageUrl, setImageUrl] = useState();
   const [editValues, setEditValues] = useState(null); // It contains the details of the mall which going to edit
   const { fetchUserData, setRender } = useContext(AppContext);
 
@@ -153,30 +152,20 @@ function Malls() {
   };
   // Handle new mall adding
   const onFormFinish = async (values) => {
-    console.log(values);
-    console.log(mallImages);
-
-    const reader = new FileReader();
-    reader.readAsDataURL(mallImages);
-    reader.onloadend = () => {
-      // set the image base64 url
-      setImageUrl(reader.result);
-    };
-    console.log(imageUrl);
-    // setBtnLoading(true);
-    // const formData = new FormData();
-    // //adding form values to form data
-    // for (const key in values) {
-    //   formData.append(key, values[key]);
-    // }
-    // //add media to form data
-    // mallImages.forEach((file) => {
-    //   formData.append("media", file.originFileObj);
-    // });
+    setBtnLoading(true);
+    const formData = new FormData();
+    //adding form values to form data
+    for (const key in values) {
+      formData.append(key, values[key]);
+    }
+    //add media to form data
+    mallImages.forEach((file) => {
+      formData.append("media", file.originFileObj);
+    });
     try {
       const response = await axios.post(
         "http://localhost:3000/api/malls/add",
-        { imageUrl: imageUrl },
+        formData,
         {
           headers: {
             Authorization: localStorage.getItem("logToken"),
@@ -195,11 +184,9 @@ function Malls() {
     }
   };
 
-  const handleImage = (e) => {
-    console.log(e.target.files[0]);
-    setMallImages(e.target.files[0]);
-    // setMallImages(fileList);
-    // console.log(mallImages);
+  const handleImage = ({ fileList }) => {
+    setMallImages(fileList);
+    console.log(mallImages);
   };
 
   // Handle adding edit values to the state and open form
@@ -558,10 +545,8 @@ function Malls() {
               >
                 <Input placeholder="Price" type="text" />
               </Form.Item> */}
-              <Form.Item name="media">
-                <Input type="file" onChange={handleImage}></Input>
-              </Form.Item>
-              {/* <Upload
+
+              <Upload
                 fileList={mallImages}
                 beforeUpload={() => false}
                 onChange={handleImage}
@@ -569,7 +554,7 @@ function Malls() {
                 <Button>
                   <UploadOutlined /> Upload Images
                 </Button>
-              </Upload> */}
+              </Upload>
 
               <FormControl className="d-flex mt-3">
                 <Form.Item>
