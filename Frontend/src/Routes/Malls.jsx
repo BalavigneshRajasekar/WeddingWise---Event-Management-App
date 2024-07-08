@@ -472,7 +472,7 @@ function Malls() {
               >
                 <Input placeholder="Mall Name" type="text" />
               </Form.Item>
-              {/* <Form.Item
+              <Form.Item
                 name="mallAddress"
                 initialValue={editValues ? editValues.mallAddress : ""}
                 rules={[
@@ -546,7 +546,7 @@ function Malls() {
                 ]}
               >
                 <Input placeholder="Price" type="text" />
-              </Form.Item> */}
+              </Form.Item>
 
               <Upload
                 fileList={mallImages}

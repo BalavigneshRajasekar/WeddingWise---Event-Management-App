@@ -550,11 +550,12 @@ function Dashboard() {
                             })}
                           </Button>
                           <LoadingButton
+                            className="mt-2"
                             fullWidth
                             loading={btnLoading.photo}
                             loadingPosition="start"
                             size="small"
-                            startIcon={<DeleteOutlined size={"small"} />}
+                            startIcon={<DeleteOutlined />}
                             variant="contained"
                             color="success"
                             type="Submit"
