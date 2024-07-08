@@ -177,6 +177,7 @@ function Malls() {
       handleFormModelClose();
       fetchMalls();
     } catch (e) {
+      console.log(e);
       setBtnLoading(false);
       message.error(e.response.data.message);
       setFormModel(false);
