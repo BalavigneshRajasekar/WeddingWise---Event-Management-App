@@ -325,11 +325,7 @@ function Dashboard() {
                           ></Image>
                         </div>
                         <span>{mall.djName}</span>
-                        <ul>
-                          {mall.musicType.map((offers, index1) => (
-                            <li key={index1}> {offers}</li>
-                          ))}
-                        </ul>
+
                         <p>
                           <PlaceIcon />
                           {mall.djAddress + "," + mall.djCity}
@@ -349,19 +345,21 @@ function Dashboard() {
                               }
                             })}
                           </Button>
-                          <LoadingButton
-                            fullWidth
-                            loading={btnLoading.dj}
-                            size="large"
-                            variant="contained"
-                            color="error"
-                            type="Submit"
-                            placeholder="Book"
-                            name="eventName"
-                            onClick={() => handleDjCanceling(mall)}
-                          >
-                            <span>Cancel Booking</span>
-                          </LoadingButton>
+                          <FormControl className="mt-3 d-flex">
+                            <LoadingButton
+                              fullWidth
+                              loading={btnLoading.dj}
+                              size="large"
+                              variant="contained"
+                              color="error"
+                              type="Submit"
+                              placeholder="Book"
+                              name="eventName"
+                              onClick={() => handleDjCanceling(mall)}
+                            >
+                              Cancel Booking
+                            </LoadingButton>
+                          </FormControl>
                         </div>
                       </div>
                     ))}
@@ -389,11 +387,7 @@ function Dashboard() {
                           ></Image>
                         </div>
                         <span>{mall.decorName}</span>
-                        <ul>
-                          {mall.decorType.map((offers, index1) => (
-                            <li key={index1}> {offers}</li>
-                          ))}
-                        </ul>
+
                         <p>
                           <PlaceIcon />
                           {mall.decorAddress + "," + mall.decorCity}
@@ -414,6 +408,7 @@ function Dashboard() {
                             })}
                           </Button>
                           <LoadingButton
+                            className="mt-3"
                             fullWidth
                             loading={btnLoading.decor}
                             size="large"
@@ -424,7 +419,7 @@ function Dashboard() {
                             name="eventName"
                             onClick={() => handleDecorCanceling(mall)}
                           >
-                            <span>Cancel Booking</span>
+                            Cancel Booking
                           </LoadingButton>
                         </div>
                       </div>
@@ -453,11 +448,7 @@ function Dashboard() {
                           ></Image>
                         </div>
                         <span>{mall.cateringName}</span>
-                        <ul>
-                          {mall.cateringMenu.map((offers, index1) => (
-                            <li key={index1}> {offers}</li>
-                          ))}
-                        </ul>
+
                         <p>
                           <PlaceIcon />
                           {mall.cateringAddress + "," + mall.cateringCity}
@@ -478,17 +469,18 @@ function Dashboard() {
                             })}
                           </Button>
                           <LoadingButton
+                            className="mt-3"
                             fullWidth
                             loading={btnLoading.cater}
                             size="large"
                             variant="contained"
-                            color="success"
+                            color="error"
                             type="Submit"
                             placeholder="Book"
                             name="eventName"
                             onClick={() => handleCaterCanceling(mall)}
                           >
-                            <span>Cancel Booking</span>
+                            Cancel Booking
                           </LoadingButton>
                         </div>
                       </div>
@@ -517,11 +509,7 @@ function Dashboard() {
                           ></Image>
                         </div>
                         <span>{photo.photographyName}</span>
-                        <ul>
-                          {photo.photographyType.map((offers, index1) => (
-                            <li key={index1}> {offers}</li>
-                          ))}
-                        </ul>
+
                         <p>
                           <PlaceIcon />
                           {photo.photographyAddress +
@@ -544,10 +532,10 @@ function Dashboard() {
                             })}
                           </Button>
                           <LoadingButton
-                            className="mt-2"
+                            className="mt-3"
                             fullWidth
                             loading={btnLoading.photo}
-                            size="small"
+                            size="large"
                             variant="contained"
                             color="error"
                             type="Submit"
@@ -555,7 +543,7 @@ function Dashboard() {
                             name="eventName"
                             onClick={() => handlePhotoCanceling(photo)}
                           >
-                            <span>Cancel Booking</span>
+                            Cancel Booking
                           </LoadingButton>
                         </div>
                       </div>
