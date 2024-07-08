@@ -164,7 +164,7 @@ function Malls() {
     });
     try {
       const response = await axios.post(
-        "https://eventapi-uk2d.onrender.com/api/malls/add",
+        "http://localhost:3000/api/malls/add",
         formData,
         {
           headers: {
