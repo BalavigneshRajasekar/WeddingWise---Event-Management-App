@@ -110,7 +110,7 @@ cateringRouter.post("/book/:id", loginAuth, async (req, res) => {
     if (verifyDate.length > 0) {
       return res
         .status(400)
-        .send({ message: "catering already booked on that day" });
+        .send({ message: "catering already booked on that date" });
     }
     //if user has booked a catering then he cannot book the same catering to other date until that day overs
     const verifyUser = selectedCater.bookedOn.filter((user) => {

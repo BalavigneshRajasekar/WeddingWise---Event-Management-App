@@ -111,7 +111,7 @@ photographyRouter.post("/book/:id", loginAuth, async (req, res) => {
     if (verifyDate.length > 0) {
       return res
         .status(400)
-        .send({ message: "Mall already booked on that day" });
+        .send({ message: "Photography already booked on that date" });
     }
     //if user has booked a mall then he cannot book the same mall to other date until that day overs
     const verifyUser = selectedPhoto.bookedOn.filter((user) => {

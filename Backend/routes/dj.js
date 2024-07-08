@@ -108,7 +108,9 @@ djRouter.post("/book/:id", loginAuth, async (req, res) => {
     });
     //verifying the catering is booked on that date r not
     if (verifyDate.length > 0) {
-      return res.status(400).send({ message: "DJ already booked on that day" });
+      return res
+        .status(400)
+        .send({ message: "DJ already booked on that date" });
     }
     //if user has booked a catering then he cannot book the same catering to other date until that day overs
     const verifyUser = selectedDJ.bookedOn.filter((user) => {

@@ -46,6 +46,7 @@ function SingleCatering() {
   };
 
   const onFinish = async (values) => {
+    setBtnLoading(true);
     try {
       const response = await axios.post(
         `https://eventapi-uk2d.onrender.com/api/catering/book/${id}`,
@@ -57,10 +58,12 @@ function SingleCatering() {
         }
       );
       message.success(response.data.message);
+      setBtnLoading(false);
       handleClose();
       fetchCatering();
     } catch (e) {
       message.error(e.response.data.message);
+      setBtnLoading(false);
     }
   };
 
