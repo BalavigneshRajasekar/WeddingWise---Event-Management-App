@@ -313,7 +313,7 @@ function Malls() {
                     </IconButton>
                     <Popconfirm
                       title="Delete the task"
-                      description="Are you sure to delete this task?"
+                      description="Are you sure to delete this Mall?"
                       okText="Yes"
                       cancelText="No"
                       onConfirm={() => handleDelete(mall)}
@@ -454,7 +454,7 @@ function Malls() {
               component="h2"
               className="p-2 border border-1 shadow-sm rounded-2"
             >
-              New Mall Details :
+              {editValues ? "Edit Mall Details" : "Add New Mall"}
             </Typography>
 
             <Form

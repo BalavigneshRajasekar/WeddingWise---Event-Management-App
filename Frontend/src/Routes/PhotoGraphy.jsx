@@ -334,7 +334,7 @@ function PhotoGraphy() {
                       </IconButton>
                       <Popconfirm
                         title="Delete the task"
-                        description="Are you sure to delete this task?"
+                        description="Are you sure to delete this Photography?"
                         okText="Yes"
                         cancelText="No"
                         onConfirm={() => handleDelete(photo)}
@@ -475,7 +475,7 @@ function PhotoGraphy() {
               component="h2"
               className="p-2 border border-1 shadow-sm rounded-2"
             >
-              New Photography Details :
+              {editValues ? "Edit Photography Details" : "Add New Photography"}
             </Typography>
 
             <Form

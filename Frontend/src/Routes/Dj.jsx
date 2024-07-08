@@ -311,7 +311,7 @@ function Dj() {
                       </IconButton>
                       <Popconfirm
                         title="Delete the task"
-                        description="Are you sure to delete this task?"
+                        description="Are you sure to delete this DJ?"
                         okText="Yes"
                         cancelText="No"
                         onConfirm={() => handleDelete(djs)}
@@ -451,7 +451,7 @@ function Dj() {
               component="h2"
               className="p-2 border border-1 shadow-sm rounded-2"
             >
-              New DJ Details :
+              {editValues ? "Edit DJ Details" : "Add New DJ"}
             </Typography>
 
             <Form

@@ -317,7 +317,7 @@ function Catering() {
                       </IconButton>
                       <Popconfirm
                         title="Delete the task"
-                        description="Are you sure to delete this task?"
+                        description="Are you sure to delete this Catering?"
                         okText="Yes"
                         cancelText="No"
                         onConfirm={() => handleDelete(cater)}
@@ -457,7 +457,7 @@ function Catering() {
               component="h2"
               className="p-2 border border-1 shadow-sm rounded-2"
             >
-              New Catering Details :
+              {editValues ? "Edit Catering Details" : "Add New Catering"}
             </Typography>
 
             <Form

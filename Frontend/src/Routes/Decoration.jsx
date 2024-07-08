@@ -314,7 +314,7 @@ function Decoration() {
                       </IconButton>
                       <Popconfirm
                         title="Delete the task"
-                        description="Are you sure to delete this task?"
+                        description="Are you sure to delete this Decor?"
                         okText="Yes"
                         cancelText="No"
                         onConfirm={() => handleDelete(decor)}
@@ -454,7 +454,7 @@ function Decoration() {
               component="h2"
               className="p-2 border border-1 shadow-sm rounded-2"
             >
-              New Decoration Details :
+              {editValues ? "Edit Decoration Details" : "Add New Decoration"}
             </Typography>
 
             <Form
