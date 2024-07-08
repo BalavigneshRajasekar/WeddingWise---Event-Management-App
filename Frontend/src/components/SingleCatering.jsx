@@ -17,6 +17,7 @@ import { FormControl } from "@mui/material";
 import { Form, message, Input } from "antd";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { SaveFilled } from "@ant-design/icons";
+import { Zoom } from "react-slideshow-image";
 
 function SingleCatering() {
   const [modal, setModal] = useState();
@@ -82,11 +83,16 @@ function SingleCatering() {
         </Button>
         {singleCatering && (
           <Paper elevation={3} sx={{ padding: 4, marginTop: 3 }}>
-            <Image
-              src={singleCatering.cateringImages[0]}
-              width="100%"
-              height="300px"
-            ></Image>
+            <Zoom canSwipe arrows={false} indicators>
+              {singleCatering.cateringImages.map((image, imgIndex) => (
+                <Image
+                  key={imgIndex}
+                  src={image}
+                  width="100%"
+                  height="300px"
+                ></Image>
+              ))}
+            </Zoom>
 
             <Typography variant="h3" sx={{ marginTop: 3 }}>
               {singleCatering.cateringName}

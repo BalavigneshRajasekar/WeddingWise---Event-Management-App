@@ -18,6 +18,7 @@ import { Form, message, Input } from "antd";
 import axios from "axios";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { SaveFilled } from "@ant-design/icons";
+import { Zoom } from "react-slideshow-image";
 
 function SinglePhoto() {
   const [modal, setModal] = useState(false);
@@ -84,11 +85,16 @@ function SinglePhoto() {
         </Button>
         {singlePhoto && (
           <Paper elevation={3} sx={{ padding: 4, marginTop: 3 }}>
-            <Image
-              src={singlePhoto.photographyImages[0]}
-              width="100%"
-              height="300px"
-            ></Image>
+            <Zoom canSwipe arrows={false} indicators>
+              {singlePhoto.photographyImages.map((image, imgIndex) => (
+                <Image
+                  key={imgIndex}
+                  src={image}
+                  width="100%"
+                  height="300px"
+                ></Image>
+              ))}
+            </Zoom>
             <Typography variant="h3" sx={{ marginTop: 3 }}>
               {singlePhoto.photographyName}
             </Typography>

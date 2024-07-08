@@ -17,6 +17,7 @@ import { FormControl } from "@mui/material";
 import { Form, message, Input } from "antd";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { SaveFilled } from "@ant-design/icons";
+import { Zoom } from "react-slideshow-image";
 
 function SingleDecoration() {
   const [modal, setModal] = useState(false);
@@ -85,11 +86,16 @@ function SingleDecoration() {
         </Button>
         {singleDecoration && (
           <Paper elevation={3} sx={{ padding: 4, marginTop: 3 }}>
-            <Image
-              src={singleDecoration.decorImages[0]}
-              width="100%"
-              height="300px"
-            ></Image>
+            <Zoom canSwipe arrows={false} indicators>
+              {singleDecoration.decorImages.map((image, imgIndex) => (
+                <Image
+                  key={imgIndex}
+                  src={image}
+                  width="100%"
+                  height="300px"
+                ></Image>
+              ))}
+            </Zoom>
 
             <Typography variant="h3" sx={{ marginTop: 3 }}>
               {singleDecoration.decorName}
